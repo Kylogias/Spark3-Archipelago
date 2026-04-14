@@ -1,0 +1,38 @@
+Checkpoint-Sanity
+Medal-Sanity (Speed and Score Medals)
+	+88 for Speed
+	+56 for Score
+Coin-Sanity (Exploration Medals)
+	+300
+
+SA2 style level-gating, with Freedom Medals
+Shop items are in the item pool (the shop is either randomized or set to obsurd prices)
+Junk items would be bits, energy, and extra lives
+
+There are 53 levels and 4 bosses that can be randomized
+
+The game only recognizes a stage as available if it's active on the menu
+For level completion, the stage completion scene has an object that contains the stage id
+Just fake the freedom medal count :)
+
+[WORLD MAP]
+	UI/WorldMapInfo/Fp/FpText : UnityEngine.UI.Text
+		edit to fake medals
+	Map/Stages
+		For every child, check if available in archipelago. If so, unlock and move
+	Input : Save.Saves[Save.CurrentSaveSlot]
+		Set every stage greater than ID 200 to complete
+		Set every stage to unlocked
+		Set game to complete
+
+[STAGE COMPLETE SCREEN]
+	Stage Compl : StageCompleteControl
+		LevelJustInIndex to distinguish levels for sending locations
+	SCORE_DIA
+	SCORE_GOLD
+	SPD_DIA
+	SPD_GOLD
+		If active and medal sanity, send location
+
+WorldMedal.OnTriggerEnter
+	send check based on WorldMedal.MedalId and Save.CurrentStageIndex
