@@ -273,27 +273,27 @@ class LocationState:
 		self.spoiler_text += "Gate 0:\n"
 		total = 0
 		for i in range(self.GATE_STAGE_COUNT[0]):
-			self.gate_data[0].append([shuffled_stages[total].id, i, 0])
+			self.gate_data[0].append([shuffled_stages[total].id, (i-10)*0.75, 0])
 			self.add_stage_to_gate(world, gates[0], shuffled_stages[total])
 			total += 1
 		self.spoiler_text += "Gate 1:\n"
 		for i in range(self.GATE_STAGE_COUNT[1]):
-			self.gate_data[1].append([shuffled_stages[total].id, i, 1])
+			self.gate_data[1].append([shuffled_stages[total].id, (i-10)*0.75, 1*0.75])
 			self.add_stage_to_gate(world, gates[1], shuffled_stages[total])
 			total += 1
 		self.spoiler_text += "Gate 2:\n"
 		for i in range(self.GATE_STAGE_COUNT[2]):
-			self.gate_data[2].append([shuffled_stages[total].id, i, 2])
+			self.gate_data[2].append([shuffled_stages[total].id, (i-10)*0.75, 2*0.75])
 			self.add_stage_to_gate(world, gates[2], shuffled_stages[total])
 			total += 1
 		self.spoiler_text += "Gate 3:\n"
 		for i in range(self.GATE_STAGE_COUNT[3]):
-			self.gate_data[3].append([shuffled_stages[total].id, i, 3])
+			self.gate_data[3].append([shuffled_stages[total].id, (i-10)*0.75, 3*0.75])
 			self.add_stage_to_gate(world, gates[3], shuffled_stages[total])
 			total += 1
 		self.spoiler_text += "Gate 4:\n"
 		for i in range(self.GATE_STAGE_COUNT[4]):
-			self.gate_data[4].append([shuffled_stages[total].id, i, 4])
+			self.gate_data[4].append([shuffled_stages[total].id, (i-10)*0.75, 4*0.75])
 			self.add_stage_to_gate(world, gates[4], shuffled_stages[total])
 			total += 1
 	#	self.spoiler_text += "Utopia:\n"
@@ -301,7 +301,7 @@ class LocationState:
 	#	self.gate_data[5].append([utopia.id, 0, 5])
 		
 		self.add_stage_to_gate(world, gates[0], utopia, event="Victory")
-		self.gate_data[5].append([utopia.id, 0, 5])
+		self.gate_data[5].append([utopia.id, -10*0.75, -5*0.75])
 		
 		self.spoiler_text += "Boss Order:\n"
 		for i in range(4):
@@ -309,7 +309,7 @@ class LocationState:
 			boss_region = self.stage_regions[shuffled_bosses[i].name][0]
 			gates[i].connect(boss_region, f"Gate {i} to Boss")
 			boss_region.connect(gates[i+1], f"Boss to Gate {i+1}")
-			self.boss_data.append([shuffled_bosses[i].id, -1, i+1])
+			self.boss_data.append([shuffled_bosses[i].id, 1, (i+1)*0.75])
 		
 	#	world.get_region(STAGE_UTOPIA_SHELTER).add_event("Defeat Claritas Centralis", "Victory", location_type=Spark3Location, item_type=Spark3Item)
 

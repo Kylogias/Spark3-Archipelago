@@ -118,14 +118,17 @@ int main(int argc, char* argv[]) {
 	#define UNITYBASE SPARKDIR "/Spark the Electric Jester 3_Data/Managed/"
 
 	nob_cmd_append(
-		&linkcmd, "mcs", "-target:library", "-sdk:4.7.2", "-out:" SPARKDIR "/Mods/Sparkipelago.Mono.dll",
+		&linkcmd, "mcs", "-target:library", "-sdk:4.7.2", "-out:mod/Mods/Sparkipelago.Mono.dll",
 		"-reference:" SPARKDIR "/MelonLoader/net35/MelonLoader.dll",
 		"-reference:" SPARKDIR "/MelonLoader/net35/0Harmony.dll",
 		"-reference:" SPARKDIR "/UserLibs/Archipelago.MultiClient.Net.dll",
 		"-reference:" SPARKDIR "/UserLibs/Newtonsoft.Json.dll"
 	);
 	
-	const char* include_managed[] = {"Assembly-CSharp.dll", "UnityEngine.dll", "UnityEngine.CoreModule.dll", "UnityEngine.UI.dll", "Rewired_Core.dll"};
+	const char* include_managed[] = {
+		"Assembly-CSharp.dll", "UnityEngine.dll", "UnityEngine.CoreModule.dll", "UnityEngine.UI.dll", "UnityEngine.AudioModule.dll",
+		"Rewired_Core.dll", "UnityEngine.UnityWebRequestModule.dll", "UnityEngine.UnityWebRequestAudioModule.dll"
+	};
 	int numinclude = sizeof(include_managed)/sizeof(*include_managed);
 	for (int i = 0; i < numinclude; i++) {
 		char ref[512] = "-reference:" UNITYBASE;
@@ -145,6 +148,7 @@ int main(int argc, char* argv[]) {
 		//	nob_cmd_append(&runcmd, "./"OUTEXE);
 			nob_cmd_run(&runcmd, 0);
 		}
+		nob_copy_file("mod/Mods/Sparkipelago.Mono.dll", SPARKDIR "/Mods/Sparkipelago.Mono.dll");
 	} else {
 		fprintf(stderr, "Compile Error, see log files for more information\n");
 	}

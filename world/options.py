@@ -55,7 +55,7 @@ class FreedomCount(Range):
 	"""
 	display_name = "Freedom Medal Count"
 
-	range_start = 1
+	range_start = 0
 	range_end = 100
 
 class FreedomRequired(NamedRange):
@@ -71,12 +71,26 @@ class FreedomRequired(NamedRange):
 		"open_world": 0
 	}
 
+class MusicChoice(Choice):
+	"""
+	What music to use. If non-vanilla, music is chosen from "(game directory)/Spark the Electric Jester 3_Data/music"
+	"""
+	display_name = "Music Randomization"
+	
+	option_vanilla = 0
+	option_per_stage = 1
+	option_per_load = 2
+	option_per_loop = 3
+	
+	default = option_vanilla
+
 @dataclass
 class Spark3Options(PerGameCommonOptions):
-	abilityrando: AbilityRando
-	freedomcount: FreedomCount
-	freedomreq: FreedomRequired
+	ability_rando: AbilityRando
+	freedom_count: FreedomCount
+	freedom_required: FreedomRequired
 	shopsanity: Shopsanity
 	speedsanity: Speedsanity
 	scoresanity: Scoresanity
 	exploresanity: Exploresanity
+	music_rando: MusicChoice

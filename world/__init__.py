@@ -38,13 +38,13 @@ class Spark3World(World):
 		else:
 			self.shop_enabled = False
 		
-		if self.options.abilityrando:
+		if self.options.ability_rando:
 			self.ability_rando = True
 		else:
 			self.ability_rando = False
 		
-		self.item_state.FREEDOM_COUNT = self.options.freedomcount.value
-		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedomreq.value * 0.01))
+		self.item_state.FREEDOM_COUNT = self.options.freedom_count.value
+		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))
 		self.rules_state.FREEDOM_REQUIREMENTS = [int(req_freedom/5), int(2*req_freedom/5), int(3*req_freedom/5), int(4*req_freedom/5), int(req_freedom)]
 		print(self.rules_state.FREEDOM_REQUIREMENTS)
 		print(self.item_state.FREEDOM_COUNT)
@@ -75,6 +75,8 @@ class Spark3World(World):
 			"version": 0,
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
 			"gates": self.location_state.gate_data,
-			"bosses": self.location_state.boss_data
+			"bosses": self.location_state.boss_data,
+			"musicseed": self.random.randint(0, 2**31),
+			"musicchoice": self.options.music_rando.value
 		}
 		return slot_data

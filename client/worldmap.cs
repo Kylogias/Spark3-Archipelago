@@ -85,7 +85,14 @@ namespace Sparkipelago {
 			Save.SaveFile save = Save.GetCurrentSave();
 			foreach(LevelData level in levels) {
 				bool unlocked = false;
-				if (level.ID == -99) unlocked = true;
+				if (level.ID == -99) {
+					Vector3 newpos;
+					newpos.x = 0;
+					newpos.y = 0.75f;
+					newpos.z = level.gameObject.transform.position.z;
+					level.gameObject.transform.position = newpos;
+					unlocked = true;
+				}
 				
 				i = 0;
 				foreach (JToken boss in ((JArray)Sparkipelago.slotData["bosses"])) {

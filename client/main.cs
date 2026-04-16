@@ -6,6 +6,7 @@ using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
+using Newtonsoft.Json.Linq;
 
 [assembly: MelonInfo(typeof(Sparkipelago.Sparkipelago), "Sparkipelago", "0.1.0", "Kylogias")]
 [assembly: MelonGame("Feperd Games", "Spark the Electric Jester 3")]
@@ -86,6 +87,8 @@ namespace Sparkipelago {
 		int currentItem = -1;
 		public static int[] itemState;
 		public static string[] shopItems;
+		public static int musicRando = 0;
+		public static int musicSeed = 0;
 		
 		public override void OnInitializeMelon() {
 			instance = this;
@@ -97,6 +100,8 @@ namespace Sparkipelago {
 			port = MelonPreferences.CreateEntry<int>("Archipelago Connection", "Port", 38281);
 			username = MelonPreferences.CreateEntry<string>("Archipelago Connection", "Username", "Player1");
 			password = MelonPreferences.CreateEntry<string>("Archipelago Connection", "Password", "");
+			
+			MusicRandomization.registerMusic();
 		}
 		
 		public void ConnectToArchipelago(bool newServer) {
@@ -114,6 +119,9 @@ namespace Sparkipelago {
 			if (result.Successful) {
 				slotData = ((LoginSuccessful)result).SlotData;
 				currentSaveSlot = Save.CurrentSaveSlot;
+				
+				musicRando = (int)(long)slotData["musicchoice"];
+				musicSeed = (int)(long)slotData["musicseed"];
 			} else {
 				MelonLogger.Error("Error while connecting to Archipelago");
 				foreach(string e in ((LoginFailure)result).Errors) {
