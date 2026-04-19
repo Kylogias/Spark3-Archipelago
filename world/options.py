@@ -73,7 +73,7 @@ class FreedomRequired(NamedRange):
 
 class MusicChoice(Choice):
 	"""
-	What music to use. If non-vanilla, music is chosen from "(game directory)/Spark the Electric Jester 3_Data/music"
+	What music to use. If non-vanilla, music is chosen from "(game directory)/apmusic"
 	"""
 	display_name = "Music Randomization"
 	

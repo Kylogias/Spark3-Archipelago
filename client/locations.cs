@@ -18,12 +18,21 @@ namespace Sparkipelago {
 		private static class PurchasePatch {
 			private static bool Prefix(ShopItenDetails __instance, ShopaloShop shop) {
 				// X button to check
-				bool isChecking = shop.Rewinp.GetButton("AttackHeavy") || !__instance.Unlocked;
+				const long id = 16295300000 + 6000;
+				int idx = getItenIndex(__instance);
+				bool canCheck = Sparkipelago.currentSession.Locations.AllLocations.Contains(id+idx)
+					&& Sparkipelago.currentSession.Locations.AllMissingLocations.Contains(id+idx);
+				bool isChecking = (shop.Rewinp.GetButton("AttackHeavy") || !__instance.Unlocked) && canCheck;
 				Save.SaveFile s = Save.GetCurrentSave();
 				if (isChecking && s.Bits >= __instance.BitsCost) {
 					if (__instance.Unlocked) s.Bits -= __instance.BitsCost;
 					
 					Locations.sendLocationCheck(300, getItenIndex(__instance));
+				}
+				
+				if (!canCheck && !__instance.Unlocked) {
+					shop.StartTextBox("Thought you could pull a fast on over on Archipelago eh? Gonna have to unlock it the hard way");
+					return false;
 				}
 				
 				return true;

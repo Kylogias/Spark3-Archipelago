@@ -68,6 +68,13 @@ namespace Sparkipelago {
 			}
 		}
 		
+		[HarmonyPatch(typeof(Action05_Rail), "RailMovement")]
+		private static class RailDashPatch {
+			private static void Prefix(Action05_Rail __instance, ref bool ___Dashed) {
+				if (Sparkipelago.itemState[(long)ItemIds.DASH] == 0) ___Dashed = true;
+			}
+		}
+		
 		[HarmonyPatch(typeof(Action01_Jump), "HomingManagement")]
 		private static class HomingPatch {
 			private static void Prefix(ActionManager ___Actions) {
@@ -101,6 +108,13 @@ namespace Sparkipelago {
 		private static class DoubleJumpPatch {
 			private static void Prefix(Action01_Jump __instance) {
 				if (Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] == 0) __instance.DoubleJumpAvailable = false;
+			}
+		}
+		
+		[HarmonyPatch(typeof(Action00_Regular), "FixedUpdate")]
+		private static class DoubleJumpPatch2 {
+			private static void Prefix(Action00_Regular __instance) {
+				if (Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] == 0) __instance.DoubleJumpEnabledAction0 = false;
 			}
 		}
 		

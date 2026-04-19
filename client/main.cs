@@ -147,7 +147,7 @@ namespace Sparkipelago {
 		public static void HandleShopScout(Dictionary<long, ScoutedItemInfo> scouted) {
 			long id = 16295300000 + 6000;
 			for (int i = 0; i < 26; i++) {
-				shopItems[i] = string.Format("{0} for {1}", scouted[id].ItemName, scouted[id].Player.Name);
+				if (scouted.ContainsKey(id)) shopItems[i] = string.Format("{0} for {1}", scouted[id].ItemName, scouted[id].Player.Name);
 				id += 1;
 			}
 		}

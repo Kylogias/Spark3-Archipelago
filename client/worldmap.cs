@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using HarmonyLib;
@@ -128,30 +129,50 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(ShopaloShop), "SwitchPage")]
 		private static class PagePatch {
 			private static void Postfix(ShopaloShop __instance, int page) {
-				int i = 0;
 				if (page == 0) {
 					__instance.Index = 4;
 				}
+				int i = 0;
 				foreach (ShopItenDetails iten in __instance.MainPageItens) {
 					if (Sparkipelago.itemState[(long)ItemIds.SHOP_MOVES+i] == 0) iten.gameObject.SetActive(false);
 					i++;
 					if (i == 4) break;
 				}
+				ShopItenDetails[] itenlist = new ShopItenDetails[26];
 				foreach (ShopItenDetails iten in __instance.MoveItens) {
-					int idx = Locations.getItenIndex(iten);
-					iten.Description = Sparkipelago.shopItems[idx];
+					itenlist[Locations.getItenIndex(iten)] = iten;
 				}
 				foreach (ShopItenDetails iten in __instance.SpecialItens) {
-					int idx = Locations.getItenIndex(iten);
-					iten.Description = Sparkipelago.shopItems[idx];
+					itenlist[Locations.getItenIndex(iten)] = iten;
 				}
 				foreach (ShopItenDetails iten in __instance.JesterItens) {
-					int idx = Locations.getItenIndex(iten);
-					iten.Description = Sparkipelago.shopItems[idx];
+					itenlist[Locations.getItenIndex(iten)] = iten;
 				}
 				foreach (ShopItenDetails iten in __instance.UpgradeItens) {
-					int idx = Locations.getItenIndex(iten);
-					iten.Description = Sparkipelago.shopItems[idx];
+					itenlist[Locations.getItenIndex(iten)] = iten;
+				}
+				
+				const long id = 16295300000 + 6000;
+				for (i = 0; i < 26; i++) {
+					ShopItenDetails iten = itenlist[i];
+					if (Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i)) {
+						iten.Description = Sparkipelago.shopItems[i];
+					}
+				}
+			}
+		}
+		
+		[HarmonyPatch(typeof(ShopItenDetails), "SetText")]
+		private static class ItenTextPatch {
+			private static void Postfix(ShopItenDetails __instance) {
+				const long id = 16295300000 + 6000;
+				int i = Locations.getItenIndex(__instance);
+				Text textComponent = __instance.gameObject.transform.Find("bitsamm").GetComponent<Text>();
+				if (!Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i)) return;
+				if (Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(id+i)) {
+					textComponent.color = new Color(0.5f, 0.5f, 0.5f);
+				} else {
+					textComponent.color = new Color(0.25f, 1.0f, 0.25f);
 				}
 			}
 		}

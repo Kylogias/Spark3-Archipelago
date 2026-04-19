@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using MelonLoader;
 
 namespace Sparkipelago {
@@ -18,10 +19,11 @@ namespace Sparkipelago {
 	class MusicRandomization {
 		[HarmonyPatch(typeof(StageMusicControl), "FixedUpdate")]
 		private class StageMusicPatch {
-			private static void Prefix(StageMusicControl __instance, int ___frame) {
+			private static void Prefix(StageMusicControl __instance, int ___frame, ref bool ___Started) {
 				if (Sparkipelago.musicRando != (int)MusicType.VANILLA) {
 					if (___frame != __instance.FrameToStartMusicAt) return;
-					string musicPath = Path.Combine(Application.dataPath, "music");
+					___Started = true;
+					string musicPath = Path.Combine(Application.dataPath, "../apmusic");
 					DirectoryInfo dir = new DirectoryInfo(musicPath);
 					FileInfo[] info = dir.GetFiles("*.ogg");
 		
@@ -35,42 +37,45 @@ namespace Sparkipelago {
 						rnd = new System.Random();
 					}
 					
-					AudioClip clip = loadMusic(info[rnd.Next(info.Length)].FullName);
-						
-					__instance.Loop = clip;
-					__instance.MainIsLoop = true;
-					__instance.Intro = clip;
+					loadMusic(__instance.MainSource, info[rnd.Next(info.Length)].FullName);
 				}
 			}
 			
 			private static void Postfix(StageMusicControl __instance, bool ___Started) {
 				if (Sparkipelago.musicRando == (int)MusicType.LOOP) __instance.MainSource.loop = false;
 				
-				if (___Started && !__instance.MainSource.isPlaying && Sparkipelago.musicRando == (int)MusicType.LOOP) {
-					string musicPath = Path.Combine(Application.dataPath, "music");
+				if (!__instance.MainSource.isPlaying && Sparkipelago.musicRando == (int)MusicType.LOOP && !loadingMusic) {
+					string musicPath = Path.Combine(Application.dataPath, "../apmusic");
 					DirectoryInfo dir = new DirectoryInfo(musicPath);
 					FileInfo[] info = dir.GetFiles("*.ogg");
 					var rnd = new System.Random();
-					__instance.MainSource.clip = loadMusic(info[rnd.Next(info.Length)].FullName);
-					__instance.MainSource.clip.LoadAudioData();
-					__instance.MainSource.Play();
+					loadMusic(__instance.MainSource, info[rnd.Next(info.Length)].FullName);
 				}
 			}
 		}
 		
 		static Dictionary<string, AudioClip> music;
+		static bool loadingMusic;
 		
-		static AudioClip loadMusic(string path) {
-			string uri = "file://" + path;
-			MelonLogger.Msg("Randomizing Music: {0}", uri);
-			if (!music.ContainsKey(path)) {
-				using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(uri, AudioType.OGGVORBIS)) {
-					www.SendWebRequest();
-					while (!www.isDone);
-					music.Add(path, DownloadHandlerAudioClip.GetContent(www));
+		static Task<AudioClip> loadMusic(AudioSource source, string path) {
+			loadingMusic = true;
+			return Task.Run(() => {
+				string uri = "file://" + path;
+				MelonLogger.Msg("Randomizing Music: {0}", uri);
+				if (!music.ContainsKey(path)) {
+					using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(uri, AudioType.OGGVORBIS)) {
+						www.SendWebRequest();
+						while (!www.isDone);
+						music.Add(path, DownloadHandlerAudioClip.GetContent(www));
+					}
 				}
-			}
-			return music[path];
+				
+				source.clip = music[path];
+				source.clip.LoadAudioData();
+				source.Play();
+				loadingMusic = false;
+				return music[path];
+			});
 		}
 		
 		public static void registerMusic() {
