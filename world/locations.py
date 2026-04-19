@@ -15,14 +15,18 @@ class Moves(IntFlag):
 	DOUBLE_JUMP = 32
 	COMBAT = 64
 	
+	ONE_CANCEL = CHARGED_DASH | DOUBLE_JUMP | DASH
+	
 	FARK = 128
 	SFARX = 256
+
+TWO_CANCEL = [Moves.CHARGED_DASH | Moves.DOUBLE_JUMP, Moves.DOUBLE_JUMP | Moves.DASH, Moves.DASH | Moves.CHARGED_DASH]
 
 @dataclass
 class StageInfo:
 	name: str
 	id: int
-	explore: int # Number of Explore Medals
+	explore: list[Moves] | None # Number of Explore Medals
 	speed: int # Number of Speed Medals
 	score: int # Number of Score Medals
 	required_completion: list[Moves]
@@ -42,68 +46,152 @@ class Spark3Location(Location):
 	game = GAME_NAME
 
 stages = [
-	StageInfo(STAGE_ALPINE_CARRERA, 0, 0, 2, 0, [Moves.CHARGED_DASH | Moves.DASH]),
-	StageInfo(STAGE_DOUBLEMOON_VILLA, 1, 10, 2, 2, []),
-	StageInfo(STAGE_HIGH_RISE_TRACKS, 2, 10, 2, 2, []),
-	StageInfo(STAGE_COLD_DRY_DESERT, 3, 0, 2, 0, []), # Can easily be completed by going down the center of the track LOL
-	StageInfo(STAGE_AM_VILLAGE, 4, 0, 0, 0, []),
-	StageInfo(STAGE_LOST_RIVIERA, 5, 10, 2, 2, []),
-	StageInfo(STAGE_LOST_RAVINE, 6, 10, 2, 0, [Moves.WALL_JUMP, Moves.COMBAT, Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH]),
-	StageInfo(STAGE_CANYON_ZERO, 7, 10, 0, 2, []), # Raid Stage
-	StageInfo(STAGE_BEATDOWN_TOWER, 13, 0, 2, 0, [Moves.COMBAT]), # Combat Stage
-	StageInfo(STAGE_ARID_HOLE, 11, 0, 0, 0, []),
-	StageInfo(STAGE_SPLASH_GROTTO, 12, 0, 2, 0, []),
-	StageInfo(STAGE_DISTRICT_5, 8, 10, 2, 2, []),
-	StageInfo(STAGE_DISTRICT_6, 14, 10, 2, 2, [Moves.CHARGED_DASH | Moves.DASH]),
-	StageInfo(STAGE_DISTRICT_9, 15, 10, 2, 0, [Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH]),
-	StageInfo(STAGE_DISTRICT_4, 16, 0, 2, 0, [Moves.COMBAT]), # Combat Stage
-	StageInfo(STAGE_DISTRICT_79, 17, 10, 2, 2, [Moves.COMBAT]),
-	StageInfo(STAGE_DOWNTOWN_DISSENT, 10, 10, 2, 2, [Moves.DOUBLE_JUMP | Moves.WALL_JUMP]),
-	StageInfo(STAGE_RESIDENTIAL_RATTLE, 22, 10, 2, 2, []),
-	StageInfo(STAGE_ROADWAY_RALLY, 23, 0, 2, 0, []), # Car Stage, don't even need to jump
-	StageInfo(STAGE_STRIKE_SEWERS, 20, 10, 2, 2, [Moves.WALL_JUMP]),
-	StageInfo(STAGE_SQUABBLE_SPILLWAY, 21, 0, 0, 0, []),
-	StageInfo(STAGE_NIGHTTIME_PHENOMENA, 18, 10, 2, 2, [Moves.COMBAT, Moves.DOUBLE_JUMP]),
-	StageInfo(STAGE_DROPSHIP_DAYBREAK, 27, 0, 0, 0, [Moves.COMBAT]), # Collectation Stage, doubt you could replace combat with anything
-	StageInfo(STAGE_HEAVEN_PARK, 28, 0, 2, 0, [Moves.DOUBLE_JUMP | Moves.CHARGED_DASH]), # Timed Stage, idk if these are actually required
-	StageInfo(STAGE_ENDLESS_HALL, 29, 10, 2, 2, [Moves.COMBAT, Moves.DOUBLE_JUMP]),
-	StageInfo(STAGE_BALLOON_FIESTA, 30, 10, 2, 0, [Moves.JESTER_DASH, Moves.COMBAT]), # Technically you could substitute Jester Dash for either Wall Jump or Double Jump, but the route's a pain
-	StageInfo(STAGE_AIRSTRIP_MADNESS, 25, 10, 2, 2, []),
-	StageInfo(STAGE_TWO_STAGE_LIFTOFF, 33, 0, 2, 0, [Moves.JESTER_DASH]), # Theoretically could remove Jester Dash like in BALLOON FIESTA
-	StageInfo(STAGE_SUBORBITAL_SCRAMBLE, 34, 10, 2, 2, [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.WALL_JUMP]),
-	StageInfo(STAGE_AVIATOR_HIGHWAY, 31, 0, 2, 0, []),
-	StageInfo(STAGE_MAYDAY_MIDDAY, 32, 0, 2, 0, [Moves.JESTER_DASH]),
-	StageInfo(STAGE_DEEP_DESCENT, 26, 10, 2, 0, [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH, Moves.DOUBLE_JUMP | Moves.WALL_JUMP]),
-	StageInfo(STAGE_SLOPE_JUMPING, 100, 0, 0, 0, []),
-	StageInfo(STAGE_JESTER_DASH, 101, 0, 0, 0, [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH]),
-	StageInfo(STAGE_CHARGED_JESTER_DASH, 102, 0, 0, 0, [Moves.CHARGED_DASH, Moves.DOUBLE_JUMP]),
-	StageInfo(STAGE_HIGH_SPEEDS, 103, 0, 0, 0, [Moves.DOUBLE_JUMP]),
-	StageInfo(STAGE_WALL_JUMPING, 104, 0, 0, 0, [Moves.WALL_JUMP]),
-	StageInfo(STAGE_WALL_WALKING, 105, 0, 0, 0, [Moves.WALL_JUMP]),
-	StageInfo(STAGE_FALL_DAMAGE, 106, 0, 0, 0, [Moves.DOUBLE_JUMP | Moves.DASH, Moves.DASH | Moves.CHARGED_DASH, Moves.CHARGED_DASH | Moves.DOUBLE_JUMP]), # This level requires 2 fall damage resets
-	StageInfo(STAGE_FM_CITY, 141, 10, 2, 2, [Moves.DOUBLE_JUMP]),
-	StageInfo(STAGE_FM_DOWNTOWN, 142, 10, 2, 2, []),
-	StageInfo(STAGE_FLORIA_HIGHWAY, 143, 10, 2, 2, [Moves.DOUBLE_JUMP | Moves.CHARGED_DASH, Moves.WALL_JUMP]),
-	StageInfo(STAGE_FLORIA_PLANT, 144, 10, 2, 2, [Moves.DOUBLE_JUMP]),
-	StageInfo(STAGE_FLORESTA_BLANCA, 145, 10, 2, 2, [Moves.DOUBLE_JUMP]),
-	StageInfo(STAGE_CASTELA_BLANCA, 152, 0, 2, 2, [Moves.WALL_JUMP, Moves.DASH | Moves.CHARGED_DASH]),
-	StageInfo(STAGE_SHANTORIA_TOWN, 146, 10, 2, 2, [Moves.WALL_JUMP]),
-	StageInfo(STAGE_TECHNORIA_CITY, 147, 10, 2, 2, [Moves.JESTER_DASH]), # You could strafe to the springs manually out of logic
-	StageInfo(STAGE_TERMINAL_DRAGON, 148, 10, 2, 2, [Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH]),
-	StageInfo(STAGE_SCARIA_STROPOLIS, 149, 10, 2, 2, []),
-	StageInfo(STAGE_TITANIC_TOWER, 150, 10, 2, 2, []),
-	StageInfo(STAGE_PLANETARY_STRIPE, 151, 0, 2, 2, []),
-	StageInfo(STAGE_HYPERATH_FLEET, 153, 10, 2, 2, [Moves.CHARGED_DASH | Moves.DOUBLE_JUMP]),
-	StageInfo(STAGE_APOCALYPSE_THRUSTER, 154, 10, 2, 2, [])
+	StageInfo(STAGE_ALPINE_CARRERA, 0, None, 2, 0, [Moves.CHARGED_DASH | Moves.DASH]),
+	StageInfo(STAGE_DOUBLEMOON_VILLA, 1, [
+		[], [Moves.DASH], [], [], [], [], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP], [], [], [Moves.DASH]
+	], 2, 2, []),
+	StageInfo(STAGE_HIGH_RISE_TRACKS, 2, [
+		[], [], [], [], [], [], [], [], [], []
+	], 2, 2, []),
+	StageInfo(STAGE_COLD_DRY_DESERT, 3, None, 2, 0, []), # Can easily be completed by going down the center of the track LOL
+	StageInfo(STAGE_AM_VILLAGE, 4, None, 0, 0, []),
+	StageInfo(STAGE_LOST_RIVIERA, 5, [
+		[], [], [], [], [], [], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP], [], [Moves.CHARGED_DASH, Moves.WALL_JUMP, Moves.DASH, Moves.DOUBLE_JUMP], []
+	], 2, 2, []),
+	StageInfo(STAGE_LOST_RAVINE, 6, [
+		[], [], [], [], [], [Moves.COMBAT], [Moves.COMBAT, Moves.WALL_JUMP], [Moves.COMBAT, Moves.WALL_JUMP], [Moves.COMBAT, Moves.WALL_JUMP], []
+	], 2, 0, [Moves.WALL_JUMP, Moves.COMBAT, Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH]),
+	StageInfo(STAGE_CANYON_ZERO, 7, [
+		[], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP], [], [Moves.WALL_JUMP], [], [Moves.COMBAT], [], [], [], []
+	], 0, 2, []), # Raid Stage
+	StageInfo(STAGE_BEATDOWN_TOWER, 13, None, 2, 0, [Moves.COMBAT]), # Combat Stage
+	StageInfo(STAGE_ARID_HOLE, 11, None, 0, 0, []),
+	StageInfo(STAGE_SPLASH_GROTTO, 12, None, 2, 0, []),
+	StageInfo(STAGE_DISTRICT_5, 8, [
+		[Moves.WALL_JUMP]+TWO_CANCEL, [], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP | Moves.CHARGED_DASH], [], [Moves.ONE_CANCEL], 
+		[Moves.WALL_JUMP, Moves.ONE_CANCEL], [], [Moves.DASH | Moves.CHARGED_DASH], [Moves.DASH | Moves.CHARGED_DASH], []
+	], 2, 2, []),
+	StageInfo(STAGE_DISTRICT_6, 14, [
+		[Moves.WALL_JUMP, Moves.ONE_CANCEL], [], [Moves.WALL_JUMP | Moves.DOUBLE_JUMP], [], [],
+		[], [Moves.DOUBLE_JUMP | Moves.CHARGED_DASH], [], [], []
+	], 2, 2, [Moves.CHARGED_DASH | Moves.DASH]),
+	StageInfo(STAGE_DISTRICT_9, 15, [
+		[Moves.DASH | Moves.CHARGED_DASH], [Moves.DASH], [], [Moves.CHARGED_DASH], [Moves.DASH, Moves.CHARGED_DASH], [Moves.CHARGED_DASH], [], [Moves.ONE_CANCEL], [Moves.ONE_CANCEL] ,[Moves.ONE_CANCEL]
+	], 2, 0, [Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH]),
+	StageInfo(STAGE_DISTRICT_4, 16, None, 2, 0, [Moves.COMBAT]), # Combat Stage
+	StageInfo(STAGE_DISTRICT_79, 17, [
+		[Moves.DOUBLE_JUMP | Moves.CHARGED_DASH], [Moves.COMBAT], [Moves.COMBAT], [Moves.COMBAT], [Moves.COMBAT, Moves.DOUBLE_JUMP],
+		[Moves.COMBAT, Moves.DOUBLE_JUMP], [Moves.COMBAT, Moves.DOUBLE_JUMP], [], [Moves.COMBAT], [Moves.COMBAT]
+	], 2, 2, [Moves.COMBAT, Moves.DOUBLE_JUMP]),
+	StageInfo(STAGE_DOWNTOWN_DISSENT, 10, [
+		[], [], [Moves.DOUBLE_JUMP | Moves.WALL_JUMP], [Moves.ONE_CANCEL], [Moves.CHARGED_DASH], [], [], [Moves.ONE_CANCEL], [Moves.DASH | Moves.CHARGED_DASH], [Moves.DOUBLE_JUMP | Moves.CHARGED_DASH]
+	], 2, 2, [Moves.DOUBLE_JUMP | Moves.WALL_JUMP]),
+	StageInfo(STAGE_RESIDENTIAL_RATTLE, 22, [
+		[], [], [], [Moves.CHARGED_DASH], [Moves.WALL_JUMP | Moves.DOUBLE_JUMP], [], [], [], [], []
+	], 2, 2, []),
+	StageInfo(STAGE_ROADWAY_RALLY, 23, None, 2, 0, []), # Car Stage, don't even need to jump
+	StageInfo(STAGE_STRIKE_SEWERS, 20, [
+		[Moves.WALL_JUMP], [], [Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP],
+		[Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP],
+		[Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP]
+	], 2, 2, [Moves.WALL_JUMP | Moves.CHARGED_DASH | Moves.DOUBLE_JUMP]),
+	StageInfo(STAGE_SQUABBLE_SPILLWAY, 21, None, 0, 0, []),
+	StageInfo(STAGE_NIGHTTIME_PHENOMENA, 18, [
+		[Moves.WALL_JUMP, Moves.DASH], [], [Moves.DOUBLE_JUMP], [], [Moves.COMBAT],
+		[Moves.COMBAT, Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.COMBAT], [Moves.COMBAT], [Moves.COMBAT], [Moves.COMBAT]
+	], 2, 2, [Moves.COMBAT, Moves.DOUBLE_JUMP]), # Truth be told, I forgor where double jump is used. Maybe the one place I got bumped up?
+	StageInfo(STAGE_DROPSHIP_DAYBREAK, 27, None, 0, 0, [Moves.COMBAT]), # Collectation Stage, doubt you could replace combat with anything
+	StageInfo(STAGE_HEAVEN_PARK, 28, None, 2, 0, [Moves.DOUBLE_JUMP | Moves.CHARGED_DASH]), # Timed Stage, idk if these are actually required
+	StageInfo(STAGE_ENDLESS_HALL, 29, [
+		[], [Moves.COMBAT], [Moves.COMBAT], [Moves.COMBAT], [Moves.COMBAT],
+		[Moves.COMBAT], [Moves.COMBAT], [Moves.COMBAT], [], []
+	], 2, 2, [Moves.COMBAT]),
+	StageInfo(STAGE_BALLOON_FIESTA, 30, [
+		[], [], [Moves.JESTER_DASH, Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.JESTER_DASH], [Moves.JESTER_DASH],
+		[Moves.JESTER_DASH, Moves.WALL_JUMP], [Moves.JESTER_DASH], [Moves.JESTER_DASH], [Moves.JESTER_DASH, Moves.DOUBLE_JUMP, Moves.DASH], [Moves.JESTER_DASH]
+	], 2, 0, [Moves.JESTER_DASH, Moves.COMBAT]), # Technically you could substitute Jester Dash for either Wall Jump or Double Jump, but the route's a pain
+	StageInfo(STAGE_AIRSTRIP_MADNESS, 25, [
+		[], [], [], [], [], [], [], [], [], []
+	], 2, 2, []),
+	StageInfo(STAGE_TWO_STAGE_LIFTOFF, 33, None, 2, 0, [Moves.JESTER_DASH]), # Theoretically could remove Jester Dash like in BALLOON FIESTA
+	StageInfo(STAGE_SUBORBITAL_SCRAMBLE, 34, [
+		[Moves.DOUBLE_JUMP | Moves.WALL_JUMP], [], [], [], [], [], [], [], [], [] 
+	], 2, 2, [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.WALL_JUMP]),
+	StageInfo(STAGE_AVIATOR_HIGHWAY, 31, None, 2, 0, []),
+	StageInfo(STAGE_MAYDAY_MIDDAY, 32, None, 2, 0, [Moves.JESTER_DASH]),
+	StageInfo(STAGE_DEEP_DESCENT, 26, [
+		[], [Moves.WALL_JUMP, Moves.DASH, Moves.DOUBLE_JUMP], [Moves.JESTER_DASH], [Moves.JESTER_DASH, Moves.ONE_CANCEL], [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.WALL_JUMP, Moves.ONE_CANCEL],
+		[Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.WALL_JUMP], [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.WALL_JUMP], [], [Moves.JESTER_DASH, Moves.ONE_CANCEL], []
+	], 2, 0, [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH, Moves.DOUBLE_JUMP | Moves.WALL_JUMP]),
+	StageInfo(STAGE_SLOPE_JUMPING, 100, None, 0, 0, []),
+	StageInfo(STAGE_JESTER_DASH, 101, None, 0, 0, [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH]),
+	StageInfo(STAGE_CHARGED_JESTER_DASH, 102, None, 0, 0, [Moves.CHARGED_DASH, Moves.DOUBLE_JUMP]),
+	StageInfo(STAGE_HIGH_SPEEDS, 103, None, 0, 0, [Moves.DOUBLE_JUMP]),
+	StageInfo(STAGE_WALL_JUMPING, 104, None, 0, 0, [Moves.WALL_JUMP]),
+	StageInfo(STAGE_WALL_WALKING, 105, None, 0, 0, [Moves.WALL_JUMP]),
+	StageInfo(STAGE_FALL_DAMAGE, 106, None, 0, 0, [Moves.DOUBLE_JUMP | Moves.DASH, Moves.DASH | Moves.CHARGED_DASH, Moves.CHARGED_DASH | Moves.DOUBLE_JUMP]), # This level requires 2 fall damage resets
+	StageInfo(STAGE_FM_CITY, 141, [
+		[], [], [Moves.DOUBLE_JUMP], [Moves.DOUBLE_JUMP], [Moves.DOUBLE_JUMP],
+		[Moves.DOUBLE_JUMP], [Moves.CHARGED_DASH, Moves.DASH, Moves.DOUBLE_JUMP, Moves.WALL_JUMP, Moves.JESTER_DASH], [Moves.CHARGED_DASH],
+		[Moves.CHARGED_DASH, Moves.DOUBLE_JUMP, Moves.DASH], [Moves.CHARGED_DASH]
+	], 2, 2, [Moves.DOUBLE_JUMP]),
+	StageInfo(STAGE_FM_DOWNTOWN, 142, [
+		[], [], [], [], [], [Moves.ONE_CANCEL | Moves.WALL_JUMP], [], [], [], []
+	], 2, 2, []),
+	StageInfo(STAGE_FLORIA_HIGHWAY, 143, [
+		[Moves.WALL_JUMP, Moves.DOUBLE_JUMP, Moves.CHARGED_DASH | Moves.DASH], [Moves.DOUBLE_JUMP], [Moves.DOUBLE_JUMP],
+		[Moves.DOUBLE_JUMP | Moves.CHARGED_DASH, Moves.WALL_JUMP], [Moves.CHARGED_DASH, Moves.WALL_JUMP],
+		[Moves.DOUBLE_JUMP | Moves.CHARGED_DASH, Moves.WALL_JUMP], [Moves.DOUBLE_JUMP | Moves.CHARGED_DASH, Moves.WALL_JUMP],
+		[Moves.DOUBLE_JUMP, Moves.DASH, Moves.CHARGED_DASH, Moves.WALL_JUMP], [Moves.DOUBLE_JUMP | Moves.CHARGED_DASH, Moves.WALL_JUMP],
+		[Moves.DOUBLE_JUMP | Moves.CHARGED_DASH, Moves.WALL_JUMP]
+	], 2, 2, [Moves.DOUBLE_JUMP | Moves.CHARGED_DASH, Moves.WALL_JUMP]),
+	StageInfo(STAGE_FLORIA_PLANT, 144, [
+		[Moves.CHARGED_DASH], [], [Moves.WALL_JUMP, Moves.DASH, Moves.DOUBLE_JUMP, Moves.CHARGED_DASH], [], [Moves.WALL_JUMP]+TWO_CANCEL,
+		[Moves.DOUBLE_JUMP | Moves.WALL_JUMP, Moves.DASH, Moves.CHARGED_DASH], [Moves.DOUBLE_JUMP | Moves.WALL_JUMP, Moves.CHARGED_DASH],
+		[Moves.DOUBLE_JUMP | Moves.WALL_JUMP], [Moves.DOUBLE_JUMP | Moves.WALL_JUMP, Moves.DASH], [Moves.DOUBLE_JUMP | Moves.WALL_JUMP]
+	], 2, 2, [Moves.DOUBLE_JUMP | Moves.WALL_JUMP]),
+	StageInfo(STAGE_FLORESTA_BLANCA, 145, [
+		[], [], [], [], [Moves.DOUBLE_JUMP], [Moves.DOUBLE_JUMP], [Moves.DOUBLE_JUMP, Moves.WALL_JUMP], [Moves.DOUBLE_JUMP], [], []
+	], 2, 2, [Moves.DOUBLE_JUMP]),
+	StageInfo(STAGE_CASTELA_BLANCA, 152, None, 2, 2, [Moves.WALL_JUMP, Moves.DASH | Moves.CHARGED_DASH]),
+	StageInfo(STAGE_SHANTORIA_TOWN, 146, [
+		[Moves.CHARGED_DASH], [Moves.CHARGED_DASH], [], [Moves.CHARGED_DASH, Moves.DOUBLE_JUMP], [Moves.DASH | Moves.CHARGED_DASH],
+		[Moves.DOUBLE_JUMP], [], [Moves.CHARGED_DASH, Moves.DASH], [], []
+	], 2, 2, []),
+	StageInfo(STAGE_TECHNORIA_CITY, 147, [
+		[Moves.WALL_JUMP, Moves.ONE_CANCEL], [Moves.JESTER_DASH], [Moves.JESTER_DASH], [Moves.JESTER_DASH], [Moves.JESTER_DASH],
+		[Moves.JESTER_DASH], [Moves.JESTER_DASH], [Moves.JESTER_DASH], [Moves.JESTER_DASH, Moves.DOUBLE_JUMP | Moves.WALL_JUMP], [Moves.JESTER_DASH]
+	], 2, 2, [Moves.JESTER_DASH]), # You could strafe to the springs manually out of logic
+	StageInfo(STAGE_TERMINAL_DRAGON, 148, [
+		[], [], [Moves.ONE_CANCEL], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP, Moves.CHARGED_DASH | Moves.DASH], [Moves.ONE_CANCEL],
+		[Moves.ONE_CANCEL], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP], [Moves.ONE_CANCEL], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP, Moves.CHARGED_DASH, Moves.DASH], [Moves.ONE_CANCEL]
+	], 2, 2, [Moves.DOUBLE_JUMP | Moves.DASH | Moves.CHARGED_DASH]),
+	StageInfo(STAGE_SCARIA_STROPOLIS, 149, [
+		[], [], [], [], [], [Moves.CHARGED_DASH], [], [], [Moves.CHARGED_DASH, Moves.DOUBLE_JUMP, Moves.WALL_JUMP], []
+	], 2, 2, []),
+	StageInfo(STAGE_TITANIC_TOWER, 150, [
+		[], [], [], [], [], [], [], [], [], [] # To be fair, it's very vertical
+	], 2, 2, []),
+	StageInfo(STAGE_PLANETARY_STRIPE, 151, None, 2, 2, []),
+	StageInfo(STAGE_HYPERATH_FLEET, 153, [
+		# ok how does the game normally expect #3?
+		[Moves.WALL_JUMP, Moves.ONE_CANCEL], [], [Moves.DASH], [Moves.ONE_CANCEL], [Moves.ONE_CANCEL, Moves.WALL_JUMP],
+		[Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.WALL_JUMP | Moves.DOUBLE_JUMP], [Moves.CHARGED_DASH | Moves.DOUBLE_JUMP],
+		[Moves.CHARGED_DASH | Moves.DOUBLE_JUMP], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP, Moves.CHARGED_DASH | Moves.DASH]
+	], 2, 2, [Moves.CHARGED_DASH | Moves.DOUBLE_JUMP]),
+	StageInfo(STAGE_APOCALYPSE_THRUSTER, 154, [
+		[Moves.WALL_JUMP, Moves.ONE_CANCEL], [], [Moves.CHARGED_DASH], [], [],
+		[Moves.DASH | Moves.CHARGED_DASH], [], [Moves.WALL_JUMP, Moves.DOUBLE_JUMP], [Moves.WALL_JUMP, Moves.ONE_CANCEL], []
+	], 2, 2, [])
 ]
 
-utopia = StageInfo(STAGE_UTOPIA_SHELTER, 50, 0, 0, 0, [Moves.COMBAT, Moves.CHARGED_DASH, Moves.WALL_JUMP, Moves.DASH, Moves.DOUBLE_JUMP, Moves.FARK, Moves.SFARX]) # Ending Stage
+utopia = StageInfo(STAGE_UTOPIA_SHELTER, 50, None, 0, 0, [Moves.COMBAT, Moves.CHARGED_DASH, Moves.WALL_JUMP, Moves.DASH, Moves.DOUBLE_JUMP, Moves.FARK, Moves.SFARX]) # Ending Stage
 
 bosses = [
-	StageInfo(BOSS_SAW_MAN, 9, 0, 2, 0, [Moves.COMBAT]),
-	StageInfo(BOSS_ON_THE_RUN, 24, 0, 0, 0, [Moves.COMBAT]),
-	StageInfo(BOSS_THROWBACK, 37, 0, 2, 0, [Moves.COMBAT]),
-	StageInfo(BOSS_MECHA_MADNESS, 38, 0, 2, 0, [Moves.COMBAT])
+	StageInfo(BOSS_SAW_MAN, 9, None, 2, 0, [Moves.COMBAT]),
+	StageInfo(BOSS_ON_THE_RUN, 24, None, 0, 0, [Moves.COMBAT]),
+	StageInfo(BOSS_THROWBACK, 37, None, 2, 0, [Moves.COMBAT]),
+	StageInfo(BOSS_MECHA_MADNESS, 38, None, 2, 0, [Moves.COMBAT])
 ]
 
 shop = [
@@ -189,8 +277,9 @@ class LocationState:
 		if stage.score:
 			self.add_location_to_id(stage.name, self.SCORESANITY_GOLD_LOCATIONS, "Gold Score Medal", stagespace + 3)
 			self.add_location_to_id(stage.name, self.SCORESANITY_DIA_LOCATIONS, "Diamond Score Medal", stagespace + 4)
-		for i in range(stage.explore):
-			self.add_location_to_id(stage.name, self.EXPLORESANITY_LOCATIONS, f"{MEDAL_NAMES[i]} Exploration Medal", stagespace + 5 + i)
+		if stage.explore:
+			for i in range(len(stage.explore)):
+				self.add_location_to_id(stage.name, self.EXPLORESANITY_LOCATIONS, f"{MEDAL_NAMES[i]} Exploration Medal", stagespace + 5 + i)
 	
 	def add_loc_to_dict(self, stage, sanity, locs):
 		if stage.name in sanity:

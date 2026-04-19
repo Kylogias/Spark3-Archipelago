@@ -32,6 +32,7 @@ class Speedsanity(Choice):
 class Scoresanity(Choice):
 	"""
 	Adds the 28 gold and/or 28 diamond score medals to the location pool.
+	Logic requires level completion plus Combat, though it may be possible to obtain some medals without combat
 	"""
 	display_name = "ScoreSanity"
 	
@@ -44,7 +45,6 @@ class Scoresanity(Choice):
 class Exploresanity(Toggle):
 	"""
 	Adds the 300 exploration medals as checks
-	Note: Logic isn't implemented for these yet
 	"""
 	display_name = "ExploreSanity"
 

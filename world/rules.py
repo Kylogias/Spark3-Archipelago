@@ -58,7 +58,10 @@ class RulesState:
 				# Shouldn't need more than combat for score medals
 				if loc.name.endswith("Gold Score Medal"): self.parse_location_rules(world, loc, stage_data.required_completion + [Moves.COMBAT])
 				if loc.name.endswith("Diamond Score Medal"): self.parse_location_rules(world, loc, stage_data.required_completion + [Moves.COMBAT])
-			#	if loc.name.endswith(f"{MEDAL_NAMES[i]} Exploration Medal"): pass
+			
+				if stage_data.explore:
+					for i in range(len(stage_data.explore)):
+						if loc.name.endswith(f"{MEDAL_NAMES[i]} Exploration Medal"): self.parse_location_rules(world, loc, stage_data.explore[i])
 
 		world.multiworld.completion_condition[world.player] = lambda state: state.has("Victory", world.player)
 	#	raise ValueError
