@@ -11,7 +11,7 @@ namespace Sparkipelago {
 			PlayerPrefs.SetInt("Bits" + SaveSlot.Slot, ScoreManager.Bits);
 		}
 		
-		public static void handleItem(ItemInfo item) {
+		public static void handleItem(ItemInfo item, bool catchup) {
 			Save.SaveFile save = Save.Saves[Save.CurrentSaveSlot];
 			
 			switch ((ItemIds)(item.ItemId-(long)ItemIds.PREFIX)) {
@@ -23,10 +23,10 @@ namespace Sparkipelago {
 					ScoreManager.AddMultiplier(0.1f);
 					break;
 				case ItemIds.HEALTH_CAPSULE: // 1 health
-					PlayerHealthAndStats.PlayerHP += 1;
+					if (!catchup) PlayerHealthAndStats.PlayerHP += 1;
 					break;
 				case ItemIds.ENERGY_CAPSULE: PlayerHealthAndStats.AddEnergy(10); break; // 10 energy
-				case ItemIds.BIT_BUBBLE: addBits(30); break; // 30 bits
+				case ItemIds.BIT_BUBBLE: if (!catchup) addBits(30); break; // 30 bits
 				case ItemIds.ENERGY_BUBBLE: PlayerHealthAndStats.AddEnergy(20); break; // 20 energy
 				case ItemIds.NIGHTMARE_TRAP: break;
 				case ItemIds.LASER_TRAP: break;
@@ -54,10 +54,10 @@ namespace Sparkipelago {
 				case ItemIds.RAIL_BOOST: save.RailBoost = true; break;
 				case ItemIds.REGEN_BREAKING: save.RegenBreak = true; break;
 				case ItemIds.JESTER_SWIPE: save.JesterSwipe = true; save.JesterSwipeEnabled = true; break;
-				case ItemIds.REAPER: save.Power_Reaper = true; save.Power_Reaper_Unlocked = true; save.Power_Reaper_Unlock_Notif = true; break;
-				case ItemIds.FLOAT: save.Power_Float = true; save.Power_Float_Unlocked = true; save.Power_Float_Unlock_Notif = true; break;
-				case ItemIds.FARK: save.Power_Fark = true; save.Power_Fark_Unlocked = true; save.Power_Fark_Unlock_Notif = true; break;
-				case ItemIds.SFARX: save.Power_Sfarx = true; save.Power_Sfarx_Unlocked = true; save.Power_Sfarx_Unlock_Notif = true; break;
+				case ItemIds.REAPER: save.Power_Reaper = true; break;
+				case ItemIds.FLOAT: save.Power_Float = true; break;
+				case ItemIds.FARK: save.Power_Fark = true; break;
+				case ItemIds.SFARX: save.Power_Sfarx = true; break;
 			}
 		}
 		

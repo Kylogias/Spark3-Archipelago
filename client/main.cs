@@ -111,14 +111,19 @@ namespace Sparkipelago {
 			}
 			
 			currentSession = ArchipelagoSessionFactory.CreateSession(ip.Value, port.Value);
-			currentSession.Items.ItemReceived += HandleItem;
 			LoginResult result;
 			if (password.Value.Length != 0) result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", username.Value, ItemsHandlingFlags.AllItems, password: password.Value);
 			else result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", username.Value, ItemsHandlingFlags.AllItems);
 			
 			if (result.Successful) {
+				currentSession.Items.ItemReceived += HandleItem;
 				slotData = ((LoginSuccessful)result).SlotData;
 				currentSaveSlot = Save.CurrentSaveSlot;
+				
+				foreach (ItemInfo item in currentSession.Items.AllItemsReceived) {
+					onItem(item, true);
+				}
+				while (currentSession.Items.Any()) currentSession.Items.DequeueItem();
 				
 				musicRando = (int)(long)slotData["musicchoice"];
 				musicSeed = (int)(long)slotData["musicseed"];
@@ -130,17 +135,20 @@ namespace Sparkipelago {
 			}
 		}
 		
+		private static void onItem(ItemInfo item, bool catchup)  {
+				MelonLogger.Msg("Receiving {0} with ID {1} (index {2})", item.ItemDisplayName, item.ItemId, item.ItemId-(long)ItemIds.PREFIX);
+				itemState[item.ItemId-(long)ItemIds.PREFIX] += 1;
+				MelonLogger.Msg("Handling Item");
+				Items.handleItem(item, catchup);
+		}
+		
 		public static void HandleItem(ReceivedItemsHelper itemHandler) {
 			while (itemHandler.Any()) {
 				int oldIndex = itemHandler.Index;
-				ItemInfo item = itemHandler.DequeueItem();
-				MelonLogger.Msg("Receiving {0} with ID {1} (index {2})", item.ItemDisplayName, item.ItemId, item.ItemId-(long)ItemIds.PREFIX);
 				if (oldIndex <= instance.currentItem) continue;
+				ItemInfo item = itemHandler.DequeueItem();
 				instance.currentItem = oldIndex;
-				
-				itemState[item.ItemId-(long)ItemIds.PREFIX] += 1;
-				MelonLogger.Msg("Handling Item");
-				Items.handleItem(item);
+				onItem(item, false);
 			}
 		}
 		
@@ -162,6 +170,10 @@ namespace Sparkipelago {
 			
 			if (sceneName == "[CUTSCENE 16 - ENDING CUTSCENE]") {
 				currentSession.SetGoalAchieved();
+			}
+			
+			if (sceneName == "[STAGE 02 - BOSS FLINT]" || sceneName == "[STAGE 03 - BOSS FLINT SECOND]") {
+				SceneController.LoadMapScreen();
 			}
 			
 			if (sceneName == "[WORLD MAP]") {

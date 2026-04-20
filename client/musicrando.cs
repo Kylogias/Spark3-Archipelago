@@ -22,11 +22,16 @@ namespace Sparkipelago {
 			private static void Prefix(StageMusicControl __instance, int ___frame, ref bool ___Started) {
 				if (Sparkipelago.musicRando != (int)MusicType.VANILLA) {
 					if (___frame != __instance.FrameToStartMusicAt) return;
-					___Started = true;
 					string musicPath = Path.Combine(Application.dataPath, "../apmusic");
 					DirectoryInfo dir = new DirectoryInfo(musicPath);
 					FileInfo[] info = dir.GetFiles("*.ogg");
-		
+					
+					if (info.Length == 0) {
+						Sparkipelago.musicRando = (int)MusicType.VANILLA;
+						return;
+					}
+					___Started = true;
+					
 					System.Random rnd;
 					if (Sparkipelago.musicRando == (int)MusicType.STAGE) {
 						rnd = new System.Random(Sparkipelago.musicSeed);
@@ -44,7 +49,7 @@ namespace Sparkipelago {
 			private static void Postfix(StageMusicControl __instance, bool ___Started) {
 				if (Sparkipelago.musicRando == (int)MusicType.LOOP) __instance.MainSource.loop = false;
 				
-				if (!__instance.MainSource.isPlaying && Sparkipelago.musicRando == (int)MusicType.LOOP && !loadingMusic) {
+				if (!__instance.MainSource.isPlaying && ___Started && Sparkipelago.musicRando == (int)MusicType.LOOP && !loadingMusic) {
 					string musicPath = Path.Combine(Application.dataPath, "../apmusic");
 					DirectoryInfo dir = new DirectoryInfo(musicPath);
 					FileInfo[] info = dir.GetFiles("*.ogg");
