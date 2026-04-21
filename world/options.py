@@ -57,8 +57,10 @@ class FreedomCount(Range):
 
 	range_start = 0
 	range_end = 100
+	
+	default = 20
 
-class FreedomRequired(NamedRange):
+class FreedomRequired(Range):
 	"""
 	What's the required percentage of freedom medals to unlock Utopia Shelter
 	Note that you still need Fark and Sfarx to unlock Utopia Shelter
@@ -67,9 +69,8 @@ class FreedomRequired(NamedRange):
 	
 	range_start = 0
 	range_end = 100
-	special_range_names = {
-		"open_world": 0
-	}
+	
+	default = 100
 
 class MusicChoice(Choice):
 	"""

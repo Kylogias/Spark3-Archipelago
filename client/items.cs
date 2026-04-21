@@ -108,6 +108,7 @@ namespace Sparkipelago {
 		private static class DoubleJumpPatch {
 			private static void Prefix(Action01_Jump __instance) {
 				if (Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] == 0) __instance.DoubleJumpAvailable = false;
+				if (Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] == 0) __instance.OnWall = false;
 			}
 		}
 		
