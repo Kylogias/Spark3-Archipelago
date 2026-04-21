@@ -36,3 +36,25 @@ Just fake the freedom medal count :)
 
 WorldMedal.OnTriggerEnter
 	send check based on WorldMedal.MedalId and Save.CurrentStageIndex
+
+BubbleSanity
+	Get all MonitorData components on stage load
+	Monitors_Interaction.OnTriggerEnter
+
+CapsuleSanity
+	Check if RotateRing is used elsewhere?
+	If not, get all RotateRing on stage load
+	Objects_Interaction.BasicCollectables
+
+Collectation Checks
+	Blue coins in collectathon stages
+	CollectableCoin.CollectableCoinList
+
+CheckpointSanity
+	Look for all CheckPointData for amount of check points
+	LevelProgressControl.SetCheckPoint
+
+Spark 2 Option
+	43 checks without (yikes)
+	Make collectathon coins default?
+	Raid stage goals?

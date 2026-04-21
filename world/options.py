@@ -7,6 +7,13 @@ class Shopsanity(Toggle):
 	"""
 	display_name = "ShopSanity"
 
+class Spark2Stages(DefaultOnToggle):
+	"""
+	Adds the 14 Spark 2 stages
+	"""
+	
+	display_name = "Spark 2 Stages"
+
 class AbilityRando(DefaultOnToggle):
 	"""
 	Randomize the abilities Spark normally can use into the item pool
@@ -17,9 +24,7 @@ class AbilityRando(DefaultOnToggle):
 class Speedsanity(Choice):
 	"""
 	Adds the 44 gold and/or 44 diamond speed medals to the location pool.
-	WARNING: Due to the nature of these medals, they are hard to logically test.
-		Logically, they require every ability to be unlocked. It's very possible to accidentally get these checks out of logic
-		It's also possible that they require items from the shop
+	WARNING: Logic Not Implemented
 	"""
 	display_name = "SpeedSanity"
 	
@@ -32,7 +37,7 @@ class Speedsanity(Choice):
 class Scoresanity(Choice):
 	"""
 	Adds the 28 gold and/or 28 diamond score medals to the location pool.
-	Logic requires level completion plus Combat, though it may be possible to obtain some medals without combat
+	WARNING: Logic Not Implemented
 	"""
 	display_name = "ScoreSanity"
 	
@@ -51,14 +56,14 @@ class Exploresanity(Toggle):
 class FreedomCount(Range):
 	"""
 	How many freedom medals to put into the item pool.
-	Under minimal settings (Ability Rando + No Sanities), the maximum is 24 (57 stages, 26 shop unlocks, 7 abilities)
+	Under minimal settings (Ability Rando + No Sanities + No Spark 2), the maximum is 10 (43 stages, 26 shop unlocks, 7 abilities)
 	"""
 	display_name = "Freedom Medal Count"
 
 	range_start = 0
 	range_end = 100
 	
-	default = 20
+	default = 10
 
 class FreedomRequired(Range):
 	"""
@@ -88,6 +93,7 @@ class MusicChoice(Choice):
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
+	spark2_stages: Spark2Stages
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
 	shopsanity: Shopsanity

@@ -153,8 +153,8 @@ namespace Sparkipelago {
 		}
 		
 		public static void HandleShopScout(Dictionary<long, ScoutedItemInfo> scouted) {
-			long id = 16295300000 + 6000;
 			for (int i = 0; i < 26; i++) {
+				long id = APShared.shop[i].id;
 				if (scouted.ContainsKey(id)) shopItems[i] = string.Format("{0} for {1}", scouted[id].ItemName, scouted[id].Player.Name);
 				id += 1;
 			}
@@ -172,7 +172,7 @@ namespace Sparkipelago {
 				currentSession.SetGoalAchieved();
 			}
 			
-			if (sceneName == "[STAGE 02 - BOSS FLINT]" || sceneName == "[STAGE 03 - BOSS FLINT SECOND]") {
+			if (sceneName == "[CUTSCENE 02 - FLINT CUTSCENE]" || sceneName == "[CUTSCENE 04 - FLINT SECOND CUTSCENE]") {
 				SceneController.LoadMapScreen();
 			}
 			
@@ -186,10 +186,8 @@ namespace Sparkipelago {
 
 			if (sceneName == "[SHOP]") {
 				long[] scout = new long[26];
-				long id = 16295300000 + 6000;
 				for (int i = 0; i < 26; i++) { // 26 shop locations
-					scout[i] = id;
-					id += 1;
+					scout[i] = APShared.shop[i].id;
 				}
 				currentSession.Locations.ScoutLocationsAsync(HandleShopScout, scout);
 			}

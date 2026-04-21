@@ -3,5 +3,7 @@ nob.old
 sparkdir
 Archipelago
 world/__pycache__
+world/apshared.py
+client/apshared.cs
 music
 mod

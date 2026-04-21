@@ -1,67 +1,110 @@
 from BaseClasses import CollectionState
-from worlds.generic.Rules import add_rule, set_rule
+from rule_builder.rules import Has, HasAny, And, Or, True_
 
-from .locations import Moves, stages, bosses, utopia
 from .items import Spark3Item
 from .constants import *
 
+from enum import Enum
+
 from Utils import visualize_regions
+
+class RuleToken(Enum):
+	UNK = 0
+	LPAREN  = 1
+	RPAREN  = 2
+	AND     = 3
+	OR      = 4
+	
+	JESTER_DASH  = 5
+	DASH         = 6
+	CHARGED_DASH = 7
+	DOWN_DASH    = 8
+	WALL_JUMP    = 9
+	DOUBLE_JUMP  = 10
+	COMBAT       = 11
+	
+	FARK   = 12
+	SFARX  = 13
+	FLOAT  = 14
+	REAPER = 15
+	
+	ONE_CANCEL = 16
+	TWO_CANCEL = 17
+
+STRING_TO_TOKEN = ["asdf", "(", ")", "+", "|", "jd", "da", "cd", "dd", "wj", "dj", "co", "fa", "sf", "fl", "re", "1c", "2c"]
 
 class RulesState:
 	def __init__(self):
 		self.FREEDOM_REQUIREMENTS = [4, 8, 12, 16, 20]
 	
+	def add_to_rule(self, op, rule, add):
+		print(f"{rule} {op} {add}")
+		if op == RuleToken.UNK: return add
+		if op == RuleToken.AND: return And(rule, add)
+		if op == RuleToken.OR: return Or(rule, add)
+	
+	def recurse_tokens(self, tokens):
+		op = RuleToken.UNK
+		rule = None
+		print("New Rule!")
+		while len(tokens):
+			token = tokens.pop(0)
+			print(f"\t{token}")
+			match token:
+				case RuleToken.LPAREN: rule = self.add_to_rule(op, rule, self.recurse_tokens(tokens))
+				case RuleToken.RPAREN: return rule
+				case RuleToken.AND: op = RuleToken.AND
+				case RuleToken.OR: op = RuleToken.OR
+				case RuleToken.JESTER_DASH: rule = self.add_to_rule(op, rule, Has(JESTER_DASH))
+				case RuleToken.DASH: rule = self.add_to_rule(op, rule, Has(DASH))
+				case RuleToken.CHARGED_DASH: rule = self.add_to_rule(op, rule, Has(CHARGED_DASH))
+				case RuleToken.DOWN_DASH: rule = self.add_to_rule(op, rule, Has(DOWN_DASH))
+				case RuleToken.WALL_JUMP: rule = self.add_to_rule(op, rule, Has(WALL_JUMP))
+				case RuleToken.DOUBLE_JUMP: rule = self.add_to_rule(op, rule, Has(DOUBLE_JUMP))
+				case RuleToken.COMBAT: rule = self.add_to_rule(op, rule, Has(COMBAT))
+				case RuleToken.FARK: rule = self.add_to_rule(op, rule, Has(FARK))
+				case RuleToken.SFARX: rule = self.add_to_rule(op, rule, Has(SFARX))
+				case RuleToken.FLOAT: rule = self.add_to_rule(op, rule, Has(FLOAT))
+				case RuleToken.REAPER: rule = self.add_to_rule(op, rule, Has(REAPER))
+				case RuleToken.ONE_CANCEL: rule = self.add_to_rule(op, rule, HasAny(DOUBLE_JUMP, CHARGED_DASH, DASH))
+				case RuleToken.TWO_CANCEL: rule = self.add_to_rule(op, rule, And(HasAny(DOUBLE_JUMP, CHARGED_DASH), HasAny(CHARGED_DASH, DASH), HasAny(DASH, DOUBLE_JUMP)))
+		if rule == None:
+			rule = True_()
+		print(f"\t{rule}")
+		return rule
+	
 	def parse_location_rules(self, world, location, rules):
-		for rule in rules:
-			parsed = []
-			if rule & Moves.JESTER_DASH: parsed.append(JESTER_DASH)
-			if rule & Moves.DASH: parsed.append(DASH)
-			if rule & Moves.CHARGED_DASH: parsed.append(CHARGED_DASH)
-			if rule & Moves.DOWN_DASH: parsed.append(DOWN_DASH)
-			if rule & Moves.WALL_JUMP: parsed.append(WALL_JUMP)
-			if rule & Moves.DOUBLE_JUMP: parsed.append(DOUBLE_JUMP)
-			if rule & Moves.COMBAT: parsed.append(COMBAT)
-			if rule & Moves.FARK: parsed.append(FARK)
-			if rule & Moves.SFARX: parsed.append(SFARX)
-			
-			add_rule(location, lambda state, r=parsed: state.has_any(r, world.player))
-			print(f"\t{parsed}")
+		i = 0
+		tokens = []
+		while i < len(rules):
+			for tok in range(len(STRING_TO_TOKEN)):
+				if rules[i:].startswith(STRING_TO_TOKEN[tok]):
+					tokens.append(RuleToken(tok))
+					i += len(STRING_TO_TOKEN[tok])
+					break
+		world.set_rule(location, self.recurse_tokens(tokens))
 	
 	def set_shop_rules(self, world):
-		set_rule(world.get_entrance(f"Gate 0 to {SHOP_MOVES}"), lambda state: state.has(SHOP_MOVES, world.player))
-		set_rule(world.get_entrance(f"Gate 0 to {SHOP_POWERS}"), lambda state: state.has(SHOP_POWERS, world.player))
-		set_rule(world.get_entrance(f"Gate 0 to {SHOP_UPGRADES}"), lambda state: state.has(SHOP_UPGRADES, world.player))
-		set_rule(world.get_entrance(f"Gate 0 to {SHOP_CHARACTERS}"), lambda state: state.has(SHOP_CHARACTERS, world.player))
+		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_MOVES}"), Has(SHOP_MOVES))
+		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_POWERS}"), Has(SHOP_POWERS))
+		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_UPGRADES}"), Has(SHOP_UPGRADES))
+		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_CHARACTERS}"), Has(SHOP_CHARACTERS))
 	
 	def set_stage_rules(self, world):
 		for i in range(4):
 			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
-			set_rule(gate_entrance, lambda state, idx=i: state.has(COMBAT, world.player) and state.has(FREEDOM_MEDAL, world.player, self.FREEDOM_REQUIREMENTS[idx]))
-		utopia_entrance = world.get_entrance(f"Entrance to {STAGE_UTOPIA_SHELTER}")
-		set_rule(utopia_entrance, lambda state: state.has(FREEDOM_MEDAL, world.player, self.FREEDOM_REQUIREMENTS[4]))
+			world.set_rule(gate_entrance, Has(COMBAT) & Has(FREEDOM_MEDAL, count=self.FREEDOM_REQUIREMENTS[i]))
+		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
+		world.set_rule(utopia_entrance, Has(FREEDOM_MEDAL, count=self.FREEDOM_REQUIREMENTS[4]))
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			stage_region = world.location_state.stage_regions[stage_name]
 			stage_data = stage_region[1]
 			stage_region = stage_region[0]
 			
-			print(stage_name)
-			for loc in stage_region.get_locations():
-				print(loc.name)
-			#	if STAGE_UTOPIA_SHELTER in loc.name: continue
-				if loc.name.endswith("Completion"): self.parse_location_rules(world, loc, stage_data.required_completion)
-				
-				# I'm not sure what's required for speed medals so require everything :)
-				if loc.name.endswith("Gold Speed Medal"): self.parse_location_rules(world, loc, [Moves.JESTER_DASH, Moves.DASH, Moves.CHARGED_DASH, Moves.DOWN_DASH, Moves.WALL_JUMP, Moves.DOUBLE_JUMP, Moves.COMBAT])
-				if loc.name.endswith("Diamond Speed Medal"): self.parse_location_rules(world, loc, [Moves.JESTER_DASH, Moves.DASH, Moves.CHARGED_DASH, Moves.DOWN_DASH, Moves.WALL_JUMP, Moves.DOUBLE_JUMP, Moves.COMBAT])
-				
-				# Shouldn't need more than combat for score medals
-				if loc.name.endswith("Gold Score Medal"): self.parse_location_rules(world, loc, stage_data.required_completion + [Moves.COMBAT])
-				if loc.name.endswith("Diamond Score Medal"): self.parse_location_rules(world, loc, stage_data.required_completion + [Moves.COMBAT])
-			
-				if stage_data.explore:
-					for i in range(len(stage_data.explore)):
-						if loc.name.endswith(f"{MEDAL_NAMES[i]} Exploration Medal"): self.parse_location_rules(world, loc, stage_data.explore[i])
+			for check in stage_data["checks"]:
+				if check["sanity"] in world.location_state.sanities:
+					loc = world.get_location(f"{stage_data['name']} {check['name']}")
+					self.parse_location_rules(world, loc, check['requires'])
 
 		world.multiworld.completion_condition[world.player] = lambda state: state.has("Victory", world.player)
-	#	raise ValueError

@@ -5,14 +5,8 @@ using Rewired;
 
 namespace Sparkipelago {
 	class Locations {
-		[HarmonyPatch(typeof(WorldMedal), "SetExploreMedal")]
-		private static class WorldMedalPatch {
-			private static void Postfix(int medal) {
-				MelonLogger.Msg("Sending " + Save.CurrentStageIndex.ToString() + " Medal " + medal.ToString());
-				sendLocationCheck(Save.CurrentStageIndex, medal+5);
-			}
-		}
 		
+		static string[] MEDALNAMES = {"CYAN", "GREEN", "YELLOW", "RED", "MAGENTA", "PURPLE", "BLUE", "GREY", "WHITE", "BROWN"};
 		
 		[HarmonyPatch(typeof(ShopItenDetails), "PurchaseIten")]
 		private static class PurchasePatch {
@@ -27,7 +21,7 @@ namespace Sparkipelago {
 				if (isChecking && s.Bits >= __instance.BitsCost) {
 					if (__instance.Unlocked) s.Bits -= __instance.BitsCost;
 					
-					Locations.sendLocationCheck(300, getItenIndex(__instance));
+					Locations.sendLocationCheck(getItenIndex(__instance), "__shop");
 				}
 				
 				if (!canCheck && !__instance.Unlocked) {
@@ -112,30 +106,58 @@ namespace Sparkipelago {
 			return idx;
 		}
 		
-		public static void sendLocationCheck(int level, int sub) {
-			long id = 16295300000 + ((long)level * 20) + sub;
-			Sparkipelago.currentSession.Locations.CompleteLocationChecks(id);
+		public static void sendLocationCheck(int level, string check) {
+			if (check == "__shop") {
+				Sparkipelago.currentSession.Locations.CompleteLocationChecks(APShared.shop[level].id);
+			} else {
+				bool foundStage = false;
+				bool foundCheck = false;
+				foreach (APStageData stage in APShared.stages) {
+					if (stage.id == level) {
+						foreach (APStageCheck ch in stage.checks) {
+							if (ch.name == check) {
+								Sparkipelago.currentSession.Locations.CompleteLocationChecks(ch.id);
+								foundCheck = true;
+								break;
+							}
+						}
+						foundStage = true;
+						break;
+					}
+				}
+				
+				if (!foundStage) MelonLogger.Msg("Unable to find stage {0}", level);
+				if (!foundCheck) MelonLogger.Msg("Unable to find {0} check {1}", level, check);
+			}
 		}
 		
 		public static void onLevelComplete(int idx) {
 			MelonLogger.Msg("Send Location For Level " + idx.ToString());
-			sendLocationCheck(idx, 0);
+			sendLocationCheck(idx, "COMPLETION");
 			Save.SaveFile savefile = Save.Saves[Save.CurrentSaveSlot];
 			if (savefile.SpeedGoldMedals[idx]) {
 				MelonLogger.Msg("Send Gold Speed");
-				sendLocationCheck(idx, 1);
+				sendLocationCheck(idx, "GOLD SPEED MEDAL");
 			}
 			if (savefile.SpeedDiaMedals[idx]) {
 				MelonLogger.Msg("Send Diamond Speed");
-				sendLocationCheck(idx, 2);
+				sendLocationCheck(idx, "DIAMOND SPEED MEDAL");
 			}
 			if (savefile.ScoreGoldMedals[idx]) {
 				MelonLogger.Msg("Send Gold Score");
-				sendLocationCheck(idx, 3);
+				sendLocationCheck(idx, "GOLD SCORE MEDAL");
 			}
 			if (savefile.ScoreDiaMedals[idx]) {
 				MelonLogger.Msg("Send Diamond Score");
-				sendLocationCheck(idx, 4);
+				sendLocationCheck(idx, "DIAMOND SCORE MEDAL");
+			}
+		}
+		
+		[HarmonyPatch(typeof(WorldMedal), "SetExploreMedal")]
+		private static class WorldMedalPatch {
+			private static void Postfix(int medal) {
+				MelonLogger.Msg("Sending " + Save.CurrentStageIndex.ToString() + " Medal " + medal.ToString());
+				sendLocationCheck(Save.CurrentStageIndex, string.Format("{0} EXPLORATION MEDAL", MEDALNAMES[medal]));
 			}
 		}
 	}
