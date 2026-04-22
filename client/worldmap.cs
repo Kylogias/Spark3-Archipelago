@@ -162,6 +162,13 @@ namespace Sparkipelago {
 			}
 		}
 		
+		[HarmonyPatch(typeof(DisableButtons), "Start")]
+		private static class DisableButtonPatch {
+			private static void Prefix(DisableButtons __instance) {
+				__instance.ButtonsToDisable = new Button[0];
+			}
+		}
+		
 		[HarmonyPatch(typeof(ShopItenDetails), "SetText")]
 		private static class ItenTextPatch {
 			private static void Postfix(ShopItenDetails __instance) {

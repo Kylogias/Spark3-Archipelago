@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"shop": [
 		{"name": "Spin Charge", "page": "Moves"},
 		{"name": "Dual Air Kick", "page": "Moves"},
@@ -35,7 +35,12 @@
 		{"name": "ALPINE CARRERA", "id": 0, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "cd|da"},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
-			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
+			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
+			
+			{"name": "CHECKPOINT #1", "index": 9, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #2", "index": 7, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #3", "index": 8, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #4", "index": 4, "sanity": "checkpoint", "requires": ""}
 		]},
 		{"name": "DOUBLEMOON VILLA", "id": 1, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
@@ -53,7 +58,18 @@
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "da"}
+			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "da"},
+			
+			{"name": "CHECKPOINT #1", "index": 0, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #2", "index": 1, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #3", "index": 3, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #4", "index": 2, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #5", "index": 5, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #6", "index": 4, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #7", "index": 7, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #8", "index": 6, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #9", "index": 9, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #10", "index": 8, "sanity": "checkpoint", "requires": ""}
 		]},
 		{"name": "HIGH-RISE TRACKS", "id": 2, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
@@ -71,7 +87,28 @@
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+			
+			{"name": "CAPSULE #1", "index": 0, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #2", "index": 1, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #3", "index": 2, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #4", "index": 3, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #5", "index": 4, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #6", "index": 5, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #7", "index": 6, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #8", "index": 7, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #9", "index": 8, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #10", "index": 9, "sanity": "capsule", "requires": ""},
+			{"name": "CAPSULE #11", "index": 10, "sanity": "capsule", "requires": ""},
+			
+			{"name": "BUBBLE #0", "index": 0, "sanity": "bubble", "requires": ""},
+			{"name": "BUBBLE #1", "index": 1, "sanity": "bubble", "requires": ""},
+			{"name": "BUBBLE #2", "index": 2, "sanity": "bubble", "requires": ""},
+			{"name": "BUBBLE #3", "index": 3, "sanity": "bubble", "requires": ""},
+			
+			{"name": "CHECKPOINT #1", "index": 0, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #2", "index": 1, "sanity": "checkpoint", "requires": ""},
+			{"name": "CHECKPOINT #3", "index": 2, "sanity": "checkpoint", "requires": ""}
 		]},
 		{"name": "COLD-DRY DESERT", "id": 3, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},

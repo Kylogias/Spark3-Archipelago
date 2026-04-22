@@ -120,6 +120,13 @@ namespace Sparkipelago {
 				slotData = ((LoginSuccessful)result).SlotData;
 				currentSaveSlot = Save.CurrentSaveSlot;
 				
+				if ((long)slotData["version"] != APShared.version) {
+					MelonLogger.Error("Client Version does not match APWorld! Refusing connection");
+					currentSession.Say("Client Version does not match APWorld! Refusing connection");
+					currentSession = null;
+					return;
+				}
+				
 				foreach (ItemInfo item in currentSession.Items.AllItemsReceived) {
 					onItem(item, true);
 				}
@@ -164,6 +171,7 @@ namespace Sparkipelago {
 			MelonLogger.Msg("Scene Loaded: " + sceneName);
 			currentScene = sceneName;
 			player = GameObject.Find("Player_Fark");
+			Collectibles.onSceneLoad();
 			if (sceneName == "[CUTSCENE 01 - INTRO CUTSCENE]") {
 				WorldMap.initializeSave();
 			}

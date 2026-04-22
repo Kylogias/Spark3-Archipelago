@@ -19,7 +19,7 @@ COMMANDBASE = [
 
 INCLUDE_MANAGED = [
 	"Assembly-CSharp.dll", "UnityEngine.dll", "UnityEngine.CoreModule.dll", "UnityEngine.UI.dll", "UnityEngine.AudioModule.dll",
-	"Rewired_Core.dll", "UnityEngine.UnityWebRequestModule.dll", "UnityEngine.UnityWebRequestAudioModule.dll"
+	"Rewired_Core.dll", "UnityEngine.UnityWebRequestModule.dll", "UnityEngine.UnityWebRequestAudioModule.dll", "UnityEngine.PhysicsModule.dll"
 ]
 
 command = COMMANDBASE[0]
