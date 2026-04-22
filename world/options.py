@@ -21,6 +21,13 @@ class AbilityRando(DefaultOnToggle):
 	"""
 	display_name = "Randomize Abilities"
 
+class LabMode(Toggle):
+	"""
+	Overrides the ability randomizer and automatically opens all stages, for labbing checks.
+	WARNING: For development purposes only
+	"""
+	display_name = "Labbing Mode"
+
 class Speedsanity(Choice):
 	"""
 	Adds the 44 gold and/or 44 diamond speed medals to the location pool.
@@ -52,6 +59,12 @@ class Exploresanity(Toggle):
 	Adds the 300 exploration medals as checks
 	"""
 	display_name = "ExploreSanity"
+
+class Coinsanity(Toggle):
+	"""
+	Adds the 72 collectable coins in the collectathon stages as checks
+	"""
+	display_name = "CoinSanity"
 
 class FreedomCount(Range):
 	"""
@@ -93,6 +106,7 @@ class MusicChoice(Choice):
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
+	labmode: LabMode
 	spark2_stages: Spark2Stages
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
@@ -100,4 +114,5 @@ class Spark3Options(PerGameCommonOptions):
 	speedsanity: Speedsanity
 	scoresanity: Scoresanity
 	exploresanity: Exploresanity
+	coinsanity: Coinsanity
 	music_rando: MusicChoice

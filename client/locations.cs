@@ -106,6 +106,27 @@ namespace Sparkipelago {
 			return idx;
 		}
 		
+		public static void sendLocationByIndex(int level, string sanity, int index) {
+			bool foundStage = false;
+			bool foundCheck = false;
+			foreach (APStageData stage in APShared.stages) {
+				if (stage.id == level) {
+					foreach (APStageCheck ch in stage.checks) {
+						if (ch.sanity == sanity && ch.index == index) {
+							Sparkipelago.currentSession.Locations.CompleteLocationChecks(ch.id);
+							foundCheck = true;
+							break;
+						}
+					}
+					foundStage = true;
+					break;
+				}
+			}
+			
+			if (!foundStage) MelonLogger.Msg("Unable to find stage {0}", level);
+			if (!foundCheck) MelonLogger.Msg("Unable to find {0} sanity {1} index {2}", level, sanity, index);
+		}
+		
 		public static void sendLocationCheck(int level, string check) {
 			if (check == "__shop") {
 				Sparkipelago.currentSession.Locations.CompleteLocationChecks(APShared.shop[level].id);

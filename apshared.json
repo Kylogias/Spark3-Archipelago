@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"shop": [
 		{"name": "Spin Charge", "page": "Moves"},
 		{"name": "Dual Air Kick", "page": "Moves"},
@@ -116,7 +116,22 @@
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
 		]},
 		{"name": "A.M VILLAGE", "id": 4, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": ""}
+			{"name": "COMPLETION", "sanity": "base", "requires": ""},
+			{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #3", "index": 14, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #4", "index": 3, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #5", "index": 4, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #6", "index": 5, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #7", "index": 6, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #8", "index": 7, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #9", "index": 8, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #10", "index": 9,  "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #11", "index": 10, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #12", "index": 11, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #13", "index": 12, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #14", "index": 13, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #15", "index": 2, "sanity": "coin", "requires": "cd"}
 		]},
 		{"name": "LOST RIVIERA", "id": 5, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
@@ -174,7 +189,22 @@
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
 		]},
 		{"name": "ARID HOLE", "id": 11, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": ""}
+			{"name": "COMPLETION", "sanity": "base", "requires": ""},
+			{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #3", "index": 2, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #4", "index": 3, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #5", "index": 4, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #6", "index": 5, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #7", "index": 6, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #8", "index": 7, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #9", "index": 8, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #10", "index": 9,  "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #11", "index": 10, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #12", "index": 11, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #13", "index": 12, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #14", "index": 13, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #15", "index": 14, "sanity": "coin", "requires": ""}
 		]},
 		{"name": "SPLASH GROTTO", "id": 12, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
@@ -316,7 +346,22 @@
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"}
 		]},
 		{"name": "SQUABBLE SPILLWAY", "id": 21, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": ""}
+			{"name": "COMPLETION", "sanity": "base", "requires": ""},
+			{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #3", "index": 2, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #4", "index": 3, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #5", "index": 4, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #6", "index": 5, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #7", "index": 6, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #8", "index": 7, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #9", "index": 8, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #10", "index": 9,  "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #11", "index": 10, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #12", "index": 11, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #13", "index": 12, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #14", "index": 13, "sanity": "coin", "requires": ""},
+			{"name": "BLUE COIN #15", "index": 14, "sanity": "coin", "requires": ""}
 		]},
 		{"name": "NIGHTTIME PHENOMENA", "id": 18, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "co+dj"},
@@ -337,7 +382,34 @@
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "co"}
 		]},
 		{"name": "DROPSHIP DAYBREAK", "id": 27, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "co"}
+			{"name": "COMPLETION", "sanity": "base", "requires": "co"},
+			{"name": "NIGHT BLUE COIN #1", "index": 9,  "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #2", "index": 2, "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #3", "index": 1, "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #4", "index": 4, "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #5", "index": 5, "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #6", "index": 13, "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #7", "index": 11, "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #8", "index": 14, "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #9", "index": 26,  "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #10", "index": 21, "sanity": "coin", "requires": ""},
+			{"name": "NIGHT BLUE COIN #11", "index": 23, "sanity": "coin", "requires": "cd|dj"},
+			{"name": "NIGHT BLUE COIN #12", "index": 7,  "sanity": "coin", "requires": "co"},
+			{"name": "SHIP BLUE COIN #1", "index": 16, "sanity": "coin", "requires": "co"},
+			{"name": "SHIP BLUE COIN #2", "index": 17, "sanity": "coin", "requires": "co"},
+			{"name": "SHIP BLUE COIN #3", "index": 18, "sanity": "coin", "requires": "co"},
+			{"name": "SHIP BLUE COIN #4", "index": 15, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #1", "index": 19, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #2", "index": 22, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #3", "index": 0, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #4", "index": 3, "sanity": "coin", "requires": "co+wj+dj"},
+			{"name": "DAY BLUE COIN #5", "index": 10, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #6", "index": 20, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #7", "index": 25, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #8", "index": 8, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #9", "index": 12, "sanity": "coin", "requires": "co"},
+			{"name": "DAY BLUE COIN #10", "index": 24, "sanity": "coin", "requires": "co+(cd|dj)"},
+			{"name": "DAY BLUE COIN #11", "index": 6, "sanity": "coin", "requires": "co+wj"}
 		]},
 		{"name": "HEAVEN PARK", "id": 28, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "dj|cd"},

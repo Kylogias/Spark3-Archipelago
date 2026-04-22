@@ -4,12 +4,14 @@ namespace Sparkipelago {
 		public string sanity;
 		public string requires;
 		public long id;
+		public int index;
 		
-		public APStageCheck(string n, string s, string r, long i) {
+		public APStageCheck(string n, string s, string r, long i, int idx) {
 			name = n;
 			sanity = s;
 			requires = r;
 			id = i;
+			index = idx;
 		}
 	}
 	

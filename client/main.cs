@@ -171,7 +171,7 @@ namespace Sparkipelago {
 			MelonLogger.Msg("Scene Loaded: " + sceneName);
 			currentScene = sceneName;
 			player = GameObject.Find("Player_Fark");
-			Collectibles.onSceneLoad();
+			if (player != null) Collectibles.onSceneLoad(sceneName);
 			if (sceneName == "[CUTSCENE 01 - INTRO CUTSCENE]") {
 				WorldMap.initializeSave();
 			}

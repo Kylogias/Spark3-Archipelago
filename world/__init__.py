@@ -34,6 +34,8 @@ class Spark3World(World):
 			self.location_state.sanities.append("speeddia")
 		if self.options.exploresanity:
 			self.location_state.sanities.append("explore")
+		if self.options.coinsanity:
+			self.location_state.sanities.append("coin")
 		
 		if self.options.shopsanity:
 			self.shop_enabled = True
@@ -51,6 +53,16 @@ class Spark3World(World):
 		else:
 			self.location_state.SPARK2 = False
 			self.location_state.GATE_STAGE_COUNT = [7, 8, 8, 8, 8]
+		
+		if self.options.labmode:
+			self.location_state.SPARK2 = True
+			self.location_state.bosses = [
+				{"name": "LABTIME1", "id": 250, "type": "boss", "checks": []},
+				{"name": "LABTIME2", "id": 250, "type": "boss", "checks": []},
+				{"name": "LABTIME3", "id": 250, "type": "boss", "checks": []},
+				{"name": "LABTIME4", "id": 250, "type": "boss", "checks": []}
+			]
+			self.ability_rando = False
 		
 		self.item_state.FREEDOM_COUNT = self.options.freedom_count.value
 		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))

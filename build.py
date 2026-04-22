@@ -41,17 +41,34 @@ for shop in shared["shop"]:
 	location_name_to_id[f"Shop {shop['page']} {shop['name']}"] = curID
 	curID += 1
 
+sanity_priority = ["base", "speedgold", "speeddia", "scoregold", "scoredia", "explore", "coin"]
+sanities = {}
+for sanity in sanity_priority:
+	sanities[sanity] = []
+
 for stage in shared["stages"]:
-	for check in stage["checks"]:
+	for check in stage["checks"].copy():
+		if check["sanity"] in sanities:
+			sanities[check["sanity"]].append([stage, check])
+		else:
+			stage["checks"].remove(check)
+			continue
+
+for sanity in sanity_priority:
+	for location in sanities[sanity]:
+		stage = location[0]
+		check = location[1]
 		check["id"] = curID
 		location_name_to_id[f"{stage['name']} {check['name']}"] = curID
+		if not "index" in check:
+			check["index"] = -1;
 		curID += 1
 
 with open("world/apshared.py", "w") as appy:
 	appy.write("apshared = ")
-	appy.write(json.dumps(shared))
+	appy.write(json.dumps(shared, indent='\t'))
 	appy.write("\nlocation_name_to_id = ")
-	appy.write(json.dumps(location_name_to_id))
+	appy.write(json.dumps(location_name_to_id, indent='\t'))
 
 with open("client/apshared.cs", "w") as apcs:
 	apcs.write("namespace Sparkipelago {\n")
@@ -69,7 +86,7 @@ with open("client/apshared.cs", "w") as apcs:
 		apcs.write(f"\t\t\tnew APStageData(\"{stage['name']}\", \"{stage['type']}\", {stage['id']}, new APStageCheck[]")
 		apcs.write("{\n")
 		for check in stage["checks"]:
-			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\", \"{check['requires']}\", {check['id']})")
+			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\", \"{check['requires']}\", {check['id']}, {check['index']})")
 			if check != stage["checks"][-1]:
 				apcs.write(",")
 			apcs.write("\n")
