@@ -55,7 +55,7 @@ namespace Sparkipelago {
 				if (!bubbles.Contains(mon)) return;
 				if (mon.Type == MonitorType.Ring) type = "Bit";
 				if (mon.Type == MonitorType.Energy) type = "Energy";
-				MelonLogger.Msg("Collected Bubble #{0} ({1})", bubbles.IndexOf(mon), type);
+				Sparkipelago.debugLog("Collected Bubble #{0} ({1})", bubbles.IndexOf(mon), type);
 				bubbles[bubbles.IndexOf(mon)] = null;
 			}
 		}
@@ -67,7 +67,7 @@ namespace Sparkipelago {
 				
 				RotateRing rotring = col.GetComponent<RotateRing>();
 				if (!capsules.Contains(rotring)) return;
-				MelonLogger.Msg("Collected Capsule #{0} ({1})", capsules.IndexOf(rotring), col.tag);
+				Sparkipelago.debugLog("Collected Capsule #{0} ({1})", capsules.IndexOf(rotring), col.tag);
 				capsules[capsules.IndexOf(rotring)] = null;
 			}
 		}
@@ -76,7 +76,7 @@ namespace Sparkipelago {
 		private static class CheckpointPatch {
 			private static void Prefix(LevelProgressControl __instance, CheckPointData check) {
 				if (!checkpoints.Contains(check)) return;
-				MelonLogger.Msg("Collected Checkpoint #{0}", checkpoints.IndexOf(check));
+				Sparkipelago.debugLog("Collected Checkpoint #{0}", checkpoints.IndexOf(check));
 				checkpoints[checkpoints.IndexOf(check)] = null;
 			}
 		}
@@ -86,7 +86,7 @@ namespace Sparkipelago {
 			private static void Prefix(CollectableCoin __instance, Collider col) {
 				if (col.tag == "Player" && coins.Contains(__instance)) {
 					int idx = coins.IndexOf(__instance);
-					MelonLogger.Msg("Collected Coin #{0}", idx);
+					Sparkipelago.debugLog("Collected Coin #{0}", idx);
 					Locations.sendLocationByIndex(Save.CurrentStageIndex, "coin", idx);
 					coins[idx] = null;
 				}

@@ -109,6 +109,7 @@ class Spark3World(World):
 		slot_data = {
 			"version": apshared["version"],
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
+			"labmode": self.options.labmode.value,
 			"sanities": self.location_state.sanities,
 			"difficulty": self.difficulty,
 			"gates": self.location_state.gate_data,
