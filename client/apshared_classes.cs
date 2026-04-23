@@ -1,14 +1,18 @@
+using System.Collections.Generic;
+
 namespace Sparkipelago {
 	public struct APStageCheck {
 		public string name;
 		public string sanity;
-		public string requires;
+		public string[] difficulties;
+		public string[] requires;
 		public long id;
 		public int index;
 		
-		public APStageCheck(string n, string s, string r, long i, int idx) {
+		public APStageCheck(string n, string s, string[] d, string[] r, long i, int idx) {
 			name = n;
 			sanity = s;
+			difficulties = d;
 			requires = r;
 			id = i;
 			index = idx;

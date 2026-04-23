@@ -76,9 +76,12 @@ class RulesState:
 	def parse_location_rules(self, world, location, rules):
 		i = 0
 		tokens = []
-		while i < len(rules):
+		rule = rules["base"]
+		if world.difficulty in rules:
+			rule = rules[world.difficulty]
+		while i < len(rule):
 			for tok in range(len(STRING_TO_TOKEN)):
-				if rules[i:].startswith(STRING_TO_TOKEN[tok]):
+				if rule[i:].startswith(STRING_TO_TOKEN[tok]):
 					tokens.append(RuleToken(tok))
 					i += len(STRING_TO_TOKEN[tok])
 					break

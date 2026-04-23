@@ -59,6 +59,9 @@ for sanity in sanity_priority:
 		stage = location[0]
 		check = location[1]
 		check["id"] = curID
+		if isinstance(check["requires"], str):
+			check["requires"] = {"base": check["requires"]}
+		print(check["requires"])
 		location_name_to_id[f"{stage['name']} {check['name']}"] = curID
 		if not "index" in check:
 			check["index"] = -1;
@@ -86,7 +89,24 @@ with open("client/apshared.cs", "w") as apcs:
 		apcs.write(f"\t\t\tnew APStageData(\"{stage['name']}\", \"{stage['type']}\", {stage['id']}, new APStageCheck[]")
 		apcs.write("{\n")
 		for check in stage["checks"]:
-			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\", \"{check['requires']}\", {check['id']}, {check['index']})")
+			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\", new string[]")
+			apcs.write("{")
+			difficulties = []
+			requires = []
+			for k in check['requires'].keys():
+				difficulties.append(k)
+				requires.append(check['requires'][k])
+			for k in difficulties:
+				apcs.write(f"\"{k}\"")
+				if k != difficulties[-1]:
+					apcs.write(", ")
+			apcs.write("}, new string[]{")
+			for v in requires:
+				apcs.write(f"\"{v}\"")
+				if v != requires[-1]:
+					apcs.write(", ")
+			apcs.write("}")
+			apcs.write(f", {check['id']}, {check['index']})")
 			if check != stage["checks"][-1]:
 				apcs.write(",")
 			apcs.write("\n")

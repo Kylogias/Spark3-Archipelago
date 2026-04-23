@@ -7,6 +7,14 @@ class Shopsanity(Toggle):
 	"""
 	display_name = "ShopSanity"
 
+class Difficulty(Choice):
+	"""
+	How difficult should the logic be
+	"""
+	
+	option_base = 0
+	default = option_base
+
 class Spark2Stages(DefaultOnToggle):
 	"""
 	Adds the 14 Spark 2 stages
@@ -106,6 +114,7 @@ class MusicChoice(Choice):
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
+	difficulty: Difficulty
 	labmode: LabMode
 	spark2_stages: Spark2Stages
 	freedom_count: FreedomCount

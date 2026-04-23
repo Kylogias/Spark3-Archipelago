@@ -55,6 +55,8 @@ class Spark3World(World):
 			self.location_state.SPARK2 = False
 			self.location_state.GATE_STAGE_COUNT = [7, 8, 8, 8, 8]
 		
+		self.difficulty = apshared["difficulties"][self.options.difficulty]
+		
 		if self.options.labmode:
 			self.location_state.SPARK2 = True
 			self.location_state.bosses = [
@@ -73,10 +75,13 @@ class Spark3World(World):
 		if re_gen_passthrough and self.game in re_gen_passthrough:
 			slot_data = re_gen_passthrough[self.game]
 			self.rules_state.FREEDOM_REQUIREMENTS = slot_data["freedom_requirements"]
+			self.difficulty = slot_data["difficulty"]
 			self.location_state.sanities = slot_data["sanities"]
 			self.location_state.gate_data = slot_data["gates"]
 			self.location_state.boss_data = slot_data["bosses"]
 			self.location_state.regen = True
+			self.location_state.SPARK2 = True
+			self.shop_enabled = True
 	
 	def create_regions(self):
 		self.location_state.setup_gates(self)
@@ -105,6 +110,7 @@ class Spark3World(World):
 			"version": apshared["version"],
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
 			"sanities": self.location_state.sanities,
+			"difficulty": self.difficulty,
 			"gates": self.location_state.gate_data,
 			"bosses": self.location_state.boss_data,
 			"musicseed": self.random.randint(0, 2**31),

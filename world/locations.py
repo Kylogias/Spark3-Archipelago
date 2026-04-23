@@ -116,7 +116,7 @@ class LocationState:
 	#	gates[2].connect(gates[3], "Gate 2 to 3")
 	#	gates[3].connect(gates[4], "Gate 3 to 4")
 		
-		if self.SPARK2 or self.regen:
+		if self.SPARK2:
 			self.stages += self.spark2
 		
 		if self.regen:
