@@ -15,11 +15,6 @@ class LocationState:
 		self.SHOP_LOCATIONS = {}
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11] # Gate 0 excludes Alpine Carrera in the count
-		self.SPEEDSANITY_GOLD = False
-		self.SPEEDSANITY_DIA = False
-		self.SCORESANITY_GOLD = False
-		self.SCORESANITY_DIA = False
-		self.EXPLORESANITY = False
 		self.SPARK2 = True
 		
 		self.sanities = ["base"]
@@ -32,6 +27,7 @@ class LocationState:
 		# This data is passed to the client. The 5 lists are each gates
 		# Each member in the gate list is a list containing 3 elements: Stage ID, X Pos, Y Pos
 		self.gate_data = [[], [], [], [], [], []]
+		self.regen = False
 		self.boss_data = []
 	
 		self.spoiler_text = ""
@@ -120,11 +116,33 @@ class LocationState:
 	#	gates[2].connect(gates[3], "Gate 2 to 3")
 	#	gates[3].connect(gates[4], "Gate 3 to 4")
 		
-		if self.SPARK2:
+		if self.SPARK2 or self.regen:
 			self.stages += self.spark2
 		
-		world.random.shuffle(self.stages)
-		world.random.shuffle(self.bosses)
+		if self.regen:
+			old_stages = self.stages.copy()
+			old_bosses = self.bosses.copy()
+			self.stages.clear()
+			self.bosses.clear()
+			for gate in range(len(self.gate_data)-1): # last gate is utopia
+				print(gate)
+				self.GATE_STAGE_COUNT[gate] = 0
+				cur_gate = self.gate_data[gate]
+				for stage in cur_gate:
+					for data in old_stages:
+						if data["id"] == stage[0]:
+							self.stages.append(data)
+							break
+					self.GATE_STAGE_COUNT[gate] += 1
+			
+			for boss in self.boss_data:
+				for data in old_bosses:
+					if data["id"] == boss[0]:
+						self.bosses.append(data)
+						break
+		else:
+			world.random.shuffle(self.stages)
+			world.random.shuffle(self.bosses)
 		
 		self.spoiler_text += f"\nLevel Gates for {world.multiworld.player_name[world.player]}:\n"
 		self.spoiler_text += "Gate 0:\n"

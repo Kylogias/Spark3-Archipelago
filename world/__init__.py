@@ -7,6 +7,7 @@ from .apshared import apshared
 
 class Spark3World(World):
 	game = GAME_NAME
+	ut_can_gen_without_yaml = True
 	
 	location_name_to_id = loctoid
 	item_name_to_id = items.static_item.ITEM_NAME_TO_ID
@@ -67,6 +68,15 @@ class Spark3World(World):
 		self.item_state.FREEDOM_COUNT = self.options.freedom_count.value
 		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))
 		self.rules_state.FREEDOM_REQUIREMENTS = [int(req_freedom/5), int(2*req_freedom/5), int(3*req_freedom/5), int(4*req_freedom/5), int(req_freedom)]
+		
+		re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
+		if re_gen_passthrough and self.game in re_gen_passthrough:
+			slot_data = re_gen_passthrough[self.game]
+			self.rules_state.FREEDOM_REQUIREMENTS = slot_data["freedom_requirements"]
+			self.location_state.sanities = slot_data["sanities"]
+			self.location_state.gate_data = slot_data["gates"]
+			self.location_state.boss_data = slot_data["bosses"]
+			self.location_state.regen = True
 	
 	def create_regions(self):
 		self.location_state.setup_gates(self)
@@ -94,9 +104,14 @@ class Spark3World(World):
 		slot_data = {
 			"version": apshared["version"],
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
+			"sanities": self.location_state.sanities,
 			"gates": self.location_state.gate_data,
 			"bosses": self.location_state.boss_data,
 			"musicseed": self.random.randint(0, 2**31),
 			"musicchoice": self.options.music_rando.value
 		}
+		return slot_data
+	
+	@staticmethod
+	def interpret_slot_data(slot_data):
 		return slot_data
