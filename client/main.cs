@@ -100,6 +100,7 @@ namespace Sparkipelago {
 			port = MelonPreferences.CreateEntry<int>("Archipelago Connection", "Port", 38281);
 			username = MelonPreferences.CreateEntry<string>("Archipelago Connection", "Username", "Player1");
 			password = MelonPreferences.CreateEntry<string>("Archipelago Connection", "Password", "");
+			LabMode.initPrefs();
 			
 			MusicRandomization.registerMusic();
 		}
@@ -177,69 +178,7 @@ namespace Sparkipelago {
 		public override void OnUpdate() {
 			if (slotData == null) return;
 			if ((long)slotData["labmode"] != 0 && currentSession != null) {
-				if (Input.GetKeyDown(KeyCode.Alpha5)) {
-					if (Sparkipelago.itemState[(long)ItemIds.JESTER_DASH] > 0) {
-						Sparkipelago.itemState[(long)ItemIds.JESTER_DASH] = 0;
-						debugLog("Disabling JESTER_DASH");
-					} else {
-						Sparkipelago.itemState[(long)ItemIds.JESTER_DASH] = 1;
-						debugLog("Enabling JESTER_DASH");
-					}
-				}
-				if (Input.GetKeyDown(KeyCode.Alpha6)) {
-					if (Sparkipelago.itemState[(long)ItemIds.DASH] > 0) {
-						Sparkipelago.itemState[(long)ItemIds.DASH] = 0;
-						debugLog("Disabling DASH");
-					} else {
-						Sparkipelago.itemState[(long)ItemIds.DASH] = 1;
-						debugLog("Enabling DASH");
-					}
-				}
-				if (Input.GetKeyDown(KeyCode.Alpha7)) {
-					if (Sparkipelago.itemState[(long)ItemIds.CHARGED_DASH] > 0) {
-						Sparkipelago.itemState[(long)ItemIds.CHARGED_DASH] = 0;
-						debugLog("Disabling CHARGED_DASH");
-					} else {
-						Sparkipelago.itemState[(long)ItemIds.CHARGED_DASH] = 1;
-						debugLog("Enabling CHARGED_DASH");
-					}
-				}
-				if (Input.GetKeyDown(KeyCode.Alpha8)) {
-					if (Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] > 0) {
-						Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] = 0;
-						debugLog("Disabling WALL_JUMP");
-					} else {
-						Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] = 1;
-						debugLog("Enabling WALL_JUMP");
-					}
-				}
-				if (Input.GetKeyDown(KeyCode.Alpha9)) {
-					if (Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] > 0) {
-						Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] = 0;
-						debugLog("Disabling DOUBLE_JUMP");
-					} else {
-						Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] = 1;
-						debugLog("Enabling DOUBLE_JUMP");
-					}
-				}
-				if (Input.GetKeyDown(KeyCode.Alpha0)) {
-					if (Sparkipelago.itemState[(long)ItemIds.COMBAT] > 0) {
-						Sparkipelago.itemState[(long)ItemIds.COMBAT] = 0;
-						debugLog("Disabling COMBAT");
-					} else {
-						Sparkipelago.itemState[(long)ItemIds.COMBAT] = 1;
-						debugLog("Enabling COMBAT");
-					}
-				}
-				if (Input.GetKeyDown(KeyCode.Minus)) {
-					if (Sparkipelago.itemState[(long)ItemIds.DOWN_DASH] > 0) {
-						Sparkipelago.itemState[(long)ItemIds.DOWN_DASH] = 0;
-						debugLog("Disabling DOWN_DASH");
-					} else {
-						Sparkipelago.itemState[(long)ItemIds.DOWN_DASH] = 1;
-						debugLog("Enabling DOWN_DASH");
-					}
-				}
+				LabMode.checkForInput();
 			}
 		}
 		
