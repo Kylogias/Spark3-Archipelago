@@ -82,6 +82,15 @@ namespace Sparkipelago {
 			}
 		}
 		
+		[HarmonyPatch(typeof(Action02_Homing), "FixedUpdate")]
+		private static class ExhaustedMagdashPatch {
+			private static void Prefix(Action02_Homing __instance) {
+				// There's no easily accessible variable so this'll have to do
+				if (Sparkipelago.itemState[(long)ItemIds.DASH] == 0) __instance.MagnetDashMultiplier = 0.2f;
+				else __instance.MagnetDashMultiplier = 0.65f;
+			}
+		}
+		
 		[HarmonyPatch(typeof(Action08_SuperMoves), "FixedUpdate")]
 		private static class SuperPatch {
 			private static void Prefix(Action08_SuperMoves __instance) {
