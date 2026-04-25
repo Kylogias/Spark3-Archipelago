@@ -120,8 +120,8 @@ class Spark3Options(PerGameCommonOptions):
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
 	shopsanity: Shopsanity
-	speedsanity: Speedsanity
-	scoresanity: Scoresanity
+#	speedsanity: Speedsanity
+#	scoresanity: Scoresanity
 	exploresanity: Exploresanity
 	coinsanity: Coinsanity
 	music_rando: MusicChoice
