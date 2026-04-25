@@ -135,5 +135,13 @@ namespace Sparkipelago {
 				return true;
 			}
 		}
+		
+		[HarmonyPatch(typeof(StratoMech), "CheckForAttackAction")]
+		private static class MechCombatPatch {
+			private static bool Prefix() {
+				if (Sparkipelago.itemState[(long)ItemIds.COMBAT] == 0) return false;
+				return true;
+			}
+		}
 	}
 }
