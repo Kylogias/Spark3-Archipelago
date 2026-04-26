@@ -44,9 +44,9 @@ class Speedsanity(Choice):
 	display_name = "SpeedSanity"
 	
 	option_none = 0
-	option_gold = 1
-	option_diamond = 2
-	option_both = 3
+#	option_gold = 1
+#	option_diamond = 2
+#	option_both = 3
 	default = option_none
 
 class Scoresanity(Choice):
@@ -57,9 +57,9 @@ class Scoresanity(Choice):
 	display_name = "ScoreSanity"
 	
 	option_none = 0
-	option_gold = 1
-	option_diamond = 2
-	option_both = 3
+#	option_gold = 1
+#	option_diamond = 2
+#	option_both = 3
 	default = option_none
 
 class Exploresanity(Toggle):
@@ -120,8 +120,8 @@ class Spark3Options(PerGameCommonOptions):
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
 	shopsanity: Shopsanity
-#	speedsanity: Speedsanity
-#	scoresanity: Scoresanity
+	speedsanity: Speedsanity
+	scoresanity: Scoresanity
 	exploresanity: Exploresanity
 	coinsanity: Coinsanity
 	music_rando: MusicChoice

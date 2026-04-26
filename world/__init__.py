@@ -66,6 +66,9 @@ class Spark3World(World):
 				{"name": "LABTIME4", "id": 250, "type": "boss", "checks": []}
 			]
 			self.ability_rando = False
+			self.labbing = True
+		else:
+			self.labbing = False
 		
 		self.item_state.FREEDOM_COUNT = self.options.freedom_count.value
 		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))

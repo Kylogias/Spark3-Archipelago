@@ -12,7 +12,7 @@ namespace Sparkipelago {
 		private static class PurchasePatch {
 			private static bool Prefix(ShopItenDetails __instance, ShopaloShop shop) {
 				// X button to check
-				const long id = 16295300000 + 6000;
+				const long id = 16295300000;
 				int idx = getItenIndex(__instance);
 				bool canCheck = Sparkipelago.currentSession.Locations.AllLocations.Contains(id+idx)
 					&& Sparkipelago.currentSession.Locations.AllMissingLocations.Contains(id+idx);

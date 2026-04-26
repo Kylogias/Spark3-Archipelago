@@ -152,7 +152,7 @@ namespace Sparkipelago {
 					itenlist[Locations.getItenIndex(iten)] = iten;
 				}
 				
-				const long id = 16295300000 + 6000;
+				const long id = 16295300000;
 				for (i = 0; i < 26; i++) {
 					ShopItenDetails iten = itenlist[i];
 					if (Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i)) {
@@ -169,14 +169,20 @@ namespace Sparkipelago {
 			}
 		}
 		
+		[HarmonyPatch(typeof(ShopItenDetails), "Start")]
+		private static class ItenBitPatch {
+			private static void Prefix(ShopItenDetails __instance) {
+				if (__instance.BitsCost >= 1000) __instance.BitsCost /= 10;
+			}
+		}
+		
 		[HarmonyPatch(typeof(ShopItenDetails), "SetText")]
 		private static class ItenTextPatch {
 			private static void Postfix(ShopItenDetails __instance) {
-				const long id = 16295300000 + 6000;
-				int i = Locations.getItenIndex(__instance);
+				long i = 16295300000 + Locations.getItenIndex(__instance);
 				Text textComponent = __instance.gameObject.transform.Find("bitsamm").GetComponent<Text>();
-				if (!Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i)) return;
-				if (Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(id+i)) {
+				if (!Sparkipelago.currentSession.Locations.AllLocations.Contains(i)) return;
+				if (Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(i)) {
 					textComponent.color = new Color(0.5f, 0.5f, 0.5f);
 				} else {
 					textComponent.color = new Color(0.25f, 1.0f, 0.25f);

@@ -140,7 +140,7 @@ class LocationState:
 					if data["id"] == boss[0]:
 						self.bosses.append(data)
 						break
-		else:
+		elif not world.labbing:
 			world.random.shuffle(self.stages)
 			world.random.shuffle(self.bosses)
 		
