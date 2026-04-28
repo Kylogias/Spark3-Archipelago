@@ -98,6 +98,17 @@ class FreedomRequired(Range):
 	
 	default = 100
 
+class TrapChance(Range):
+	"""
+	Chance to receive traps instead of filler
+	"""
+	display_name = "Trap Chance"
+
+	range_start = 0
+	range_end = 100
+	
+	default = 0
+
 class MusicChoice(Choice):
 	"""
 	What music to use. If non-vanilla, music is chosen from "(game directory)/apmusic"
@@ -124,4 +135,5 @@ class Spark3Options(PerGameCommonOptions):
 	scoresanity: Scoresanity
 	exploresanity: Exploresanity
 	coinsanity: Coinsanity
+	trap_chance: TrapChance
 	music_rando: MusicChoice

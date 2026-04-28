@@ -15,6 +15,7 @@ class ItemType(Enum):
 	FREEDOM = 5
 	SHOP = 6
 	ABILITY = 7
+	UNIMPLEMENTED = 8
 
 @dataclass
 class ItemInfo:
@@ -41,7 +42,7 @@ items = [
 	# Traps
 	ItemInfo(NIGHTMARE_TRAP, ItemType.TRAP), # Red Bubble
 	ItemInfo(LASER_TRAP, ItemType.TRAP), # Grey Bubble
-	ItemInfo(DUST_TRAP, ItemType.TRAP), # Dust cloud, need to figure out
+	ItemInfo(DUST_TRAP, ItemType.UNIMPLEMENTED), # Dust cloud, need to figure out
 
 	# Moves
 	ItemInfo(SPIN_CHARGE, ItemType.MOVE),

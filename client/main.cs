@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 using System.Collections.Generic;
 using MelonLoader;
@@ -83,6 +84,11 @@ namespace Sparkipelago {
 		public static Dictionary<string, object> slotData;
 		int currentSaveSlot = -1;
 		GameObject player;
+		
+		private GameObject redWorld;
+		private GameObject grayWorld;
+		public static GameObject playerRed;
+		public static GameObject playerGray;
 		
 		int currentItem = -1;
 		public static int[] itemState;
@@ -182,11 +188,78 @@ namespace Sparkipelago {
 			}
 		}
 		
+		private void setupPrefabChildren(GameObject prefab) {
+			prefab.hideFlags = HideFlags.HideAndDontSave;
+			prefab.transform.position = new Vector3(0, 0, 0);
+			for (int i = 0; i < prefab.transform.childCount; i++) {
+				setupPrefabChildren(prefab.transform.GetChild(i).gameObject);
+			}
+		}
+		
+		private void setupPrefabs() {
+			GameObject prefabHolder = GameObject.Find("[PREFABS HOLDER]");
+			prefabHolder.transform.GetChild(12).gameObject.SetActive(true); // Should be AbyssPrefabs
+			
+			GameObject prefabObject = new GameObject("AP Prefabs");
+			prefabObject.SetActive(false);
+			prefabObject.hideFlags = HideFlags.HideAndDontSave;
+			
+			GameObject redPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/RedGhostWorld");
+			GameObject grayPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/GrayGhostWorld");
+			GameObject ragingPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/RagingGhost");
+			GameObject wanderingPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/MinorGhost");
+			GameObject lazerPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/LazerFirerer");
+			
+			GameObject ragingInstance = UnityEngine.Object.Instantiate(ragingPrefab, prefabObject.transform);
+			setupPrefabChildren(ragingInstance);
+			GameObject wanderingInstance = UnityEngine.Object.Instantiate(wanderingPrefab, prefabObject.transform);
+			setupPrefabChildren(wanderingInstance);
+			GameObject lazerInstance = UnityEngine.Object.Instantiate(lazerPrefab, prefabObject.transform);
+			setupPrefabChildren(lazerInstance);
+			
+			redWorld = UnityEngine.Object.Instantiate(redPrefab, prefabObject.transform);
+			setupPrefabChildren(redWorld);
+			RedWorldSequence redSeq = redWorld.GetComponent<RedWorldSequence>();
+			redSeq.RagingGhost = ragingInstance;
+			redSeq.WanderingGhost = wanderingInstance;
+			
+			grayWorld = UnityEngine.Object.Instantiate(grayPrefab, prefabObject.transform);
+			setupPrefabChildren(grayWorld);
+			GrayWorldSequence graySeq = grayWorld.GetComponent<GrayWorldSequence>();
+			graySeq.GrayLazer = lazerInstance;
+		}
+		
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName) {
 			MelonLogger.Msg("Scene Loaded: " + sceneName);
 			currentScene = sceneName;
 			player = GameObject.Find("Player_Fark");
-			if (player != null) Collectibles.onSceneLoad(sceneName);
+			if (player != null) {
+				Collectibles.onSceneLoad(sceneName);
+				
+				GameObject fogMesh = GameObject.Find("PlayerObjects/Camera_Objects/Main Camera/FogMeshPlayer");
+				if (fogMesh && redWorld && grayWorld) {
+					playerRed = UnityEngine.Object.Instantiate(redWorld, fogMesh.transform);
+					playerGray = UnityEngine.Object.Instantiate(grayWorld, fogMesh.transform);
+					playerRed.GetComponent<SetParent>().Parent = fogMesh.transform;
+					playerGray.GetComponent<SetParent>().Parent = fogMesh.transform;
+				} else {
+					playerRed = null;
+					playerGray = null;
+				}
+			} else {
+				playerRed = null;
+				playerGray = null;
+			}
+			
+			if (sceneName == "[LOGO]" && redWorld == null && grayWorld == null) {
+				SceneManager.LoadScene("[STAGE 0X - LEVEL TEMPLATE]");
+			}
+			
+			if (sceneName == "[STAGE 0X - LEVEL TEMPLATE]") {
+				setupPrefabs();
+				SceneManager.LoadScene("[LOGO]");
+			}
+			
 			if (sceneName == "[CUTSCENE 01 - INTRO CUTSCENE]") {
 				WorldMap.initializeSave();
 			}

@@ -54,6 +54,10 @@ CheckpointSanity
 	Look for all CheckPointData for amount of check points
 	LevelProgressControl.SetCheckPoint
 
+Glitch Zones
+	Red World and Gray World from mod template
+	SetParent component set to "PlayerObjects/Camera_Objects/Main Camera/FogMeshPlayer"
+
 Spark 2 Option
 	43 checks without (yikes)
 	Make collectathon coins default?

@@ -28,8 +28,12 @@ namespace Sparkipelago {
 				case ItemIds.ENERGY_CAPSULE: PlayerHealthAndStats.AddEnergy(10); break; // 10 energy
 				case ItemIds.BIT_BUBBLE: if (!catchup) addBits(30); break; // 30 bits
 				case ItemIds.ENERGY_BUBBLE: PlayerHealthAndStats.AddEnergy(20); break; // 20 energy
-				case ItemIds.NIGHTMARE_TRAP: break;
-				case ItemIds.LASER_TRAP: break;
+				case ItemIds.NIGHTMARE_TRAP:
+					if (Sparkipelago.playerRed != null) Sparkipelago.playerRed.SetActive(true);
+					break;
+				case ItemIds.LASER_TRAP:
+					if (Sparkipelago.playerGray != null) Sparkipelago.playerGray.SetActive(true);
+					break;
 				case ItemIds.DUST_TRAP: break;
 				
 				case ItemIds.SPIN_CHARGE: save.Move00_SpinCharge = true; save.Move00_SpinCharge_Enabled = true; break;

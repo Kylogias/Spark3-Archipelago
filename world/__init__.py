@@ -55,6 +55,8 @@ class Spark3World(World):
 			self.location_state.SPARK2 = False
 			self.location_state.GATE_STAGE_COUNT = [7, 8, 8, 8, 8]
 		
+		self.item_state.TRAP_CHANCE = self.options.trap_chance.value
+		
 		self.difficulty = apshared["difficulties"][self.options.difficulty]
 		
 		if self.options.labmode:
