@@ -38,7 +38,7 @@ class LabMode(Toggle):
 
 class Speedsanity(Choice):
 	"""
-	Adds the 44 gold and/or 44 diamond speed medals to the location pool.
+	Adds the 30 gold and/or 30 diamond speed medals to the location pool. (44 each with Spark 2 stages)
 	WARNING: Logic Not Implemented
 	"""
 	display_name = "SpeedSanity"
@@ -51,7 +51,7 @@ class Speedsanity(Choice):
 
 class Scoresanity(Choice):
 	"""
-	Adds the 28 gold and/or 28 diamond score medals to the location pool.
+	Adds the 14 gold and/or 14 diamond score medals to the location pool. (28 each with Spark 2 stages)
 	WARNING: Logic Not Implemented
 	"""
 	display_name = "ScoreSanity"

@@ -71,7 +71,6 @@ namespace Sparkipelago {
 	}
 	
 	public class Sparkipelago : MelonMod {
-		private MelonPreferences_Category connectionCategory;
 		private MelonPreferences_Entry<string> ip;
 		private MelonPreferences_Entry<int> port;
 		private MelonPreferences_Entry<string> username;
@@ -90,7 +89,6 @@ namespace Sparkipelago {
 		public static GameObject playerRed;
 		public static GameObject playerGray;
 		
-		int currentItem = -1;
 		public static int[] itemState;
 		public static string[] shopItems;
 		public static int musicRando = 0;
@@ -101,7 +99,7 @@ namespace Sparkipelago {
 			itemState = new int[(long)ItemIds.END];
 			shopItems = new string[26];
 			
-			connectionCategory = MelonPreferences.CreateCategory("Archipelago Connection");
+			MelonPreferences.CreateCategory("Archipelago Connection");
 			ip = MelonPreferences.CreateEntry<string>("Archipelago Connection", "IP", "localhost");
 			port = MelonPreferences.CreateEntry<int>("Archipelago Connection", "Port", 38281);
 			username = MelonPreferences.CreateEntry<string>("Archipelago Connection", "Username", "Player1");
@@ -113,19 +111,27 @@ namespace Sparkipelago {
 		
 		public void ConnectToArchipelago(bool newServer) {
 			if (newServer) {
-				currentItem = -1;
 				Array.Clear(itemState, 0, itemState.Length);
 			}
 			
-			currentSession = ArchipelagoSessionFactory.CreateSession(ip.Value, port.Value);
+			APSavedata data = APSave.getAPSave();
+			currentSession = ArchipelagoSessionFactory.CreateSession(data.ip, data.port);
 			LoginResult result;
-			if (password.Value.Length != 0) result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", username.Value, ItemsHandlingFlags.AllItems, password: password.Value);
-			else result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", username.Value, ItemsHandlingFlags.AllItems);
+			if (password.Value.Length != 0) result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", data.slot, ItemsHandlingFlags.AllItems, password: data.password);
+			else result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", data.slot, ItemsHandlingFlags.AllItems);
 			
 			if (result.Successful) {
 				currentSession.Items.ItemReceived += HandleItem;
 				slotData = ((LoginSuccessful)result).SlotData;
 				currentSaveSlot = Save.CurrentSaveSlot;
+
+				string curRoom = currentSession.RoomState.Seed;
+				if (data.room != "" && data.room != curRoom) {
+					MelonLogger.Error("Client room does not match server room! Do you have the correct connection information?");
+					currentSession.Say("Client room does not match server room! Do you have the correct connection information?");
+					currentSession = null;
+					return;
+				}
 				
 				if ((long)slotData["version"] != APShared.version) {
 					MelonLogger.Error("Client Version does not match APWorld! Refusing connection");
@@ -133,11 +139,18 @@ namespace Sparkipelago {
 					currentSession = null;
 					return;
 				}
-				
+
+				data.room = curRoom;
+				int i = 0;
 				foreach (ItemInfo item in currentSession.Items.AllItemsReceived) {
-					onItem(item, true);
+					onItem(item, i < data.lastItem);
+					i++;
 				}
+				data.lastItem = i;
 				while (currentSession.Items.Any()) currentSession.Items.DequeueItem();
+				foreach (long location in data.checkedLocations) {
+					currentSession.Locations.CompleteLocationChecks(location);
+				}
 				
 				musicRando = (int)(long)slotData["musicchoice"];
 				musicSeed = (int)(long)slotData["musicseed"];
@@ -150,10 +163,10 @@ namespace Sparkipelago {
 		}
 		
 		private static void onItem(ItemInfo item, bool catchup)  {
-				MelonLogger.Msg("Receiving {0} with ID {1} (index {2})", item.ItemDisplayName, item.ItemId, item.ItemId-(long)ItemIds.PREFIX);
-				itemState[item.ItemId-(long)ItemIds.PREFIX] += 1;
-				MelonLogger.Msg("Handling Item");
-				Items.handleItem(item, catchup);
+			MelonLogger.Msg("Receiving {0} with ID {1} (index {2})", item.ItemDisplayName, item.ItemId, item.ItemId-(long)ItemIds.PREFIX);
+			itemState[item.ItemId-(long)ItemIds.PREFIX] += 1;
+			MelonLogger.Msg("Handling Item");
+			Items.handleItem(item, catchup);
 		}
 		
 		public static void debugLog(string fmt, params object[] args) {
@@ -164,11 +177,12 @@ namespace Sparkipelago {
 		}
 		
 		public static void HandleItem(ReceivedItemsHelper itemHandler) {
+			APSavedata data = APSave.getAPSave();
 			while (itemHandler.Any()) {
 				int oldIndex = itemHandler.Index;
-				if (oldIndex <= instance.currentItem) continue;
+				if (oldIndex <= data.lastItem) continue;
 				ItemInfo item = itemHandler.DequeueItem();
-				instance.currentItem = oldIndex;
+				data.lastItem = oldIndex;
 				onItem(item, false);
 			}
 		}
@@ -262,6 +276,11 @@ namespace Sparkipelago {
 			
 			if (sceneName == "[CUTSCENE 01 - INTRO CUTSCENE]") {
 				WorldMap.initializeSave();
+				APSavedata data = APSave.getAPSave();
+				data.slot = username.Value;
+				data.password = password.Value;
+				data.ip = ip.Value;
+				data.port = port.Value;
 			}
 			
 			if (sceneName == "[CUTSCENE 16 - ENDING CUTSCENE]") {

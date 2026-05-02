@@ -17,6 +17,8 @@ namespace Sparkipelago {
 			switch ((ItemIds)(item.ItemId-(long)ItemIds.PREFIX)) {
 				case ItemIds.FREEDOM_MEDAL:
 					if (Sparkipelago.currentScene == "[WORLD MAP]") WorldMap.onMapLoad();
+					APSavedata data = APSave.getAPSave();
+					data.fpCount = Sparkipelago.itemState[(int)ItemIds.FREEDOM_MEDAL];
 					break;
 				case ItemIds.SCORE_CAPSULE: // 1000 Score
 					ScoreManager.AddStageScore(1000, "Score-Capsule");

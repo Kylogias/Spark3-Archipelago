@@ -105,6 +105,12 @@ namespace Sparkipelago {
 			}
 			return idx;
 		}
+
+		private static void sendLocationToServer(long location) {
+			Sparkipelago.currentSession.Locations.CompleteLocationChecks(location);
+			APSavedata data = APSave.getAPSave();
+			data.checkedLocations.Add(location);
+		}
 		
 		public static void sendLocationByIndex(int level, string sanity, int index) {
 			bool foundStage = false;
@@ -113,7 +119,7 @@ namespace Sparkipelago {
 				if (stage.id == level) {
 					foreach (APStageCheck ch in stage.checks) {
 						if (ch.sanity == sanity && ch.index == index) {
-							Sparkipelago.currentSession.Locations.CompleteLocationChecks(ch.id);
+							sendLocationToServer(ch.id);
 							foundCheck = true;
 							break;
 						}
@@ -129,7 +135,7 @@ namespace Sparkipelago {
 		
 		public static void sendLocationCheck(int level, string check) {
 			if (check == "__shop") {
-				Sparkipelago.currentSession.Locations.CompleteLocationChecks(APShared.shop[level].id);
+				sendLocationToServer(APShared.shop[level].id);
 			} else {
 				bool foundStage = false;
 				bool foundCheck = false;
@@ -137,7 +143,7 @@ namespace Sparkipelago {
 					if (stage.id == level) {
 						foreach (APStageCheck ch in stage.checks) {
 							if (ch.name == check) {
-								Sparkipelago.currentSession.Locations.CompleteLocationChecks(ch.id);
+								sendLocationToServer(ch.id);
 								foundCheck = true;
 								break;
 							}
