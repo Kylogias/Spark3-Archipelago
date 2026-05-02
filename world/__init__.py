@@ -87,6 +87,25 @@ class Spark3World(World):
 			self.location_state.regen = True
 			self.location_state.SPARK2 = True
 			self.shop_enabled = True
+			return
+
+		if self.ability_rando and (self.options.scoresanity.value or self.options.speedsanity.value):
+			raise ValueError("Ability logic not implemented for Score/Speed Sanities")
+
+		location_count = 43
+		if self.location_state.SPARK2: location_count += 14
+		if self.shop_enabled: location_count += 26
+		if self.options.scoresanity & 1: location_count += 28 if self.location_state.SPARK2 else 14
+		if self.options.scoresanity & 2: location_count += 28 if self.location_state.SPARK2 else 14
+		if self.options.speedsanity & 1: location_count += 44 if self.location_state.SPARK2 else 30
+		if self.options.speedsanity & 2: location_count += 44 if self.location_state.SPARK2 else 30
+		if self.options.exploresanity: location_count += 300 if self.location_state.SPARK2 else 180
+		if self.options.coinsanity: location_count += 72
+
+		reserved_items = 26
+		if self.ability_rando: reserved_items += 7
+		if self.options.freedom_count.value > location_count - reserved_items:
+			raise ValueError(f"Too many freedom medals in pool (have {self.options.freedom_count.value}, max {location_count - reserved_items})")
 	
 	def create_regions(self):
 		self.location_state.setup_gates(self)
