@@ -2,7 +2,7 @@ WIP and Unstable Archipelago integration for Spark the Electric Jester 3
 
 [Archipelago](https://archipelago.gg/) is "a cross-game modification system which randomizes different games, then uses the result to build a single unified multi-player game. Items from one game may be present in another, and you will need your fellow players to find items you need in their games to help you complete your own," (copied from the website)
 
-By default, level and boss completions may have archipelago items, though there are options to enable Score Medals, Speed Medals, Exploration Medals, and Shop Items.
+By default, level and boss completions may have archipelago items, though there are various options to enable other collectibles.
 
 The items that may be randomized include
 - Bit/Energy Bubbles
@@ -17,13 +17,20 @@ Music in stages can also be randomized. Enable it in your YAML, and drop any `.o
 
 The goal of the randomizer is to complete Utopia Shelter and defeat the final boss within, Claritas Centralis
 
+To configure the connection info in the middle of an AP, press the Light Attack button (Left Click on KB+M, X on controller) on the save select screen
+
+To check a shop item that you already have, press Y+A (Right Click + Space on KB+M)
+
 # Installation (client)
 1. Install [MelonLoader](https://github.com/LavaGang/MelonLoader)
 2. Drop the latest client into the Spark 3 installation folder
-3. Drop [MelonPreferencesManager](https://github.com/Bluscream/MelonPreferencesManager) (Mono) into the `Mods` folder
-4. Drop [UniverseLib](https://github.com/sinai-dev/UniverseLib/releases/tag/1.5.1) (Mono, dependency of MelonPreferencesManager) into the `UserLibs` folder
-5. One launched, press F5 to open the preference manager, go into the "Archipelago Connection" tab, and enter the connection information
-6. Delete a save if necessary and start a new game, the client will automatically connect after selecting a save file
+3. Start a new game, the client will connect automatically when the file is loaded
+
+Optionally, if you are helping lab checks (thank you, by the way :) ), the following steps can be used to configure available moves via GUI. The moves can also be configured via the 3 through minus hotkeys
+1. Drop [MelonPreferencesManager](https://github.com/Bluscream/MelonPreferencesManager) (Mono) into the `Mods` folder
+2. Drop [UniverseLib](https://github.com/sinai-dev/UniverseLib/releases/tag/1.5.1) (Mono, dependency of MelonPreferencesManager) into the `UserLibs` folder
+3. Generate an AP with lab mode enabled in the YAML
+4. Once launched, press F5 to open the preference manager, go into the "APDebug" tab, and modify to your heart's desire
 
 # Building
 

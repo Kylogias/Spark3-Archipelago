@@ -71,11 +71,6 @@ namespace Sparkipelago {
 	}
 	
 	public class Sparkipelago : MelonMod {
-		private MelonPreferences_Entry<string> ip;
-		private MelonPreferences_Entry<int> port;
-		private MelonPreferences_Entry<string> username;
-		private MelonPreferences_Entry<string> password;
-		
 		public static Sparkipelago instance;
 		public static string currentScene;
 		
@@ -99,11 +94,6 @@ namespace Sparkipelago {
 			itemState = new int[(long)ItemIds.END];
 			shopItems = new string[26];
 			
-			MelonPreferences.CreateCategory("Archipelago Connection");
-			ip = MelonPreferences.CreateEntry<string>("Archipelago Connection", "IP", "localhost");
-			port = MelonPreferences.CreateEntry<int>("Archipelago Connection", "Port", 38281);
-			username = MelonPreferences.CreateEntry<string>("Archipelago Connection", "Username", "Player1");
-			password = MelonPreferences.CreateEntry<string>("Archipelago Connection", "Password", "");
 			LabMode.initPrefs();
 			
 			MusicRandomization.registerMusic();
@@ -112,13 +102,17 @@ namespace Sparkipelago {
 		public void ConnectToArchipelago(bool newServer) {
 			if (newServer) {
 				Array.Clear(itemState, 0, itemState.Length);
+				if (currentSession != null) {
+					currentSession.Items.ItemReceived -= HandleItem;
+				}
 			}
 			
 			APSavedata data = APSave.getAPSave();
-			currentSession = ArchipelagoSessionFactory.CreateSession(data.ip, data.port);
+			APConnectionInfo connect = APSave.getAPConnect();
+			currentSession = ArchipelagoSessionFactory.CreateSession(connect.ip, connect.port);
 			LoginResult result;
-			if (password.Value.Length != 0) result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", data.slot, ItemsHandlingFlags.AllItems, password: data.password);
-			else result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", data.slot, ItemsHandlingFlags.AllItems);
+			if (connect.password.Length != 0) result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", connect.slot, ItemsHandlingFlags.AllItems, password: connect.password);
+			else result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", connect.slot, ItemsHandlingFlags.AllItems);
 			
 			if (result.Successful) {
 				currentSession.Items.ItemReceived += HandleItem;
@@ -273,14 +267,15 @@ namespace Sparkipelago {
 				setupPrefabs();
 				SceneManager.LoadScene("[LOGO]");
 			}
+
+			if (sceneName == "[SAVE SELECT]") {
+				currentSaveSlot = -1;
+				APSave.onSaveSelect();
+			}
 			
 			if (sceneName == "[CUTSCENE 01 - INTRO CUTSCENE]") {
 				WorldMap.initializeSave();
-				APSavedata data = APSave.getAPSave();
-				data.slot = username.Value;
-				data.password = password.Value;
-				data.ip = ip.Value;
-				data.port = port.Value;
+				APSave.clearAPSave();
 			}
 			
 			if (sceneName == "[CUTSCENE 16 - ENDING CUTSCENE]") {

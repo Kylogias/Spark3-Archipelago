@@ -110,6 +110,8 @@ namespace Sparkipelago {
 			Sparkipelago.currentSession.Locations.CompleteLocationChecks(location);
 			APSavedata data = APSave.getAPSave();
 			data.checkedLocations.Add(location);
+			data.numLocations = Sparkipelago.currentSession.Locations.AllLocations.Count;
+			data.numChecked = Sparkipelago.currentSession.Locations.AllLocationsChecked.Count;
 		}
 		
 		public static void sendLocationByIndex(int level, string sanity, int index) {

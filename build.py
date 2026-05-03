@@ -18,8 +18,9 @@ COMMANDBASE = [
 ]
 
 INCLUDE_MANAGED = [
-	"Assembly-CSharp.dll", "UnityEngine.dll", "UnityEngine.CoreModule.dll", "UnityEngine.UI.dll", "UnityEngine.AudioModule.dll", "UnityEngine.JSONSerializeModule",
-	"Rewired_Core.dll", "UnityEngine.UnityWebRequestModule.dll", "UnityEngine.UnityWebRequestAudioModule.dll", "UnityEngine.PhysicsModule.dll", "UnityEngine.InputLegacyModule"
+	"Assembly-CSharp.dll", "UnityEngine.dll", "UnityEngine.CoreModule.dll", "UnityEngine.UI.dll",
+	"UnityEngine.AudioModule.dll", "UnityEngine.JSONSerializeModule", "Rewired_Core.dll", "UnityEngine.UnityWebRequestModule.dll",
+	"UnityEngine.UnityWebRequestAudioModule.dll", "UnityEngine.PhysicsModule.dll", "UnityEngine.InputLegacyModule", "UnityEngine.TextRenderingModule"
 ]
 
 command = COMMANDBASE[0]
