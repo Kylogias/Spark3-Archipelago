@@ -3,6 +3,7 @@ from . import items, locations, rules
 from . import options as opts
 from .constants import GAME_NAME
 from .apshared import location_name_to_id as loctoid
+from .apshared import item_name_to_id as itemtoid
 from .apshared import apshared
 
 class Spark3World(World):
@@ -10,7 +11,7 @@ class Spark3World(World):
 	ut_can_gen_without_yaml = True
 	
 	location_name_to_id = loctoid
-	item_name_to_id = items.static_item.ITEM_NAME_TO_ID
+	item_name_to_id = itemtoid
 
 	options_dataclass = opts.Spark3Options
 	options: opts.Spark3Options
@@ -49,18 +50,22 @@ class Spark3World(World):
 			self.ability_rando = False
 		
 		if self.options.spark2_stages:
-			self.location_state.SPARK2 = True
+			self.spark2 = True
 			self.location_state.GATE_STAGE_COUNT = [10, 10, 11, 11, 11]
 		else:
-			self.location_state.SPARK2 = False
+			self.spark2 = False
 			self.location_state.GATE_STAGE_COUNT = [7, 8, 8, 8, 8]
+
+		self.explore_hunt = self.options.explore_hunt.value
+		if self.explore_hunt:
+			self.location_state.sanities.append("hunt")
 		
 		self.item_state.TRAP_CHANCE = self.options.trap_chance.value
 		
 		self.difficulty = apshared["difficulties"][self.options.difficulty]
 		
 		if self.options.labmode:
-			self.location_state.SPARK2 = True
+			self.spark2 = True
 			self.location_state.bosses = [
 				{"name": "LABTIME1", "id": 250, "type": "boss", "checks": []},
 				{"name": "LABTIME2", "id": 250, "type": "boss", "checks": []},
@@ -85,25 +90,29 @@ class Spark3World(World):
 			self.location_state.gate_data = slot_data["gates"]
 			self.location_state.boss_data = slot_data["bosses"]
 			self.location_state.regen = True
-			self.location_state.SPARK2 = True
+			self.spark2 = True
 			self.shop_enabled = True
+			self.explore_hunt = slot_data["explore_hunt"]
 			return
 
-		if self.ability_rando and (self.options.scoresanity.value or self.options.speedsanity.value):
-			raise ValueError("Ability logic not implemented for Score/Speed Sanities")
+	#	if self.ability_rando and (self.options.scoresanity.value or self.options.speedsanity.value):
+	#		raise ValueError("Ability logic not implemented for Score/Speed Sanities")
 
 		location_count = 43
-		if self.location_state.SPARK2: location_count += 14
+		if self.spark2: location_count += 14
 		if self.shop_enabled: location_count += 26
-		if self.options.scoresanity & 1: location_count += 28 if self.location_state.SPARK2 else 14
-		if self.options.scoresanity & 2: location_count += 28 if self.location_state.SPARK2 else 14
-		if self.options.speedsanity & 1: location_count += 44 if self.location_state.SPARK2 else 30
-		if self.options.speedsanity & 2: location_count += 44 if self.location_state.SPARK2 else 30
-		if self.options.exploresanity: location_count += 300 if self.location_state.SPARK2 else 180
+		if self.options.scoresanity & 1: location_count += 28 if self.spark2 else 14
+		if self.options.scoresanity & 2: location_count += 28 if self.spark2 else 14
+		if self.options.speedsanity & 1: location_count += 44 if self.spark2 else 30
+		if self.options.speedsanity & 2: location_count += 44 if self.spark2 else 30
+		if self.options.exploresanity: location_count += 300 if self.spark2 else 180
 		if self.options.coinsanity: location_count += 72
 
 		reserved_items = 26
 		if self.ability_rando: reserved_items += 7
+		if self.explore_hunt == 2: reserved_items += 300 if self.spark2 else 180
+		if reserved_items > location_count:
+			raise ValueError(f"Too many items in the pool! {reserved_items} items and {location_count} locations")
 		if self.options.freedom_count.value > location_count - reserved_items:
 			raise ValueError(f"Too many freedom medals in pool (have {self.options.freedom_count.value}, max {location_count - reserved_items})")
 	
@@ -135,6 +144,7 @@ class Spark3World(World):
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
 			"labmode": self.options.labmode.value,
 			"sanities": self.location_state.sanities,
+			"explore_hunt": self.explore_hunt,
 			"difficulty": self.difficulty,
 			"gates": self.location_state.gate_data,
 			"bosses": self.location_state.boss_data,

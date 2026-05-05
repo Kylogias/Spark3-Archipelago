@@ -15,7 +15,6 @@ class LocationState:
 		self.SHOP_LOCATIONS = {}
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11] # Gate 0 excludes Alpine Carrera in the count
-		self.SPARK2 = True
 		
 		self.sanities = ["base"]
 		self.stages = []
@@ -67,21 +66,30 @@ class LocationState:
 			self.spoiler_text += f"\t{stage['name']}\n"
 	
 	def setup_stage_region(self, world, stage, event=None):
-		region = Region(stage["name"], world.player, world.multiworld)
-		world.multiworld.regions += [region]
+		stage_region = Region(stage["name"], world.player, world.multiworld)
+		completion_region = Region(f"{stage['name']} GOAL", world.player, world.multiworld)
+		world.multiworld.regions += [stage_region, completion_region]
 		locs = {}
+		completion_locs = {}
+		stage_region.connect(completion_region, f"{stage['name']} GOAL")
 
 		for check in stage["checks"]:
 			if check["sanity"] in self.sanities:
-				locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
+				if check["sanity"] in completion_sanities:
+					completion_locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
+				else:
+					locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
+			elif check["sanity"] == "explore" and world.explore_hunt == 1:
+				stage_region.add_event(f"{stage['name']} {check['name']}", f"{stage['name']} EXPLORE MEDAL", location_type=Spark3Location, item_type=Spark3Item, show_in_spoiler=False)
 		
 		if event:
-			for loc in locs.keys():
-				region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
+			for loc in completion_locs.keys():
+				completion_region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
 		else:
-			region.add_locations(locs, Spark3Location)
+			completion_region.add_locations(completion_locs, Spark3Location)
+		stage_region.add_locations(locs, Spark3Location)
 
-		return region
+		return stage_region
 	
 	def setup_shop(self, world):
 		shop_pages = [
@@ -116,7 +124,7 @@ class LocationState:
 	#	gates[2].connect(gates[3], "Gate 2 to 3")
 	#	gates[3].connect(gates[4], "Gate 3 to 4")
 		
-		if self.SPARK2:
+		if world.spark2:
 			self.stages += self.spark2
 		
 		if self.regen:

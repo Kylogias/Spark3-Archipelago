@@ -1,5 +1,4 @@
-from BaseClasses import CollectionState
-from rule_builder.rules import Has, HasAny, And, Or, True_
+from rule_builder.rules import Has, HasAny, HasFromList, And, Or, True_
 
 from .items import Spark3Item
 from .constants import *
@@ -67,13 +66,13 @@ class RulesState:
 				case RuleToken.FLOAT: rule = self.add_to_rule(op, rule, Has(FLOAT))
 				case RuleToken.REAPER: rule = self.add_to_rule(op, rule, Has(REAPER))
 				case RuleToken.ONE_CANCEL: rule = self.add_to_rule(op, rule, HasAny(DOUBLE_JUMP, CHARGED_DASH, DASH))
-				case RuleToken.TWO_CANCEL: rule = self.add_to_rule(op, rule, And(HasAny(DOUBLE_JUMP, CHARGED_DASH), HasAny(CHARGED_DASH, DASH), HasAny(DASH, DOUBLE_JUMP)))
+				case RuleToken.TWO_CANCEL: rule = self.add_to_rule(op, rule, HasFromList(DOUBLE_JUMP, CHARGED_DASH, DASH, count=2))
 		if rule == None:
 			rule = True_()
 		print(f"\t{rule}")
 		return rule
 	
-	def parse_location_rules(self, world, location, rules):
+	def parse_location_rules(self, world, rules):
 		i = 0
 		tokens = []
 		rule = rules["base"]
@@ -85,7 +84,7 @@ class RulesState:
 					tokens.append(RuleToken(tok))
 					i += len(STRING_TO_TOKEN[tok])
 					break
-		world.set_rule(location, self.recurse_tokens(tokens))
+		return self.recurse_tokens(tokens)
 	
 	def set_shop_rules(self, world):
 		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_MOVES}"), Has(SHOP_MOVES))
@@ -96,18 +95,28 @@ class RulesState:
 	def set_stage_rules(self, world):
 		for i in range(4):
 			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
-			world.set_rule(gate_entrance, Has(COMBAT) & Has(FREEDOM_MEDAL, count=self.FREEDOM_REQUIREMENTS[i]))
+			has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[i])
+			has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
+			world.set_rule(gate_entrance, Has(COMBAT) & has_freedom)
 		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
-		world.set_rule(utopia_entrance, Has(FREEDOM_MEDAL, count=self.FREEDOM_REQUIREMENTS[4]))
+		has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[4])
+		has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
+		world.set_rule(utopia_entrance, has_freedom)
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			stage_region = world.location_state.stage_regions[stage_name]
 			stage_data = stage_region[1]
 			stage_region = stage_region[0]
+			completion_entrance = world.get_entrance(f"{stage_name} GOAL")
 			
 			for check in stage_data["checks"]:
-				if check["sanity"] in world.location_state.sanities:
+				if check["sanity"] in world.location_state.sanities or (check["sanity"] == "explore" and world.explore_hunt):
 					loc = world.get_location(f"{stage_data['name']} {check['name']}")
-					self.parse_location_rules(world, loc, check['requires'])
+					world.set_rule(loc, self.parse_location_rules(world, check['requires']))
+					if check["sanity"] == "base":
+						rule = self.parse_location_rules(world, check['requires'])
+						world.set_rule(completion_entrance, rule)
+					if check["sanity"] == "hunt" and world.explore_hunt:
+						world.set_rule(loc, Has(f"{stage_name} EXPLORE MEDAL", count=10))
 
 		world.multiworld.completion_condition[world.player] = lambda state: state.has("Victory", world.player)

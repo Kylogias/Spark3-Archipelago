@@ -97,7 +97,7 @@ namespace Sparkipelago {
 				
 				i = 0;
 				foreach (JToken boss in ((JArray)Sparkipelago.slotData["bosses"])) {
-					if (placeStage(boss, level) && Sparkipelago.itemState[(long)ItemIds.FREEDOM_MEDAL] >= freedomReqs[i]) unlocked = true;
+					if (placeStage(boss, level) && Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[i]) unlocked = true;
 					i++;
 				}
 				
@@ -106,7 +106,7 @@ namespace Sparkipelago {
 					if (i > 0 && i < 5) {
 						if (!save.StageCompleted[bossids[i-1]]) {i++; continue;}
 					} else if (i == 5) {
-						if (!(Sparkipelago.itemState[(long)ItemIds.FREEDOM_MEDAL] >= freedomReqs[4] && save.Power_Fark && save.Power_Sfarx)) {i++; continue;}
+						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[4] && save.Power_Fark && save.Power_Sfarx)) {i++; continue;}
 					}
 					foreach (JToken lvlinfo in (JArray)gate) {
 						if (placeStage(lvlinfo, level)) unlocked = true;
@@ -123,7 +123,7 @@ namespace Sparkipelago {
 			}
 
 			UnityEngine.UI.Text fplabel = GameObject.Find("UI/WorldMapInfo/Fp/FpText").GetComponent<UnityEngine.UI.Text>();
-			fplabel.text = Sparkipelago.itemState[(long)ItemIds.FREEDOM_MEDAL].ToString(); // Edit to match server count
+			fplabel.text = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL].ToString(); // Edit to match server count
 		}
 		
 		[HarmonyPatch(typeof(ShopaloShop), "SwitchPage")]
@@ -134,7 +134,7 @@ namespace Sparkipelago {
 				}
 				int i = 0;
 				foreach (ShopItenDetails iten in __instance.MainPageItens) {
-					if (Sparkipelago.itemState[(long)ItemIds.SHOP_MOVES+i] == 0) iten.gameObject.SetActive(false);
+					if (Sparkipelago.itemState[ItemIds.SHOP_MOVES+i] == 0) iten.gameObject.SetActive(false);
 					i++;
 					if (i == 4) break;
 				}

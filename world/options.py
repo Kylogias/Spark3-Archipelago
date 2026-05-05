@@ -122,6 +122,16 @@ class MusicChoice(Choice):
 	
 	default = option_vanilla
 
+class ExploreHunt(Choice):
+	"""
+	Add a location to each stage for collecting all explore medals
+	"""
+	display_name = "Explore Hunt"
+
+	option_off = 0
+	option_locations_only = 1
+	option_shuffle_medals = 2
+
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
@@ -134,6 +144,7 @@ class Spark3Options(PerGameCommonOptions):
 	speedsanity: Speedsanity
 	scoresanity: Scoresanity
 	exploresanity: Exploresanity
+	explore_hunt: ExploreHunt
 	coinsanity: Coinsanity
 	trap_chance: TrapChance
 	music_rando: MusicChoice

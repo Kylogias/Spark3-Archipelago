@@ -32,6 +32,18 @@ namespace Sparkipelago {
 			checks = c;
 		}
 	}
+
+	public struct APItem {
+		public string name;
+		public string type;
+		public long id;
+
+		public APItem(string n, string t, long i) {
+			name = n;
+			type = t;
+			id = i;
+		}
+	}
 	
 	public struct APShopItem {
 		public string name;

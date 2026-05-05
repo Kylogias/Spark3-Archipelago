@@ -31,16 +31,16 @@ namespace Sparkipelago {
 		}
 		
 		public static void checkForInput() {
-			if ((Sparkipelago.itemState[(long)ItemIds.DASH] > 0) != dbgHasDA.Value) Sparkipelago.itemState[(long)ItemIds.DASH] = dbgHasDA.Value ? 1 : 0;
-			if ((Sparkipelago.itemState[(long)ItemIds.CHARGED_DASH] > 0) != dbgHasCD.Value) Sparkipelago.itemState[(long)ItemIds.CHARGED_DASH] = dbgHasCD.Value ? 1 : 0;
-			if ((Sparkipelago.itemState[(long)ItemIds.JESTER_DASH] > 0) != dbgHasJD.Value) Sparkipelago.itemState[(long)ItemIds.JESTER_DASH] = dbgHasJD.Value ? 1 : 0;
-			if ((Sparkipelago.itemState[(long)ItemIds.DOWN_DASH] > 0) != dbgHasDD.Value) Sparkipelago.itemState[(long)ItemIds.DOWN_DASH] = dbgHasDD.Value ? 1 : 0;
-			if ((Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] > 0) != dbgHasDJ.Value) Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] = dbgHasDJ.Value ? 1 : 0;
-			if ((Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] > 0) != dbgHasWJ.Value) Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] = dbgHasWJ.Value ? 1 : 0;
-			if ((Sparkipelago.itemState[(long)ItemIds.COMBAT] > 0) != dbgHasCO.Value) Sparkipelago.itemState[(long)ItemIds.COMBAT] = dbgHasCO.Value ? 1 : 0;
+			if (Sparkipelago.hasItem(ItemIds.DASH) != dbgHasDA.Value) Sparkipelago.itemState[ItemIds.DASH] = dbgHasDA.Value ? 1 : 0;
+			if (Sparkipelago.hasItem(ItemIds.CHARGED_JESTER_DASH) != dbgHasCD.Value) Sparkipelago.itemState[ItemIds.CHARGED_JESTER_DASH] = dbgHasCD.Value ? 1 : 0;
+			if (Sparkipelago.hasItem(ItemIds.JESTER_DASH) != dbgHasJD.Value) Sparkipelago.itemState[ItemIds.JESTER_DASH] = dbgHasJD.Value ? 1 : 0;
+			if (Sparkipelago.hasItem(ItemIds.DOWN_DASH) != dbgHasDD.Value) Sparkipelago.itemState[ItemIds.DOWN_DASH] = dbgHasDD.Value ? 1 : 0;
+			if (Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP) != dbgHasDJ.Value) Sparkipelago.itemState[ItemIds.DOUBLE_JUMP] = dbgHasDJ.Value ? 1 : 0;
+			if (Sparkipelago.hasItem(ItemIds.WALL_JUMP) != dbgHasWJ.Value) Sparkipelago.itemState[ItemIds.WALL_JUMP] = dbgHasWJ.Value ? 1 : 0;
+			if (Sparkipelago.hasItem(ItemIds.COMBAT) != dbgHasCO.Value) Sparkipelago.itemState[ItemIds.COMBAT] = dbgHasCO.Value ? 1 : 0;
 			
 			if (Input.GetKeyDown(KeyCode.Alpha5)) {
-				if (Sparkipelago.itemState[(long)ItemIds.JESTER_DASH] > 0) {
+				if (Sparkipelago.hasItem(ItemIds.JESTER_DASH)) {
 					dbgHasJD.Value = false;
 					Sparkipelago.debugLog("Disabling JESTER_DASH");
 				} else {
@@ -49,7 +49,7 @@ namespace Sparkipelago {
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Alpha6)) {
-				if (Sparkipelago.itemState[(long)ItemIds.DASH] > 0) {
+				if (Sparkipelago.hasItem(ItemIds.DASH)) {
 					dbgHasDA.Value = false;
 					Sparkipelago.debugLog("Disabling DASH");
 				} else {
@@ -58,16 +58,16 @@ namespace Sparkipelago {
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Alpha7)) {
-				if (Sparkipelago.itemState[(long)ItemIds.CHARGED_DASH] > 0) {
+				if (Sparkipelago.hasItem(ItemIds.CHARGED_JESTER_DASH)) {
 					dbgHasCD.Value = false;
-					Sparkipelago.debugLog("Disabling CHARGED_DASH");
+					Sparkipelago.debugLog("Disabling CHARGED_JESTER_DASH");
 				} else {
 					dbgHasCD.Value = true;
-					Sparkipelago.debugLog("Enabling CHARGED_DASH");
+					Sparkipelago.debugLog("Enabling CHARGED_JESTER_DASH");
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Alpha8)) {
-				if (Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] > 0) {
+				if (Sparkipelago.hasItem(ItemIds.WALL_JUMP)) {
 					dbgHasWJ.Value = false;
 					Sparkipelago.debugLog("Disabling WALL_JUMP");
 				} else {
@@ -76,7 +76,7 @@ namespace Sparkipelago {
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Alpha9)) {
-				if (Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] > 0) {
+				if (Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP)) {
 					dbgHasDJ.Value = false;
 					Sparkipelago.debugLog("Disabling DOUBLE_JUMP");
 				} else {
@@ -85,7 +85,7 @@ namespace Sparkipelago {
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Alpha0)) {
-				if (Sparkipelago.itemState[(long)ItemIds.COMBAT] > 0) {
+				if (Sparkipelago.hasItem(ItemIds.COMBAT)) {
 					dbgHasCO.Value = false;
 					Sparkipelago.debugLog("Disabling COMBAT");
 				} else {
@@ -94,7 +94,7 @@ namespace Sparkipelago {
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Minus)) {
-				if (Sparkipelago.itemState[(long)ItemIds.DOWN_DASH] > 0) {
+				if (Sparkipelago.hasItem(ItemIds.DOWN_DASH)) {
 					dbgHasDD.Value = false;
 					Sparkipelago.debugLog("Disabling DOWN_DASH");
 				} else {
@@ -105,25 +105,25 @@ namespace Sparkipelago {
 		}
 		
 		private static void onChangeDA(bool oldV, bool newV) {
-			Sparkipelago.itemState[(long)ItemIds.DASH] = newV ? 1 : 0;
+			Sparkipelago.itemState[ItemIds.DASH] = newV ? 1 : 0;
 		}
 		private static void onChangeCD(bool oldV, bool newV) {
-			Sparkipelago.itemState[(long)ItemIds.CHARGED_DASH] = newV ? 1 : 0;
+			Sparkipelago.itemState[ItemIds.CHARGED_JESTER_DASH] = newV ? 1 : 0;
 		}
 		private static void onChangeJD(bool oldV, bool newV) {
-			Sparkipelago.itemState[(long)ItemIds.JESTER_DASH] = newV ? 1 : 0;
+			Sparkipelago.itemState[ItemIds.JESTER_DASH] = newV ? 1 : 0;
 		}
 		private static void onChangeDD(bool oldV, bool newV) {
-			Sparkipelago.itemState[(long)ItemIds.DOWN_DASH] = newV ? 1 : 0;
+			Sparkipelago.itemState[ItemIds.DOWN_DASH] = newV ? 1 : 0;
 		}
 		private static void onChangeDJ(bool oldV, bool newV) {
-			Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] = newV ? 1 : 0;
+			Sparkipelago.itemState[ItemIds.DOUBLE_JUMP] = newV ? 1 : 0;
 		}
 		private static void onChangeWJ(bool oldV, bool newV) {
-			Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] = newV ? 1 : 0;
+			Sparkipelago.itemState[ItemIds.WALL_JUMP] = newV ? 1 : 0;
 		}
 		private static void onChangeCO(bool oldV, bool newV) {
-			Sparkipelago.itemState[(long)ItemIds.COMBAT] = newV ? 1 : 0;
+			Sparkipelago.itemState[ItemIds.COMBAT] = newV ? 1 : 0;
 		}
 	}
 }

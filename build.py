@@ -35,6 +35,13 @@ with open("apshared.json", "r") as apjs:
 	shared = json.load(apjs)
 
 location_name_to_id = {}
+item_name_to_id = {}
+
+itemID = 16295350000
+for item in shared["items"]:
+	item_name_to_id[item["name"]] = itemID
+	item["id"] = itemID
+	itemID += 1
 
 curID = 16295300000
 for shop in shared["shop"]:
@@ -42,18 +49,29 @@ for shop in shared["shop"]:
 	location_name_to_id[f"Shop {shop['page']} {shop['name']}"] = curID
 	curID += 1
 
-sanity_priority = ["base", "speedgold", "speeddia", "scoregold", "scoredia", "explore", "coin"]
+sanity_priority = ["base", "speedgold", "speeddia", "scoregold", "scoredia", "explore", "hunt", "coin"]
 sanities = {}
 for sanity in sanity_priority:
 	sanities[sanity] = []
 
+itemID = 16295351000
 for stage in shared["stages"]:
+	explore_rules = []
 	for check in stage["checks"].copy():
+		if check["sanity"] == "explore":
+			explore_rules.append(f"({check['requires']})")
 		if check["sanity"] in sanities:
 			sanities[check["sanity"]].append([stage, check])
 		else:
 			stage["checks"].remove(check)
 			continue
+	if len(explore_rules):
+		explore_name = f"{stage['name']} EXPLORE MEDAL"
+		item_name_to_id[explore_name] = itemID + stage["id"]
+		shared["items"].append({"name": explore_name, "itemtype": "EXPLORE2" if stage["type"] == "spark2" else "EXPLORE3", "id": itemID+stage["id"]})
+		check = {"name": "EXPLORE HUNT", "sanity": "hunt", "requires": ""}
+		stage["checks"].append(check)
+		sanities["hunt"].append([stage, check])
 
 for sanity in sanity_priority:
 	for location in sanities[sanity]:
@@ -69,15 +87,38 @@ for sanity in sanity_priority:
 		curID += 1
 
 with open("world/apshared.py", "w") as appy:
+	appy.write("from .items import ItemType\n")
 	appy.write("apshared = ")
-	appy.write(json.dumps(shared, indent='\t'))
+	shared_str = json.dumps(shared, indent='\t')
+	index = shared_str.find("itemtype")
+	while True:
+		index = shared_str.find("itemtype")
+		if index == -1: break
+		part = shared_str.partition('"itemtype": "')
+		shared_str = "".join([part[0], '"type": ItemType.'])
+		part = part[2].partition('"')
+		shared_str = "".join([shared_str, part[0], part[2]])
+	appy.write(shared_str)
 	appy.write("\nlocation_name_to_id = ")
 	appy.write(json.dumps(location_name_to_id, indent='\t'))
+	appy.write("\nitem_name_to_id = ")
+	appy.write(json.dumps(item_name_to_id, indent='\t'))
 
 with open("client/apshared.cs", "w") as apcs:
 	apcs.write("namespace Sparkipelago {\n")
+	apcs.write("\tpublic enum ItemIds : long {\n")
+	for item in shared["items"]:
+		apcs.write(f"\t\t{item['name'].replace(' ', '_').replace('.', '').replace('-', '').upper()} = {item['id']},\n")
+	apcs.write(f"\t\tBASE_EXPLORE_MEDAL = {itemID}\n")
+	apcs.write("\t};\n")
 	apcs.write("\tclass APShared {\n")
 	apcs.write(f"\t\tpublic static int version = {shared['version']};\n")
+	apcs.write("\t\tpublic static long[] itemIDs = {")
+	for item in shared["items"]:
+		apcs.write(f"{item['id']}")
+		if item != shared["items"][-1]:
+			apcs.write(", ")
+	apcs.write("};\n")
 	apcs.write("\t\tpublic static APShopItem[] shop = {\n")
 	for shop in shared["shop"]:
 		apcs.write(f"\t\t\tnew APShopItem(\"{shop['name']}\", \"{shop['page']}\", {shop['id']})")

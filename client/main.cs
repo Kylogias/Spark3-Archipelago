@@ -14,62 +14,6 @@ using Newtonsoft.Json.Linq;
 
 
 namespace Sparkipelago {
-	// RingGiverControl
-	// EnergyGiverControl
-	// Objects_Interaction
-	// ScoreManager
-	
-	public enum ItemIds : long {
-		FREEDOM_MEDAL = 1,
-		DASH,
-		JESTER_DASH,
-		CHARGED_DASH,
-		DOWN_DASH,
-		WALL_JUMP,
-		DOUBLE_JUMP,
-		COMBAT,
-		SCORE_CAPSULE, // 1000 Score
-		HEALTH_CAPSULE, // 1 health
-		ENERGY_CAPSULE, // 10 energy
-		BIT_BUBBLE, // 30 bits
-		ENERGY_BUBBLE, // 20 energy
-		NIGHTMARE_TRAP,
-		LASER_TRAP,
-		DUST_TRAP,
-		SPIN_CHARGE,
-		DUAL_AIR_KICK,
-		DUAL_AIR_SLASH,
-		EXTRA_FINISHER,
-		SKYWARD_SLASH,
-		DOUBLE_DOWN_SPIN,
-		ABRUPT_FINISHER,
-		DUPLEX_SLASH,
-		SPEED_BUFF,
-		HYPER_SURGE,
-		ENERGY_DASH,
-		OVERCHARGE,
-		SNAP_PORTAL,
-		RADAR_SCOUT,
-		MULTISHOT_BLAST,
-		HEAL,
-		CLOUD_SHOT,
-		TEMP_SHIELD,
-		CHARGED_SHOT,
-		RAIL_BOOST,
-		REGEN_BREAKING,
-		JESTER_SWIPE,
-		REAPER,
-		FLOAT,
-		FARK,
-		SFARX,
-		SHOP_MOVES,
-		SHOP_POWERS,
-		SHOP_UPGRADES,
-		SHOP_CHARACTERS,
-		END,
-		PREFIX = 16295350000
-	}
-	
 	public class Sparkipelago : MelonMod {
 		public static Sparkipelago instance;
 		public static string currentScene;
@@ -84,14 +28,17 @@ namespace Sparkipelago {
 		public static GameObject playerRed;
 		public static GameObject playerGray;
 		
-		public static int[] itemState;
+		public static Dictionary<ItemIds, int> itemState;
 		public static string[] shopItems;
 		public static int musicRando = 0;
 		public static int musicSeed = 0;
 		
 		public override void OnInitializeMelon() {
 			instance = this;
-			itemState = new int[(long)ItemIds.END];
+			itemState = new Dictionary<ItemIds, int>();
+			foreach(long id in APShared.itemIDs) {
+				itemState.Add((ItemIds)id, 0);
+			}
 			shopItems = new string[26];
 			
 			LabMode.initPrefs();
@@ -101,7 +48,9 @@ namespace Sparkipelago {
 		
 		public void ConnectToArchipelago(bool newServer) {
 			if (newServer) {
-				Array.Clear(itemState, 0, itemState.Length);
+				foreach (long id in APShared.itemIDs) {
+					itemState[(ItemIds)id] = 0;
+				}
 				if (currentSession != null) {
 					currentSession.Items.ItemReceived -= HandleItem;
 				}
@@ -157,10 +106,10 @@ namespace Sparkipelago {
 		}
 		
 		private static void onItem(ItemInfo item, bool catchup)  {
-			MelonLogger.Msg("Receiving {0} with ID {1} (index {2})", item.ItemDisplayName, item.ItemId, item.ItemId-(long)ItemIds.PREFIX);
-			itemState[item.ItemId-(long)ItemIds.PREFIX] += 1;
+			MelonLogger.Msg("Receiving {0} with ID {1}", item.ItemDisplayName, item.ItemId);
+			itemState[(ItemIds)item.ItemId] += 1;
 			MelonLogger.Msg("Handling Item");
-			Items.handleItem(item, catchup);
+			Items.handleItem((ItemIds)item.ItemId, catchup);
 		}
 		
 		public static void debugLog(string fmt, params object[] args) {
@@ -168,6 +117,10 @@ namespace Sparkipelago {
 			if ((long)Sparkipelago.slotData["labmode"] != 0 && currentSession != null) {
 				currentSession.Say(string.Format(fmt, args));
 			} 
+		}
+
+		public static bool hasItem(ItemIds item) {
+			return itemState[item] > 0;
 		}
 		
 		public static void HandleItem(ReceivedItemsHelper itemHandler) {

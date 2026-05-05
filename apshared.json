@@ -1,6 +1,61 @@
 {
-	"version": 5,
+	"version": 6,
 	"difficulties": ["base"],
+	"items": [
+		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
+		{"name": "Dash", "itemtype": "ABILITY"},
+		{"name": "Jester Dash", "itemtype": "ABILITY"},
+		{"name": "Charged Jester Dash", "itemtype": "ABILITY"},
+		{"name": "Down Dash", "itemtype": "ABILITY"},
+		{"name": "Wall Jump", "itemtype": "ABILITY"},
+		{"name": "Double Jump", "itemtype": "ABILITY"},
+		{"name": "Combat", "itemtype": "ABILITY"},
+		
+		{"name": "Score Capsule", "itemtype": "JUNK"},
+		{"name": "Health Capsule", "itemtype": "JUNK"},
+		{"name": "Energy Capsule", "itemtype": "JUNK"},
+		{"name": "Bit Bubble", "itemtype": "JUNK"},
+		{"name": "Energy Bubble", "itemtype": "JUNK"},
+		
+		{"name": "Nightmare Trap", "itemtype": "TRAP"},
+		{"name": "Laser Trap", "itemtype": "TRAP"},
+		{"name": "Dust Trap", "itemtype": "UNIMPLEMENTED"},
+		
+		{"name": "Spin Charge", "itemtype": "MOVE"},
+		{"name": "Dual Air Kick", "itemtype": "MOVE"},
+		{"name": "Dual Air Slash", "itemtype": "MOVE"},
+		{"name": "Extra Finisher", "itemtype": "MOVE"},
+		{"name": "Skyward Slash", "itemtype": "MOVE"},
+		{"name": "Double Down Spin", "itemtype": "MOVE"},
+		{"name": "Abrupt Finisher", "itemtype": "MOVE"},
+		{"name": "Duplex Slash", "itemtype": "MOVE"},
+		
+		{"name": "Speed Buff", "itemtype": "MOVE"},
+		{"name": "Hyper Surge", "itemtype": "MOVE"},
+		{"name": "Energy Dash", "itemtype": "MOVE"},
+		{"name": "Overcharge", "itemtype": "MOVE"},
+		{"name": "Snap Portal", "itemtype": "MOVE"},
+		{"name": "Radar Scout", "itemtype": "MOVE"},
+		{"name": "Multishot Blast", "itemtype": "MOVE"},
+		{"name": "Heal", "itemtype": "MOVE"},
+		{"name": "Cloud Shot", "itemtype": "MOVE"},
+		{"name": "Temp Shield", "itemtype": "MOVE"},
+		
+		{"name": "Charged Shot", "itemtype": "MOVE"},
+		{"name": "Rail Boost", "itemtype": "MOVE"},
+		{"name": "Regen Breaking", "itemtype": "MOVE"},
+		{"name": "Jester Swipe", "itemtype": "MOVE"},
+		
+		{"name": "Reaper Jester", "itemtype": "CHARACTER"},
+		{"name": "Float", "itemtype": "CHARACTER"},
+		{"name": "Fark", "itemtype": "CHARACTER"},
+		{"name": "Sfarx", "itemtype": "CHARACTER"},
+		
+		{"name": "Shop Moves", "itemtype": "SHOP"},
+		{"name": "Shop Powers", "itemtype": "SHOP"},
+		{"name": "Shop Upgrades", "itemtype": "SHOP"},
+		{"name": "Shop Characters", "itemtype": "SHOP"}
+	],
 	"shop": [
 		{"name": "Spin Charge", "page": "Moves"},
 		{"name": "Dual Air Kick", "page": "Moves"},

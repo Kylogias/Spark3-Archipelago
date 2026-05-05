@@ -11,14 +11,14 @@ namespace Sparkipelago {
 			PlayerPrefs.SetInt("Bits" + SaveSlot.Slot, ScoreManager.Bits);
 		}
 		
-		public static void handleItem(ItemInfo item, bool catchup) {
+		public static void handleItem(ItemIds item, bool catchup) {
 			Save.SaveFile save = Save.Saves[Save.CurrentSaveSlot];
 			
-			switch ((ItemIds)(item.ItemId-(long)ItemIds.PREFIX)) {
+			switch (item) {
 				case ItemIds.FREEDOM_MEDAL:
 					if (Sparkipelago.currentScene == "[WORLD MAP]") WorldMap.onMapLoad();
 					APSavedata data = APSave.getAPSave();
-					data.fpCount = Sparkipelago.itemState[(int)ItemIds.FREEDOM_MEDAL];
+					data.fpCount = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL];
 					break;
 				case ItemIds.SCORE_CAPSULE: // 1000 Score
 					ScoreManager.AddStageScore(1000, "Score-Capsule");
@@ -60,7 +60,7 @@ namespace Sparkipelago {
 				case ItemIds.RAIL_BOOST: save.RailBoost = true; break;
 				case ItemIds.REGEN_BREAKING: save.RegenBreak = true; break;
 				case ItemIds.JESTER_SWIPE: save.JesterSwipe = true; save.JesterSwipeEnabled = true; break;
-				case ItemIds.REAPER: save.Power_Reaper = true; break;
+				case ItemIds.REAPER_JESTER: save.Power_Reaper = true; break;
 				case ItemIds.FLOAT: save.Power_Float = true; break;
 				case ItemIds.FARK: save.Power_Fark = true; break;
 				case ItemIds.SFARX: save.Power_Sfarx = true; break;
@@ -70,21 +70,21 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(Action00_Regular), "ManageDash")]
 		private static class DashPatch {
 			private static void Prefix(Action00_Regular __instance) {
-				if (Sparkipelago.itemState[(long)ItemIds.DASH] == 0) __instance.dashc = false;
+				if (!Sparkipelago.hasItem(ItemIds.DASH)) __instance.dashc = false;
 			}
 		}
 		
 		[HarmonyPatch(typeof(Action05_Rail), "RailMovement")]
 		private static class RailDashPatch {
 			private static void Prefix(Action05_Rail __instance, ref bool ___Dashed) {
-				if (Sparkipelago.itemState[(long)ItemIds.DASH] == 0) ___Dashed = true;
+				if (!Sparkipelago.hasItem(ItemIds.DASH)) ___Dashed = true;
 			}
 		}
 		
 		[HarmonyPatch(typeof(Action01_Jump), "HomingManagement")]
 		private static class HomingPatch {
 			private static void Prefix(ActionManager ___Actions) {
-				if (Sparkipelago.itemState[(long)ItemIds.JESTER_DASH] == 0) ___Actions.Action02Control.HomingAvailable = false;
+				if (!Sparkipelago.hasItem(ItemIds.JESTER_DASH)) ___Actions.Action02Control.HomingAvailable = false;
 			}
 		}
 		
@@ -92,7 +92,7 @@ namespace Sparkipelago {
 		private static class ExhaustedMagdashPatch {
 			private static void Prefix(Action02_Homing __instance) {
 				// There's no easily accessible variable so this'll have to do
-				if (Sparkipelago.itemState[(long)ItemIds.DASH] == 0) __instance.MagnetDashMultiplier = 0.2f;
+				if (!Sparkipelago.hasItem(ItemIds.DASH)) __instance.MagnetDashMultiplier = 0.2f;
 				else __instance.MagnetDashMultiplier = 0.65f;
 			}
 		}
@@ -100,11 +100,11 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(Action08_SuperMoves), "FixedUpdate")]
 		private static class SuperPatch {
 			private static void Prefix(Action08_SuperMoves __instance) {
-				if (Sparkipelago.itemState[(long)ItemIds.CHARGED_DASH] == 0 && __instance.AttackType == -2) {
+				if (!Sparkipelago.hasItem(ItemIds.CHARGED_JESTER_DASH) && __instance.AttackType == -2) {
 					__instance.AttackType = 0;
 					__instance.Actions.ChangeAction(0);
 				}
-				if (Sparkipelago.itemState[(long)ItemIds.DOWN_DASH] == 0 && __instance.AttackType == -1) {
+				if (!Sparkipelago.hasItem(ItemIds.DOWN_DASH) && __instance.AttackType == -1) {
 					__instance.AttackType = 0;
 					__instance.Actions.ChangeAction(0);
 				}
@@ -114,7 +114,7 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(Action01_Jump), "ManageWallJump")]
 		private static class WallJumpPatch {
 			private static bool Prefix() {
-				if (Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] == 0) return false;
+				if (!Sparkipelago.hasItem(ItemIds.WALL_JUMP)) return false;
 				return true;
 			}
 		}
@@ -122,22 +122,22 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(Action01_Jump), "DoDoubleJump")]
 		private static class DoubleJumpPatch {
 			private static void Prefix(Action01_Jump __instance) {
-				if (Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] == 0) __instance.DoubleJumpAvailable = false;
-				if (Sparkipelago.itemState[(long)ItemIds.WALL_JUMP] == 0) __instance.OnWall = false;
+				if (!Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP)) __instance.DoubleJumpAvailable = false;
+				if (!Sparkipelago.hasItem(ItemIds.WALL_JUMP)) __instance.OnWall = false;
 			}
 		}
 		
 		[HarmonyPatch(typeof(Action00_Regular), "FixedUpdate")]
 		private static class DoubleJumpPatch2 {
 			private static void Prefix(Action00_Regular __instance) {
-				if (Sparkipelago.itemState[(long)ItemIds.DOUBLE_JUMP] == 0) __instance.DoubleJumpEnabledAction0 = false;
+				if (!Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP)) __instance.DoubleJumpEnabledAction0 = false;
 			}
 		}
 		
 		[HarmonyPatch(typeof(Action00_Regular), "ManageAttack")]
 		private static class CombatPatch {
 			private static bool Prefix() {
-				if (Sparkipelago.itemState[(long)ItemIds.COMBAT] == 0) return false;
+				if (!Sparkipelago.hasItem(ItemIds.COMBAT)) return false;
 				return true;
 			}
 		}
@@ -145,7 +145,7 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(StratoMech), "CheckForAttackAction")]
 		private static class MechCombatPatch {
 			private static bool Prefix() {
-				if (Sparkipelago.itemState[(long)ItemIds.COMBAT] == 0) return false;
+				if (!Sparkipelago.hasItem(ItemIds.COMBAT)) return false;
 				return true;
 			}
 		}
