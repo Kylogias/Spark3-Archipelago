@@ -1,5 +1,5 @@
 {
-	"version": 6,
+	"version": 7,
 	"difficulties": ["base"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
@@ -8,6 +8,7 @@
 		{"name": "Charged Jester Dash", "itemtype": "ABILITY"},
 		{"name": "Down Dash", "itemtype": "ABILITY"},
 		{"name": "Wall Jump", "itemtype": "ABILITY"},
+		{"name": "Wall Walk", "itemtype": "ABILITY"},
 		{"name": "Double Jump", "itemtype": "ABILITY"},
 		{"name": "Combat", "itemtype": "ABILITY"},
 		
@@ -204,7 +205,7 @@
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd+wj+da+dj"},
+			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd+da+dj"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 		]},
 		{"name": "LOST RAVINE", "id": 6, "type": "stage", "checks": [
@@ -218,7 +219,7 @@
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "co"},
-			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "co+wj"},
+			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "co+(wj|dj|cd)"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "co+wj"},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "co+wj"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
@@ -229,9 +230,9 @@
 			{"name": "DIAMOND SCORE MEDAL", "sanity": "scoredia", "requires": ""},
 			
 			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj"},
+			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj|(ww&cd)"},
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "wj"},
+			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|dj"},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "co"},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -279,7 +280,7 @@
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+(dj|cd)"},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "1c"},
-			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
+			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|dj|ww"},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
@@ -294,7 +295,7 @@
 			
 			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
 			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj"},
+			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -343,7 +344,7 @@
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "co"}
 		]},
 		{"name": "DOWNTOWN DISSENT", "id": 10, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "dj|wj"},
+			{"name": "COMPLETION", "sanity": "base", "requires": "dj|ww"},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
@@ -371,7 +372,7 @@
 			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "cd"},
-			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj"},
+			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj|ww"},
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -384,7 +385,7 @@
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
 		]},
 		{"name": "STRIKE SEWERS", "id": 20, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "wj|cd|dj"},
+			{"name": "COMPLETION", "sanity": "base", "requires": "wj|cd|dj|ww"},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
@@ -392,14 +393,14 @@
 			
 			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj"},
 			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"},
-			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"},
-			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"},
-			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"},
-			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"},
-			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"},
-			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"},
-			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj"}
+			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
+			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
+			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
+			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
+			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
+			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
+			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
+			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"}
 		]},
 		{"name": "SQUABBLE SPILLWAY", "id": 21, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
@@ -426,7 +427,7 @@
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
 			{"name": "DIAMOND SCORE MEDAL", "sanity": "scoredia", "requires": ""},
 			
-			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+da"},
+			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|dj)+da"},
 			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -458,14 +459,14 @@
 			{"name": "DAY BLUE COIN #1", "index": 19, "sanity": "coin", "requires": "co"},
 			{"name": "DAY BLUE COIN #2", "index": 22, "sanity": "coin", "requires": "co"},
 			{"name": "DAY BLUE COIN #3", "index": 0, "sanity": "coin", "requires": "co"},
-			{"name": "DAY BLUE COIN #4", "index": 3, "sanity": "coin", "requires": "co+wj+dj"},
+			{"name": "DAY BLUE COIN #4", "index": 3, "sanity": "coin", "requires": "co+((wj+dj)|ww|jd)"},
 			{"name": "DAY BLUE COIN #5", "index": 10, "sanity": "coin", "requires": "co"},
 			{"name": "DAY BLUE COIN #6", "index": 20, "sanity": "coin", "requires": "co"},
 			{"name": "DAY BLUE COIN #7", "index": 25, "sanity": "coin", "requires": "co"},
 			{"name": "DAY BLUE COIN #8", "index": 8, "sanity": "coin", "requires": "co"},
 			{"name": "DAY BLUE COIN #9", "index": 12, "sanity": "coin", "requires": "co"},
 			{"name": "DAY BLUE COIN #10", "index": 24, "sanity": "coin", "requires": "co+(cd|dj)"},
-			{"name": "DAY BLUE COIN #11", "index": 6, "sanity": "coin", "requires": "co+wj"}
+			{"name": "DAY BLUE COIN #11", "index": 6, "sanity": "coin", "requires": "co+(wj|ww)"}
 		]},
 		{"name": "HEAVEN PARK", "id": 28, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "dj|cd"},
@@ -536,7 +537,7 @@
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
 			{"name": "DIAMOND SCORE MEDAL", "sanity": "scoredia", "requires": ""},
 			
-			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj"},
+			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -567,8 +568,8 @@
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+1c"},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+1c+(dj|wj)"},
-			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+(dj|wj)"},
-			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+(dj|wj)"},
+			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+1c+(dj|wj)"},
+			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+1c+(dj|wj)"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+1c"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
@@ -589,7 +590,7 @@
 			{"name": "COMPLETION", "sanity": "base", "requires": "wj"}
 		]},
 		{"name": "WALL WALKING", "id": 105, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "wj"}
+			{"name": "COMPLETION", "sanity": "base", "requires": "ww+(dj|cd|wj)"}
 		]},
 		{"name": "FALL DAMAGE", "id": 106, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "2c"}
@@ -607,7 +608,7 @@
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
-			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd+da+dj+wj+jd"},
+			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "da+dj+jd"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "cd"},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd+dj+da"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd"}
@@ -624,32 +625,32 @@
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "1c|wj"},
+			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "1c|wj|ww"},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 		]},
 		{"name": "FLORIA HIGHWAY", "id": 143, "type": "spark2", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "(dj|cd)+wj"},
+			{"name": "COMPLETION", "sanity": "base", "requires": "wj+1c"},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
 			{"name": "DIAMOND SCORE MEDAL", "sanity": "scoredia", "requires": ""},
 			
 			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj+(cd|da)"},
-			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
-			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
-			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "(dj|cd)+wj"},
-			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "cd+wj"},
-			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "(dj|cd)+wj"},
-			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "(dj|cd)+wj"},
+			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
+			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
+			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
+			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
+			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
+			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "dj+da+cd+wj"},
-			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "(dj|cd)+wj"},
-			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "(dj|cd)+wj"}
+			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
+			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"}
 		]},
 		{"name": "FLORIA PLANT", "id": 144, "type": "spark2", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "dj|wj"},
+			{"name": "COMPLETION", "sanity": "base", "requires": ""},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
@@ -660,14 +661,14 @@
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+da+dj+cd"},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+2c"},
-			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "(dj|wj)+da+cd"},
-			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "(dj|wj)+cd"},
-			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj"},
-			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "(dj|wj)+da"},
+			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
+			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj"}
 		]},
 		{"name": "FLORESTA BLANCA", "id": 145, "type": "spark2", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "dj"},
+			{"name": "COMPLETION", "sanity": "base", "requires": "dj|(wj+1c)"},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
@@ -677,10 +678,10 @@
 			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
-			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
+			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
+			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "dj+wj"},
-			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
+			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 		]},
@@ -724,7 +725,7 @@
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
-			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+(dj|wj)"},
+			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"}
 		]},
 		{"name": "TERMINAL DRAGON", "id": 148, "type": "spark2", "checks": [
@@ -760,7 +761,7 @@
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd"},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd+dj+wj"},
+			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd+wj"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 		]},
 		{"name": "TITANIC TOWER", "id": 150, "type": "spark2", "checks": [
@@ -795,13 +796,13 @@
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
 			{"name": "DIAMOND SCORE MEDAL", "sanity": "scoredia", "requires": ""},
 			
-			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
+			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|(dj+cd)"},
 			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "da"},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "1c"},
-			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "1c+wj"},
+			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "1c+(wj|ww)"},
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|dj"},
-			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|dj"},
+			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "(cd|dj)+(wj|dj|ww)"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|dj"},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|dj"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj+(cd|da)"}
@@ -821,7 +822,7 @@
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj"},
-			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
+			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj"},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 		]},
 		{"name": "BOSS: SAW-MAN", "id": 9, "type": "boss", "checks": [
@@ -843,7 +844,7 @@
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
 		]},
 		{"name": "UTOPIA SHELTER", "id": 50, "type": "utopia", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "co+cd+wj+da+dj+fa+sf"}
+			{"name": "COMPLETION", "sanity": "base", "requires": "co+cd+wj+ww+da+dj+fa+sf"}
 		]}
 	]
 }

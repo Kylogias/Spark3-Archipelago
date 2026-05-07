@@ -113,9 +113,9 @@ namespace Sparkipelago {
 		
 		[HarmonyPatch(typeof(Action01_Jump), "ManageWallJump")]
 		private static class WallJumpPatch {
-			private static bool Prefix() {
-				if (!Sparkipelago.hasItem(ItemIds.WALL_JUMP)) return false;
-				return true;
+			private static void Prefix(Action01_Jump __instance, ActionManager ___Actions) {
+				if (!Sparkipelago.hasItem(ItemIds.WALL_JUMP)) __instance.OnWall = false;
+				if (!Sparkipelago.hasItem(ItemIds.WALL_WALK)) ___Actions.Action09.Already = true;
 			}
 		}
 		

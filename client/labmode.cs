@@ -9,6 +9,7 @@ namespace Sparkipelago {
 		private static MelonPreferences_Entry<bool> dbgHasDD;
 		private static MelonPreferences_Entry<bool> dbgHasDJ;
 		private static MelonPreferences_Entry<bool> dbgHasWJ;
+		private static MelonPreferences_Entry<bool> dbgHasWW;
 		private static MelonPreferences_Entry<bool> dbgHasCO;
 		
 		public static void initPrefs() {
@@ -17,9 +18,10 @@ namespace Sparkipelago {
 			dbgHasDA = MelonPreferences.CreateEntry<bool>("APDebug", "Has Dash (Hotkey 6)", true);
 			dbgHasCD = MelonPreferences.CreateEntry<bool>("APDebug", "Has Charged Dash (Hotkey 7)", true);
 			dbgHasWJ = MelonPreferences.CreateEntry<bool>("APDebug", "Has Wall Jump (Hotkey 8)", true);
-			dbgHasDJ = MelonPreferences.CreateEntry<bool>("APDebug", "Has Double Jump (Hotkey 9)", true);
-			dbgHasCO = MelonPreferences.CreateEntry<bool>("APDebug", "Has Combat (Hotkey 0)", true);
-			dbgHasDD = MelonPreferences.CreateEntry<bool>("APDebug", "Has Down Dash (Hotkey -)", true);
+			dbgHasWW = MelonPreferences.CreateEntry<bool>("APDebug", "Has Wall Walk (Hotkey 9)", true);
+			dbgHasDJ = MelonPreferences.CreateEntry<bool>("APDebug", "Has Double Jump (Hotkey 0)", true);
+			dbgHasCO = MelonPreferences.CreateEntry<bool>("APDebug", "Has Combat (Hotkey -)", true);
+			dbgHasDD = MelonPreferences.CreateEntry<bool>("APDebug", "Has Down Dash (Hotkey +)", true);
 			
 			dbgHasDA.OnEntryValueChanged.Subscribe(onChangeDA, 100);
 			dbgHasCD.OnEntryValueChanged.Subscribe(onChangeCD, 100);
@@ -37,6 +39,7 @@ namespace Sparkipelago {
 			if (Sparkipelago.hasItem(ItemIds.DOWN_DASH) != dbgHasDD.Value) Sparkipelago.itemState[ItemIds.DOWN_DASH] = dbgHasDD.Value ? 1 : 0;
 			if (Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP) != dbgHasDJ.Value) Sparkipelago.itemState[ItemIds.DOUBLE_JUMP] = dbgHasDJ.Value ? 1 : 0;
 			if (Sparkipelago.hasItem(ItemIds.WALL_JUMP) != dbgHasWJ.Value) Sparkipelago.itemState[ItemIds.WALL_JUMP] = dbgHasWJ.Value ? 1 : 0;
+			if (Sparkipelago.hasItem(ItemIds.WALL_WALK) != dbgHasWW.Value) Sparkipelago.itemState[ItemIds.WALL_WALK] = dbgHasWW.Value ? 1 : 0;
 			if (Sparkipelago.hasItem(ItemIds.COMBAT) != dbgHasCO.Value) Sparkipelago.itemState[ItemIds.COMBAT] = dbgHasCO.Value ? 1 : 0;
 			
 			if (Input.GetKeyDown(KeyCode.Alpha5)) {
@@ -76,6 +79,15 @@ namespace Sparkipelago {
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Alpha9)) {
+				if (Sparkipelago.hasItem(ItemIds.WALL_WALK)) {
+					dbgHasWW.Value = false;
+					Sparkipelago.debugLog("Disabling WALL_WALK");
+				} else {
+					dbgHasWW.Value = true;
+					Sparkipelago.debugLog("Enabling WALL_WALK");
+				}
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha0)) {
 				if (Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP)) {
 					dbgHasDJ.Value = false;
 					Sparkipelago.debugLog("Disabling DOUBLE_JUMP");
@@ -84,7 +96,7 @@ namespace Sparkipelago {
 					Sparkipelago.debugLog("Enabling DOUBLE_JUMP");
 				}
 			}
-			if (Input.GetKeyDown(KeyCode.Alpha0)) {
+			if (Input.GetKeyDown(KeyCode.Minus)) {
 				if (Sparkipelago.hasItem(ItemIds.COMBAT)) {
 					dbgHasCO.Value = false;
 					Sparkipelago.debugLog("Disabling COMBAT");
@@ -93,7 +105,7 @@ namespace Sparkipelago {
 					Sparkipelago.debugLog("Enabling COMBAT");
 				}
 			}
-			if (Input.GetKeyDown(KeyCode.Minus)) {
+			if (Input.GetKeyDown(KeyCode.Equals)) {
 				if (Sparkipelago.hasItem(ItemIds.DOWN_DASH)) {
 					dbgHasDD.Value = false;
 					Sparkipelago.debugLog("Disabling DOWN_DASH");
@@ -121,6 +133,9 @@ namespace Sparkipelago {
 		}
 		private static void onChangeWJ(bool oldV, bool newV) {
 			Sparkipelago.itemState[ItemIds.WALL_JUMP] = newV ? 1 : 0;
+		}
+		private static void onChangeWW(bool oldV, bool newV) {
+			Sparkipelago.itemState[ItemIds.WALL_WALK] = newV ? 1 : 0;
 		}
 		private static void onChangeCO(bool oldV, bool newV) {
 			Sparkipelago.itemState[ItemIds.COMBAT] = newV ? 1 : 0;

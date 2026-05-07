@@ -107,6 +107,7 @@ class Spark3World(World):
 		if self.options.speedsanity & 2: location_count += 44 if self.spark2 else 30
 		if self.options.exploresanity: location_count += 300 if self.spark2 else 180
 		if self.options.coinsanity: location_count += 72
+		if self.explore_hunt: location_count += 30 if self.spark2 else 18
 
 		reserved_items = 26
 		if self.ability_rando: reserved_items += 7

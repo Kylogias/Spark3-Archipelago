@@ -181,7 +181,7 @@ class LocationState:
 			total += 1
 		
 		self.add_stage_to_gate(world, gates[0], self.utopia, event="Victory")
-		self.gate_data[5].append([self.utopia["id"], -10*0.75, -5*0.75])
+		self.gate_data[5].append([self.utopia["id"], -10*0.75, 5*0.75])
 		
 		self.spoiler_text += "Boss Order:\n"
 		for i in range(4):

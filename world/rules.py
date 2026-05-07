@@ -19,18 +19,19 @@ class RuleToken(Enum):
 	CHARGED_DASH = 7
 	DOWN_DASH    = 8
 	WALL_JUMP    = 9
-	DOUBLE_JUMP  = 10
-	COMBAT       = 11
+	WALL_WALK    = 10
+	DOUBLE_JUMP  = 11
+	COMBAT       = 12
 	
-	FARK   = 12
-	SFARX  = 13
-	FLOAT  = 14
-	REAPER = 15
+	FARK   = 13
+	SFARX  = 14
+	FLOAT  = 15
+	REAPER = 16
 	
-	ONE_CANCEL = 16
-	TWO_CANCEL = 17
+	ONE_CANCEL = 17
+	TWO_CANCEL = 18
 
-STRING_TO_TOKEN = ["asdf", "(", ")", "+", "|", "jd", "da", "cd", "dd", "wj", "dj", "co", "fa", "sf", "fl", "re", "1c", "2c"]
+STRING_TO_TOKEN = ["asdf", "(", ")", "+", "|", "jd", "da", "cd", "dd", "wj", "ww", "dj", "co", "fa", "sf", "fl", "re", "1c", "2c"]
 
 class RulesState:
 	def __init__(self):
@@ -59,6 +60,7 @@ class RulesState:
 				case RuleToken.CHARGED_DASH: rule = self.add_to_rule(op, rule, Has(CHARGED_DASH))
 				case RuleToken.DOWN_DASH: rule = self.add_to_rule(op, rule, Has(DOWN_DASH))
 				case RuleToken.WALL_JUMP: rule = self.add_to_rule(op, rule, Has(WALL_JUMP))
+				case RuleToken.WALL_WALK: rule = self.add_to_rule(op, rule, Has(WALL_WALK))
 				case RuleToken.DOUBLE_JUMP: rule = self.add_to_rule(op, rule, Has(DOUBLE_JUMP))
 				case RuleToken.COMBAT: rule = self.add_to_rule(op, rule, Has(COMBAT))
 				case RuleToken.FARK: rule = self.add_to_rule(op, rule, Has(FARK))
