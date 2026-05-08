@@ -2,45 +2,61 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using MelonLoader;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 
 namespace Sparkipelago {
 	class Collectibles {
+		struct TrimObject {
+			public string level;
+			public string[] trees;
+			public TrimObject(string l, string[] t) {
+				level = l;
+				trees = t;
+			}
+		}
+
 		static List<RotateRing> capsules;
 		static List<CheckPointData> checkpoints;
 		static List<MonitorData> bubbles;
 		static List<CollectableCoin> coins;
+
+		static TrimObject[] trims = {
+			new TrimObject("[STAGE 01 - VILLA] [INTRO STAGE]", new string[]{"[STAGE VILLA]", "[Colletables Holder]"}) // Alpine Carrera
+		};
 		
-		public class GOComparer : IComparer<Component> {
-			public int Compare(Component a, Component b) {
-				Vector3 pA = a.gameObject.transform.position, pB = b.gameObject.transform.position;
-				if (pA.z.CompareTo(pB.z) != 0) return pA.z.CompareTo(pB.z);
-				if (pA.x.CompareTo(pB.x) != 0) return pA.x.CompareTo(pB.x);
-				if (pA.y.CompareTo(pB.y) != 0) return pA.y.CompareTo(pB.y);
-				return 0;
-			}
-		}
-		
-		static List<T> getAllComponents<T>(string name) where T : Component {
-			Scene scn = SceneManager.GetSceneByName(name);
+		static List<T> getAllComponents<T>(Scene scn, List<GameObject> trimmed) where T : Component {
 			List<T> rotring = new List<T>();
 			foreach (GameObject go in scn.GetRootGameObjects()) {
 				T[] newring = go.GetComponentsInChildren<T>(true);
 				foreach (T ring in newring) {
-					rotring.Add(ring);
+					bool isTrimmed = false;
+					foreach (GameObject trim in trimmed) {
+						if (ring.transform.IsChildOf(trim.transform)) isTrimmed = true;
+					}
+					if (!isTrimmed) rotring.Add(ring);
 				}
 			}
 			
-			GOComparer goc = new GOComparer();
-			rotring.Sort(goc);
 			return rotring;
 		}
 		
 		public static void onSceneLoad(string name) {
-			capsules = getAllComponents<RotateRing>(name);
-			checkpoints = getAllComponents<CheckPointData>(name);
-			bubbles = getAllComponents<MonitorData>(name);
-			coins = getAllComponents<CollectableCoin>(name); // There's an easier way but shrug
+			Scene scn = SceneManager.GetSceneByName(name);
+			List<GameObject> trimmed = new List<GameObject>();
+			foreach (TrimObject trim in trims) {
+				if (name == trim.level) {
+					foreach (GameObject go in scn.GetRootGameObjects()) {
+						if (trim.trees.Contains(go.name)) trimmed.Add(go);
+					}
+					break;
+				}
+			}
+			
+			capsules = getAllComponents<RotateRing>(scn, trimmed);
+			checkpoints = getAllComponents<CheckPointData>(scn, trimmed);
+			bubbles = getAllComponents<MonitorData>(scn, trimmed);
+			coins = getAllComponents<CollectableCoin>(scn, trimmed); // There's an easier way but shrug
 			
 			MelonLogger.Msg("{0} Capsules, {1} Checkpoints, {2} Bubbles", capsules.Count, checkpoints.Count, bubbles.Count);
 		}

@@ -97,9 +97,11 @@ class RulesState:
 	def set_stage_rules(self, world):
 		for i in range(4):
 			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
+			boss_entrance = world.get_entrance(f"Boss to Gate {i+1}")
 			has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[i])
 			has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
-			world.set_rule(gate_entrance, Has(COMBAT) & has_freedom)
+			world.set_rule(gate_entrance, has_freedom)
+			world.set_rule(boss_entrance, Has(COMBAT))
 		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
 		has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[4])
 		has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))

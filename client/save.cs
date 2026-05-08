@@ -56,7 +56,7 @@ namespace Sparkipelago {
 		private class CompletionPercentPatch {
 			private static bool Prefix(ref float __result, int savefileIndex) {
 				APSavedata data = file.slots[savefileIndex];
-				__result = (float)data.checkedLocations.Count / (float)data.numLocations;
+				__result = (float)data.numChecked / (float)data.numLocations;
 				Save.GetSaveFile(savefileIndex).CompletionPercentage = __result;
 				return false;
 			}
