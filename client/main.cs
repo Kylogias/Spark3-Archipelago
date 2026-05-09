@@ -64,7 +64,6 @@ namespace Sparkipelago {
 			else result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", connect.slot, ItemsHandlingFlags.AllItems);
 			
 			if (result.Successful) {
-				currentSession.Items.ItemReceived += HandleItem;
 				slotData = ((LoginSuccessful)result).SlotData;
 				currentSaveSlot = Save.CurrentSaveSlot;
 
@@ -73,6 +72,7 @@ namespace Sparkipelago {
 					MelonLogger.Error("Client room does not match server room! Do you have the correct connection information?");
 					currentSession.Say("Client room does not match server room! Do you have the correct connection information?");
 					currentSession = null;
+					slotData = null;
 					return;
 				}
 				
@@ -80,9 +80,11 @@ namespace Sparkipelago {
 					MelonLogger.Error("Client Version does not match APWorld! Refusing connection");
 					currentSession.Say("Client Version does not match APWorld! Refusing connection");
 					currentSession = null;
+					slotData = null;
 					return;
 				}
 
+				currentSession.Items.ItemReceived += HandleItem;
 				data.room = curRoom;
 				int i = 0;
 				foreach (ItemInfo item in currentSession.Items.AllItemsReceived) {

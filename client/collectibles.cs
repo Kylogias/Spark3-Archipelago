@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using MelonLoader;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System;
 using HarmonyLib;
 
 namespace Sparkipelago {
@@ -12,21 +15,26 @@ namespace Sparkipelago {
 		static List<MonitorData> bubbles;
 		static List<CollectableCoin> coins;
 
-		static void recurseGameObject<T>(GameObject parent, List<T> comps) where T : Component {
+		static int layers;
+		
+		static void recurseGameObject<T>(GameObject parent, List<T> comps, bool getLayer) where T : Component {
 			ActivateOnDistance aod = parent.GetComponent<ActivateOnDistance>();
 			if (parent.activeSelf || aod != null) {
 				T comp = parent.GetComponent<T>();
-				if (comp != null) comps.Add(comp);
+				if (comp != null) {
+					if (getLayer) layers |= 1 << parent.layer;
+					comps.Add(comp);
+				}
 				for (int i = 0; i < parent.transform.childCount; i++) {
-					recurseGameObject(parent.transform.GetChild(i).gameObject, comps);
+					recurseGameObject(parent.transform.GetChild(i).gameObject, comps, getLayer);
 				}
 			}
 		}
 		
-		static List<T> getAllComponents<T>(Scene scn) where T : Component {
+		static List<T> getAllComponents<T>(Scene scn, bool getLayer) where T : Component {
 			List<T> rotring = new List<T>();
 			foreach (GameObject go in scn.GetRootGameObjects()) {
-				recurseGameObject<T>(go, rotring);
+				recurseGameObject<T>(go, rotring, getLayer);
 			}
 			
 			return rotring;
@@ -34,13 +42,56 @@ namespace Sparkipelago {
 		
 		public static void onSceneLoad(string name) {
 			Scene scn = SceneManager.GetSceneByName(name);
-			
-			capsules = getAllComponents<RotateRing>(scn);
-			checkpoints = getAllComponents<CheckPointData>(scn);
-			bubbles = getAllComponents<MonitorData>(scn);
-			coins = getAllComponents<CollectableCoin>(scn); // There's an easier way but shrug
+
+			layers = 0;
+			capsules = getAllComponents<RotateRing>(scn, true);
+			checkpoints = getAllComponents<CheckPointData>(scn, false);
+			bubbles = getAllComponents<MonitorData>(scn, true);
+			coins = getAllComponents<CollectableCoin>(scn, false); // There's an easier way but shrug
+
+			GameObject player = GameObject.Find("Player_Fark");
+			Action_13_NewSuperMoves nsm = player.GetComponent<Action_13_NewSuperMoves>();
+			nsm.ObjRadarMask = layers;
+
+			GameObject scouter = nsm.ScouterUIObject;
+			GameObject radar = scouter.transform.Find("Radar").gameObject;
+			GameObject dot = radar.transform.Find("Blue (1)").gameObject;
+			RectTransform[] dots = new RectTransform[200 + nsm.CollectableDots.Length];
+			for (int i = 0; i < dots.Length; i++) {
+				if (i < nsm.CollectableDots.Length) {
+					dots[i] = nsm.CollectableDots[i];
+					continue;
+				}
+				GameObject newDot = GameObject.Instantiate(dot);
+				newDot.transform.SetParent(radar.transform);
+				newDot.transform.localScale = dot.transform.localScale;
+				newDot.transform.localRotation = dot.transform.localRotation;
+				dots[i] = (RectTransform)newDot.transform;
+			}
+			nsm.CollectableDots = dots;
 			
 			MelonLogger.Msg("{0} Capsules, {1} Checkpoints, {2} Bubbles", capsules.Count, checkpoints.Count, bubbles.Count);
+		}
+
+		[HarmonyPatch(typeof(Action_13_NewSuperMoves))]
+		private static class RadarPatch {
+			private static MethodBase TargetMethod() {
+				return typeof(Action_13_NewSuperMoves).GetMethod(
+					"RadarPosition",
+					BindingFlags.NonPublic | BindingFlags.Instance,
+					null,
+					new Type[]{typeof(RectTransform[]), typeof(Collider[]), typeof(int)},
+					new ParameterModifier[0]
+				);
+			}
+			private static void Prefix(RectTransform[] pointslist, Collider[] colliders, int index) {
+				Collider col = colliders[index];
+				Image img = pointslist[index].gameObject.GetComponent<Image>();
+			//	MelonLogger.Msg(col.gameObject.name);
+				if (col.tag == "Monitor") img.color = new Color(1f, 0.9289f, 0f, 1f);
+				else if (col.tag == "Ring" || col.tag == "ScoreCapsule" || col.tag == "EnergyCap") img.color = new Color(0.5f, 1f, 0.5f, 1f);
+				else img.color = new Color(0f, 0f, 0f, 0f);
+			}
 		}
 		
 		[HarmonyPatch(typeof(Monitors_Interactions), "OnTriggerEnter")]
