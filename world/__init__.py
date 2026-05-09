@@ -109,8 +109,8 @@ class Spark3World(World):
 		if self.options.coinsanity: location_count += 72
 		if self.explore_hunt: location_count += 30 if self.spark2 else 18
 
-		reserved_items = 26
-		if self.ability_rando: reserved_items += 7
+		reserved_items = 28
+		if self.ability_rando: reserved_items += 8
 		if self.explore_hunt == 2: reserved_items += 300 if self.spark2 else 180
 		if reserved_items > location_count:
 			raise ValueError(f"Too many items in the pool! {reserved_items} items and {location_count} locations")

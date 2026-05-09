@@ -27,11 +27,14 @@ class RuleToken(Enum):
 	SFARX  = 14
 	FLOAT  = 15
 	REAPER = 16
-	
-	ONE_CANCEL = 17
-	TWO_CANCEL = 18
 
-STRING_TO_TOKEN = ["asdf", "(", ")", "+", "|", "jd", "da", "cd", "dd", "wj", "ww", "dj", "co", "fa", "sf", "fl", "re", "1c", "2c"]
+	CAR    = 17
+	COPTER = 18
+	
+	ONE_CANCEL = 19
+	TWO_CANCEL = 20
+
+STRING_TO_TOKEN = ["asdf", "(", ")", "+", "|", "jd", "da", "cd", "dd", "wj", "ww", "dj", "co", "fa", "sf", "fl", "re", "ca", "pc", "1c", "2c"]
 
 class RulesState:
 	def __init__(self):
@@ -67,6 +70,8 @@ class RulesState:
 				case RuleToken.SFARX: rule = self.add_to_rule(op, rule, Has(SFARX))
 				case RuleToken.FLOAT: rule = self.add_to_rule(op, rule, Has(FLOAT))
 				case RuleToken.REAPER: rule = self.add_to_rule(op, rule, Has(REAPER))
+				case RuleToken.CAR: rule = self.add_to_rule(op, rule, Has(CAR))
+				case RuleToken.COPTER: rule = self.add_to_rule(op, rule, Has(COPTER))
 				case RuleToken.ONE_CANCEL: rule = self.add_to_rule(op, rule, HasAny(DOUBLE_JUMP, CHARGED_DASH, DASH))
 				case RuleToken.TWO_CANCEL: rule = self.add_to_rule(op, rule, HasFromList(DOUBLE_JUMP, CHARGED_DASH, DASH, count=2))
 		if rule == None:
@@ -80,6 +85,7 @@ class RulesState:
 		rule = rules["base"]
 		if world.difficulty in rules:
 			rule = rules[world.difficulty]
+		print(rule)
 		while i < len(rule):
 			for tok in range(len(STRING_TO_TOKEN)):
 				if rule[i:].startswith(STRING_TO_TOKEN[tok]):
@@ -97,11 +103,9 @@ class RulesState:
 	def set_stage_rules(self, world):
 		for i in range(4):
 			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
-			boss_entrance = world.get_entrance(f"Boss to Gate {i+1}")
 			has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[i])
 			has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
 			world.set_rule(gate_entrance, has_freedom)
-			world.set_rule(boss_entrance, Has(COMBAT))
 		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
 		has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[4])
 		has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))

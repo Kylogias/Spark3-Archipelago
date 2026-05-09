@@ -149,5 +149,29 @@ namespace Sparkipelago {
 				return true;
 			}
 		}
+		
+		[HarmonyPatch(typeof(IntroStageSetup), "FixedUpdate")]
+		private static class IntroCarPatch {
+			private static void Prefix(IntroStageSetup __instance, ref bool ___GetInCar) {
+				if (!Sparkipelago.hasItem(ItemIds.CAR)) ___GetInCar = true;
+				__instance.GetInScript.IsAbleToExit = true;
+			}
+		}
+
+		[HarmonyPatch(typeof(GetInCar), "GetIn")]
+		private static class CarPatch {
+			private static bool Prefix() {
+				if (!Sparkipelago.hasItem(ItemIds.CAR)) return false;
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(PlayableCopter), "GetIn")]
+		private static class CopterPatch {
+			private static bool Prefix() {
+				if (!Sparkipelago.hasItem(ItemIds.COPTER)) return false;
+				return true;
+			} 
+		}
 	}
 }

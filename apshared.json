@@ -1,5 +1,5 @@
 {
-	"version": 7,
+	"version": 8,
 	"difficulties": ["base"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
@@ -51,6 +51,9 @@
 		{"name": "Float", "itemtype": "CHARACTER"},
 		{"name": "Fark", "itemtype": "CHARACTER"},
 		{"name": "Sfarx", "itemtype": "CHARACTER"},
+		
+		{"name": "Car", "itemtype": "VEHICLE"},
+		{"name": "Copter", "itemtype": "VEHICLE"},
 		
 		{"name": "Shop Moves", "itemtype": "SHOP"},
 		{"name": "Shop Powers", "itemtype": "SHOP"},
@@ -261,7 +264,7 @@
 			{"name": "DIAMOND SCORE MEDAL", "sanity": "scoredia", "requires": ""},
 			
 			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj|(ww&cd)"},
+			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj|(ww+cd)"},
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|dj"},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -375,7 +378,7 @@
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "co"}
 		]},
 		{"name": "DOWNTOWN DISSENT", "id": 10, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "dj|ww"},
+			{"name": "COMPLETION", "sanity": "base", "requires": "(dj|ww)+pc"},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
@@ -416,7 +419,7 @@
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
 		]},
 		{"name": "STRIKE SEWERS", "id": 20, "type": "stage", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "wj|cd|dj|ww"},
+			{"name": "COMPLETION", "sanity": "base", "requires": "(wj|cd|dj|ww)+pc"},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
 			{"name": "GOLD SCORE MEDAL", "sanity": "scoregold", "requires": ""},
@@ -424,14 +427,14 @@
 			
 			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj"},
 			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
-			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
-			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
-			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
-			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
-			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
-			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"},
-			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|cd|dj|ww"}
+			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"},
+			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"},
+			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"},
+			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"},
+			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"},
+			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"},
+			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"},
+			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"}
 		]},
 		{"name": "SQUABBLE SPILLWAY", "id": 21, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
@@ -862,7 +865,7 @@
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
 		]},
 		{"name": "BOSS: ON THE RUN", "id": 24, "type": "boss", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "co"}
+			{"name": "COMPLETION", "sanity": "base", "requires": "co+pc"}
 		]},
 		{"name": "BOSS: THROWBACK", "id": 37, "type": "boss", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "co"},

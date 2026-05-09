@@ -60,8 +60,8 @@ class LocationState:
 	
 	def add_stage_to_gate(self, world, gate: Region, stage, event=None):
 		region = self.setup_stage_region(world, stage, event)
-		self.stage_regions[stage['name']] = [region, stage]
-		if (gate): gate.connect(region, f"Entrance to {stage['name']}")
+		self.stage_regions[stage['name']] = [region[0], stage, region[1]]
+		if (gate): gate.connect(region[0], f"Entrance to {stage['name']}")
 		if not event:
 			self.spoiler_text += f"\t{stage['name']}\n"
 	
@@ -89,7 +89,7 @@ class LocationState:
 			completion_region.add_locations(completion_locs, Spark3Location)
 		stage_region.add_locations(locs, Spark3Location)
 
-		return stage_region
+		return [stage_region, completion_region]
 	
 	def setup_shop(self, world):
 		shop_pages = [
@@ -187,8 +187,9 @@ class LocationState:
 		for i in range(4):
 			self.add_stage_to_gate(world, gates[i+1], self.bosses[i])
 			boss_region = self.stage_regions[self.bosses[i]["name"]][0]
+			goal_region = self.stage_regions[self.bosses[i]["name"]][2]
 			gates[i].connect(boss_region, f"Gate {i} to Boss")
-			boss_region.connect(gates[i+1], f"Boss to Gate {i+1}")
+			goal_region.connect(gates[i+1], f"Boss to Gate {i+1}")
 			self.boss_data.append([self.bosses[i]["id"], 1, (i+1)*0.75])
 		
 	#	world.get_region(STAGE_UTOPIA_SHELTER).add_event("Defeat Claritas Centralis", "Victory", location_type=Spark3Location, item_type=Spark3Item)

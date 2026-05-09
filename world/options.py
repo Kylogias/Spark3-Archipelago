@@ -77,14 +77,14 @@ class Coinsanity(Toggle):
 class FreedomCount(Range):
 	"""
 	How many freedom medals to put into the item pool.
-	Under minimal settings (Ability Rando + No Sanities + No Spark 2), the maximum is 10 (43 stages, 26 shop unlocks, 7 abilities)
+	Under minimal settings (Ability Rando + No Sanities + No Spark 2), the maximum is 7 (43 stages, 26 shop unlocks, 2 vehicles, 8 abilities)
 	"""
 	display_name = "Freedom Medal Count"
 
 	range_start = 0
 	range_end = 100
 	
-	default = 10
+	default = 7
 
 class FreedomRequired(Range):
 	"""

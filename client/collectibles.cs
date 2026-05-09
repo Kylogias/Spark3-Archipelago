@@ -7,35 +7,26 @@ using HarmonyLib;
 
 namespace Sparkipelago {
 	class Collectibles {
-		struct TrimObject {
-			public string level;
-			public string[] trees;
-			public TrimObject(string l, string[] t) {
-				level = l;
-				trees = t;
-			}
-		}
-
 		static List<RotateRing> capsules;
 		static List<CheckPointData> checkpoints;
 		static List<MonitorData> bubbles;
 		static List<CollectableCoin> coins;
 
-		static TrimObject[] trims = {
-			new TrimObject("[STAGE 01 - VILLA] [INTRO STAGE]", new string[]{"[STAGE VILLA]", "[Colletables Holder]"}) // Alpine Carrera
-		};
+		static void recurseGameObject<T>(GameObject parent, List<T> comps) where T : Component {
+			ActivateOnDistance aod = parent.GetComponent<ActivateOnDistance>();
+			if (parent.activeSelf || aod != null) {
+				T comp = parent.GetComponent<T>();
+				if (comp != null) comps.Add(comp);
+				for (int i = 0; i < parent.transform.childCount; i++) {
+					recurseGameObject(parent.transform.GetChild(i).gameObject, comps);
+				}
+			}
+		}
 		
-		static List<T> getAllComponents<T>(Scene scn, List<GameObject> trimmed) where T : Component {
+		static List<T> getAllComponents<T>(Scene scn) where T : Component {
 			List<T> rotring = new List<T>();
 			foreach (GameObject go in scn.GetRootGameObjects()) {
-				T[] newring = go.GetComponentsInChildren<T>(true);
-				foreach (T ring in newring) {
-					bool isTrimmed = false;
-					foreach (GameObject trim in trimmed) {
-						if (ring.transform.IsChildOf(trim.transform)) isTrimmed = true;
-					}
-					if (!isTrimmed) rotring.Add(ring);
-				}
+				recurseGameObject<T>(go, rotring);
 			}
 			
 			return rotring;
@@ -43,20 +34,11 @@ namespace Sparkipelago {
 		
 		public static void onSceneLoad(string name) {
 			Scene scn = SceneManager.GetSceneByName(name);
-			List<GameObject> trimmed = new List<GameObject>();
-			foreach (TrimObject trim in trims) {
-				if (name == trim.level) {
-					foreach (GameObject go in scn.GetRootGameObjects()) {
-						if (trim.trees.Contains(go.name)) trimmed.Add(go);
-					}
-					break;
-				}
-			}
 			
-			capsules = getAllComponents<RotateRing>(scn, trimmed);
-			checkpoints = getAllComponents<CheckPointData>(scn, trimmed);
-			bubbles = getAllComponents<MonitorData>(scn, trimmed);
-			coins = getAllComponents<CollectableCoin>(scn, trimmed); // There's an easier way but shrug
+			capsules = getAllComponents<RotateRing>(scn);
+			checkpoints = getAllComponents<CheckPointData>(scn);
+			bubbles = getAllComponents<MonitorData>(scn);
+			coins = getAllComponents<CollectableCoin>(scn); // There's an easier way but shrug
 			
 			MelonLogger.Msg("{0} Capsules, {1} Checkpoints, {2} Bubbles", capsules.Count, checkpoints.Count, bubbles.Count);
 		}

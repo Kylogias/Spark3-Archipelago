@@ -14,6 +14,8 @@ REAPER = "Reaper Jester"
 FLOAT = "Float"
 FARK = "Fark"
 SFARX = "Sfarx"
+CAR = "Car"
+COPTER = "Copter"
 
 SHOP_MOVES = "Shop Moves"
 SHOP_POWERS = "Shop Powers"
