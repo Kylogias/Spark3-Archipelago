@@ -122,6 +122,7 @@ namespace Sparkipelago {
 				Text textComp = text.GetComponent<Text>();
 				textComp.text = rows[i];
 				textComp.font = font;
+				textComp.resizeTextForBestFit = true;
 				textComp.fontSize = (int)(versionText.fontSize*1.5);
 				textComp.alignment = TextAnchor.MiddleCenter;
 				RectTransform textRect = text.GetComponent<RectTransform>();
@@ -133,6 +134,7 @@ namespace Sparkipelago {
 				Text inputText = input.GetComponent<Text>();
 				textComps[i] = inputText;
 				inputText.font = font;
+				inputText.resizeTextForBestFit = true;
 				inputText.fontSize = (int)(versionText.fontSize*1.5);
 				inputText.alignment = TextAnchor.MiddleLeft;
 				RectTransform inputRect = input.GetComponent<RectTransform>();
