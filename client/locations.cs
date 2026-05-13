@@ -2,6 +2,7 @@ using UnityEngine;
 using HarmonyLib;
 using MelonLoader;
 using Rewired;
+using System.Linq;
 
 namespace Sparkipelago {
 	class Locations {
@@ -10,17 +11,29 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(ShopItenDetails), "PurchaseIten")]
 		private static class PurchasePatch {
 			private static bool Prefix(ShopItenDetails __instance, ShopaloShop shop) {
-				// X button to check
+				// Y button to check
+				ItemIds page = ItemIds.SHOP_MOVES;
+				if (shop.MoveItens.Contains(__instance)) page = ItemIds.SHOP_MOVES;
+				if (shop.SpecialItens.Contains(__instance)) page = ItemIds.SHOP_POWERS;
+				if (shop.UpgradeItens.Contains(__instance)) page = ItemIds.SHOP_UPGRADES;
+				if (shop.JesterItens.Contains(__instance)) page = ItemIds.SHOP_CHARACTERS;
+				
 				const long id = 16295300000;
 				int idx = getItenIndex(__instance);
 				bool canCheck = Sparkipelago.currentSession.Locations.AllLocations.Contains(id+idx)
-					&& Sparkipelago.currentSession.Locations.AllMissingLocations.Contains(id+idx);
+					&& Sparkipelago.currentSession.Locations.AllMissingLocations.Contains(id+idx)
+					&& Sparkipelago.hasItem(page);
 				bool isChecking = (shop.Rewinp.GetButton("AttackHeavy") || !__instance.Unlocked) && canCheck;
 				Save.SaveFile s = Save.GetCurrentSave();
 				if (isChecking && s.Bits >= __instance.BitsCost) {
 					if (__instance.Unlocked) s.Bits -= __instance.BitsCost;
 					
 					Locations.sendLocationCheck(getItenIndex(__instance), "__shop");
+				}
+
+				if (!Sparkipelago.hasItem(page)) {
+					shop.StartTextBox("You haven't unlocked this page yet. Sorry, I don't make the rules");
+					return false;
 				}
 				
 				if (!canCheck && !__instance.Unlocked) {

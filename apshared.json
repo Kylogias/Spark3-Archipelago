@@ -110,7 +110,7 @@
 			{"name": "DIAMOND SCORE MEDAL", "sanity": "scoredia", "requires": ""},
 			
 			{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "da"},
+			{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
 			{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -118,7 +118,7 @@
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj"},
 			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "da"},
+			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
 			
 			{"name": "CHECKPOINT #1", "index": 9, "sanity": "checkpoint", "requires": ""},
 			{"name": "CHECKPOINT #2", "index": 8, "sanity": "checkpoint", "requires": ""},

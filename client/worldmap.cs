@@ -125,18 +125,15 @@ namespace Sparkipelago {
 			UnityEngine.UI.Text fplabel = GameObject.Find("UI/WorldMapInfo/Fp/FpText").GetComponent<UnityEngine.UI.Text>();
 			fplabel.text = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL].ToString(); // Edit to match server count
 		}
+
+		static ShopaloShop shop;
 		
 		[HarmonyPatch(typeof(ShopaloShop), "SwitchPage")]
 		private static class PagePatch {
 			private static void Postfix(ShopaloShop __instance, int page) {
+				shop = __instance;
 				if (page == 0) {
 					__instance.Index = 4;
-				}
-				int i = 0;
-				foreach (ShopItenDetails iten in __instance.MainPageItens) {
-					if (Sparkipelago.itemState[ItemIds.SHOP_MOVES+i] == 0) iten.gameObject.SetActive(false);
-					i++;
-					if (i == 4) break;
 				}
 				ShopItenDetails[] itenlist = new ShopItenDetails[26];
 				foreach (ShopItenDetails iten in __instance.MoveItens) {
@@ -153,7 +150,7 @@ namespace Sparkipelago {
 				}
 				
 				const long id = 16295300000;
-				for (i = 0; i < 26; i++) {
+				for (int i = 0; i < 26; i++) {
 					ShopItenDetails iten = itenlist[i];
 					if (Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i)) {
 						iten.Description = Sparkipelago.shopItems[i];
@@ -179,10 +176,18 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(ShopItenDetails), "SetText")]
 		private static class ItenTextPatch {
 			private static void Postfix(ShopItenDetails __instance) {
+				ItemIds page = ItemIds.SHOP_MOVES;
+				if (shop.MoveItens.Contains(__instance)) page = ItemIds.SHOP_MOVES;
+				if (shop.SpecialItens.Contains(__instance)) page = ItemIds.SHOP_POWERS;
+				if (shop.UpgradeItens.Contains(__instance)) page = ItemIds.SHOP_UPGRADES;
+				if (shop.JesterItens.Contains(__instance)) page = ItemIds.SHOP_CHARACTERS;
+				
 				long i = 16295300000 + Locations.getItenIndex(__instance);
 				Text textComponent = __instance.gameObject.transform.Find("bitsamm").GetComponent<Text>();
 				if (!Sparkipelago.currentSession.Locations.AllLocations.Contains(i)) return;
-				if (Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(i)) {
+				if (!Sparkipelago.hasItem(page)) {
+					textComponent.color = new Color(0.75f, 0.2f, 0.1f);
+				} else if (Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(i)) {
 					textComponent.color = new Color(0.5f, 0.5f, 0.5f);
 				} else {
 					textComponent.color = new Color(0.25f, 1.0f, 0.25f);

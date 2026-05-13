@@ -10,6 +10,26 @@ namespace Sparkipelago {
 			ScoreManager.Bits += num;
 			PlayerPrefs.SetInt("Bits" + SaveSlot.Slot, ScoreManager.Bits);
 		}
+
+		private static void addDpadPower(int pow) {
+			Save.SaveFile currentSave = Save.GetCurrentSave();
+			if (currentSave.DpadUP == 0) {
+				currentSave.DpadUP = pow;
+				return;
+			}
+			if (currentSave.DpadLeft == 0) {
+				currentSave.DpadLeft = pow;
+				return;
+			}
+			if (currentSave.DpadDown == 0) {
+				currentSave.DpadDown = pow;
+				return;
+			}
+			if (currentSave.DpadRight == 0) {
+				currentSave.DpadRight = pow;
+				return;
+			}
+		}
 		
 		public static void handleItem(ItemIds item, bool catchup) {
 			Save.SaveFile save = Save.Saves[Save.CurrentSaveSlot];
@@ -46,24 +66,24 @@ namespace Sparkipelago {
 				case ItemIds.DOUBLE_DOWN_SPIN: save.Move05_DownSlashSpin = true; save.Move05_DownSlashSpin_Enabled = true; break;
 				case ItemIds.ABRUPT_FINISHER: save.Move07_AbruptFinisher = true; save.Move07_AbruptFinisher_Enabled = true; break;
 				case ItemIds.DUPLEX_SLASH: save.Move08_DuplexSlash = true; save.Move08_DuplexSlash_Enabled = true; break;
-				case ItemIds.SPEED_BUFF: save.Special01_SpeedBuff = true; break;
-				case ItemIds.HYPER_SURGE: save.Special02_Explosion = true; break;
-				case ItemIds.ENERGY_DASH: save.Special03_SpeedBlastBoost = true; break;
-				case ItemIds.OVERCHARGE: save.Special04_PowerBuff = true; break;
-				case ItemIds.SNAP_PORTAL: save.Special05_Teleport = true; break;
-				case ItemIds.RADAR_SCOUT: save.Special06_Scouter = true; break;
-				case ItemIds.MULTISHOT_BLAST: save.Special07_BlastMachineGun = true; break;
-				case ItemIds.HEAL: save.Special12_Heal = true; break;
-				case ItemIds.CLOUD_SHOT: save.Special13_Flutter = true; break;
-				case ItemIds.TEMP_SHIELD: save.Special14_Shield = true; break;
+				case ItemIds.SPEED_BUFF: save.Special01_SpeedBuff = true; addDpadPower(1); break;
+				case ItemIds.HYPER_SURGE: save.Special02_Explosion = true; addDpadPower(2); break;
+				case ItemIds.ENERGY_DASH: save.Special03_SpeedBlastBoost = true; addDpadPower(3); break;
+				case ItemIds.OVERCHARGE: save.Special04_PowerBuff = true; addDpadPower(4); break;
+				case ItemIds.SNAP_PORTAL: save.Special05_Teleport = true; addDpadPower(5); break;
+				case ItemIds.RADAR_SCOUT: save.Special06_Scouter = true; addDpadPower(6); break;
+				case ItemIds.MULTISHOT_BLAST: save.Special07_BlastMachineGun = true; addDpadPower(7); break;
+				case ItemIds.HEAL: save.Special12_Heal = true; addDpadPower(12); break;
+				case ItemIds.CLOUD_SHOT: save.Special13_Flutter = true; addDpadPower(13); break;
+				case ItemIds.TEMP_SHIELD: save.Special14_Shield = true; addDpadPower(14); break;
 				case ItemIds.CHARGED_SHOT: save.ChargedBlast = true; break;
 				case ItemIds.RAIL_BOOST: save.RailBoost = true; break;
 				case ItemIds.REGEN_BREAKING: save.RegenBreak = true; break;
 				case ItemIds.JESTER_SWIPE: save.JesterSwipe = true; save.JesterSwipeEnabled = true; break;
-				case ItemIds.REAPER_JESTER: save.Power_Reaper = true; break;
-				case ItemIds.FLOAT: save.Power_Float = true; break;
-				case ItemIds.FARK: save.Power_Fark = true; break;
-				case ItemIds.SFARX: save.Power_Sfarx = true; break;
+				case ItemIds.REAPER_JESTER: save.Power_Reaper = true; addDpadPower(8); break;
+				case ItemIds.FLOAT: save.Power_Float = true; addDpadPower(9); break;
+				case ItemIds.FARK: save.Power_Fark = true; addDpadPower(10); break;
+				case ItemIds.SFARX: save.Power_Sfarx = true; addDpadPower(11); break;
 			}
 		}
 		

@@ -78,7 +78,10 @@ class ItemState:
 		for i in range(self.FREEDOM_COUNT):
 			itempool.append(world.create_item(world.random.choice(self.FREEDOM_ITEMS)))
 		for i in self.MOVE_ITEMS:
-			itempool.append(world.create_item(i))
+			if i != "Radar Scout":
+				itempool.append(world.create_item(i))
+			else:
+				precollect.append(i)
 		if world.explore_hunt == 2:
 			for explore in self.EXPLORE_ITEMS:
 				include = False
