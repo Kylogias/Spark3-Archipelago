@@ -3,6 +3,8 @@ import glob
 import shutil
 import json
 
+os.system("clear")
+
 SPARKDIR = "sparkdir"
 UNITYBASE = f"{SPARKDIR}/\"Spark the Electric Jester 3_Data\"/Managed/"
 
@@ -57,14 +59,28 @@ for sanity in sanity_priority:
 itemID = 16295351000
 for stage in shared["stages"]:
 	explore_rules = []
+	sanity_max = {"checkpoint": -1, "capsule": -1, "bubble": -1}
+	sanity_seen = {"checkpoint": [], "capsule": [], "bubble": []}
+	for sanity in sanity_priority:
+		sanity_max[sanity] = -1
+		sanity_seen[sanity] = []
 	for check in stage["checks"].copy():
 		if check["sanity"] == "explore":
 			explore_rules.append(f"({check['requires']})")
+		if check["sanity"] in sanity_max and "index" in check and check["index"] > sanity_max[check["sanity"]]:
+			sanity_max[check["sanity"]] = check["index"]
+		if check["sanity"] in sanity_seen and "index" in check:
+			if (check["index"] in sanity_seen[check["sanity"]]): print(f"WARNING: Found multiple {check['index']} in {stage['name']} {check['sanity']}")
+			sanity_seen[check["sanity"]].append(check["index"])
 		if check["sanity"] in sanities:
 			sanities[check["sanity"]].append([stage, check])
 		else:
 			stage["checks"].remove(check)
 			continue
+	for sanity in sanity_seen:
+		for i in range(sanity_max[sanity]+1):
+			if not i in sanity_seen[sanity]:
+				print(f"WARNING: {i} missing in {stage['name']} {sanity}")
 	if len(explore_rules):
 		explore_name = f"{stage['name']} EXPLORE MEDAL"
 		item_name_to_id[explore_name] = itemID + stage["id"]
@@ -80,7 +96,6 @@ for sanity in sanity_priority:
 		check["id"] = curID
 		if isinstance(check["requires"], str):
 			check["requires"] = {"base": check["requires"]}
-		print(check["requires"])
 		location_name_to_id[f"{stage['name']} {check['name']}"] = curID
 		if not "index" in check:
 			check["index"] = -1;
@@ -163,7 +178,6 @@ with open("client/apshared.cs", "w") as apcs:
 for file in glob.iglob("client/**/*.cs", recursive=True):
 	command = f"{command} {file}"
 
-os.system("clear")
 os.system(command)
 shutil.copyfile("mod/Mods/Sparkipelago.Mono.dll", f"{SPARKDIR}/Mods/Sparkipelago.Mono.dll")
 

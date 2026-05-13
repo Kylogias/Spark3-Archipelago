@@ -19,7 +19,7 @@ namespace Sparkipelago {
 		
 		static void recurseGameObject<T>(GameObject parent, List<T> comps, bool getLayer) where T : Component {
 			ActivateOnDistance aod = parent.GetComponent<ActivateOnDistance>();
-			if (parent.activeSelf || aod != null) {
+			if (parent.activeSelf || aod != null || parent.name == "Area_2 (Day)") {
 				T comp = parent.GetComponent<T>();
 				if (comp != null) {
 					if (getLayer) layers |= 1 << parent.layer;
@@ -48,7 +48,22 @@ namespace Sparkipelago {
 			checkpoints = getAllComponents<CheckPointData>(scn, false);
 			bubbles = getAllComponents<MonitorData>(scn, true);
 			coins = getAllComponents<CollectableCoin>(scn, false); // There's an easier way but shrug
-
+			
+			// The normal index isn't initialized yet
+			int stage = GameObject.Find("[OffStageVaribales]").GetComponent<GameProgressVariables>().StageIndex;
+			int coinLeft = 0;
+			for (int i = 0; i < coins.Count; i++) {
+				if (Locations.isLocationCompleteByIndex(stage, "coin", i)) {
+					Material mat = coins[i].transform.Find("Pivot/CoinMesh").gameObject.GetComponent<MeshRenderer>().material;
+					mat.color = new Color(1f, 1f, 1f, 1f);
+				} else coinLeft += 1;
+			}
+			if (Locations.isLocationComplete(stage, "COMPLETION") && coins.Count > 0) {
+				CollectablesController collect = GameObject.Find("[ Collectable UI ]").GetComponent<CollectablesController>();
+				collect.StageTime = 30000;
+				collect.MedalAmm = coinLeft > 0 ? coinLeft : 100;
+			} 
+			
 			GameObject player = GameObject.Find("Player_Fark");
 			Action_13_NewSuperMoves nsm = player.GetComponent<Action_13_NewSuperMoves>();
 			nsm.ObjRadarMask = layers;

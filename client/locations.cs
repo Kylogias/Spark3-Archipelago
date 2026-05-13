@@ -116,6 +116,43 @@ namespace Sparkipelago {
 				}
 			}
 		}
+
+		public static bool isLocationCompleteByIndex(int level, string sanity, int index) {
+			foreach (APStageData stage in APShared.stages) {
+				if (stage.id == level) {
+					foreach (APStageCheck ch in stage.checks) {
+						if (ch.sanity == sanity && ch.index == index) {
+							return Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(ch.id);
+						}
+					}
+				}
+			}
+			
+			MelonLogger.Msg("Unable to find stage {0}", level);
+			MelonLogger.Msg("Unable to find {0} sanity {1} index {2}", level, sanity, index);
+			return false;
+		}
+
+		public static bool isLocationComplete(int level, string check) {
+			if (check == "__shop") {
+				return Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(APShared.shop[level].id);
+			} else {
+				foreach (APStageData stage in APShared.stages) {
+					if (stage.id == level) {
+						foreach (APStageCheck ch in stage.checks) {
+							if (ch.name == check) {
+								return Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(ch.id);
+
+							}
+						}
+					}
+				}
+				
+				MelonLogger.Msg("Unable to find stage {0}", level);
+				MelonLogger.Msg("Unable to find {0} check {1}", level, check);
+			}
+			return false;
+		}
 		
 		public static void sendLocationByIndex(int level, string sanity, int index) {
 			bool foundStage = false;
