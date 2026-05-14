@@ -21,7 +21,8 @@ class ItemType(Enum):
 	COIN = 10
 	VEHICLE = 11
 	POWER = 12
-	UNIMPLEMENTED = 13
+	MULTIPLIER = 13
+	UNIMPLEMENTED = 14
 from .apshared import item_name_to_id, apshared
 
 class ItemState:
@@ -34,6 +35,7 @@ class ItemState:
 		self.FREEDOM_ITEMS = []
 		self.EXPLORE_ITEMS = []
 		self.COIN_ITEMS = []
+		self.MULTIPLIERS = []
 		self.FREEDOM_COUNT = 20
 		self.TRAP_CHANCE = 0
 	
@@ -58,6 +60,8 @@ class ItemState:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.trap
 			if i["type"] == ItemType.MOVE:
 				self.MOVE_ITEMS.append(i["name"])
+				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.useful
+			if i["type"] == ItemType.MULTIPLIER:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.useful
 	
 	def get_filler_name(self, world):
@@ -88,6 +92,8 @@ class ItemState:
 				itempool.append(world.create_item(i))
 			else:
 				precollect.append(i)
+		for i in world.multipliers:
+			itempool.append(world.create_item(i))
 		if world.coin_hunt:
 			for i in self.COIN_ITEMS:
 				for j in range(i[1]):

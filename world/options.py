@@ -29,6 +29,18 @@ class AbilityRando(DefaultOnToggle):
 	"""
 	display_name = "Randomize Abilities"
 
+class PerfectCombo(DefaultOnToggle):
+	"""
+	When enabled, puts permanent max combo into the item pool
+	"""
+	display_name = "Perfect Combo"
+
+class ScoreMultiplier(Toggle):
+	"""
+	When enabled, randomizes an item that gives 30x score multiplier on stage load
+	"""
+	display_name = "Score Multiplier"
+
 class LabMode(Toggle):
 	"""
 	Overrides the ability randomizer and automatically opens all stages, for labbing checks.
@@ -152,6 +164,8 @@ class ExploreHunt(Choice):
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
 	difficulty: Difficulty
+	perfect_combo: PerfectCombo
+	score_multiplier: ScoreMultiplier
 	labmode: LabMode
 	spark2_stages: Spark2Stages
 	freedom_count: FreedomCount

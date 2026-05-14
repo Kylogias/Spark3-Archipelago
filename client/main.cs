@@ -21,12 +21,22 @@ namespace Sparkipelago {
 		public static ArchipelagoSession currentSession;
 		public static Dictionary<string, object> slotData;
 		int currentSaveSlot = -1;
-		GameObject player;
+		public static GameObject player;
+
+		private float itemTimer;
+		private static Queue<ItemIds> itemQueue;
 		
 		private GameObject redWorld;
 		private GameObject grayWorld;
+		public static GameObject flint;
+		public static List<GameObject> flintList;
 		public static GameObject playerRed;
 		public static GameObject playerGray;
+
+		public static GameObject eBubble;
+		public static GameObject eCapsule;
+		public static GameObject hCapsule;
+		public static GameObject sCapsule;
 		
 		public static Dictionary<ItemIds, int> itemState;
 		public static string[] shopItems;
@@ -42,6 +52,8 @@ namespace Sparkipelago {
 			shopItems = new string[26];
 			
 			LabMode.initPrefs();
+			itemQueue = new Queue<ItemIds>();
+			flintList = new List<GameObject>();
 			
 			MusicRandomization.registerMusic();
 		}
@@ -51,6 +63,7 @@ namespace Sparkipelago {
 				foreach (long id in APShared.itemIDs) {
 					itemState[(ItemIds)id] = 0;
 				}
+				itemQueue.Clear();
 				if (currentSession != null) {
 					currentSession.Items.ItemReceived -= HandleItem;
 				}
@@ -111,7 +124,9 @@ namespace Sparkipelago {
 			MelonLogger.Msg("Receiving {0} with ID {1}", item.ItemDisplayName, item.ItemId);
 			itemState[(ItemIds)item.ItemId] += 1;
 			MelonLogger.Msg("Handling Item");
-			Items.handleItem((ItemIds)item.ItemId, catchup);
+			if (Items.isStageItem((ItemIds)item.ItemId)) {
+				if (!catchup) itemQueue.Enqueue((ItemIds)item.ItemId);
+			} else Items.handleItem((ItemIds)item.ItemId, catchup);
 		}
 		
 		public static void debugLog(string fmt, params object[] args) {
@@ -145,6 +160,22 @@ namespace Sparkipelago {
 		}
 		
 		public override void OnUpdate() {
+			if (player) {
+				if (itemTimer < 0 && itemQueue.Count > 0) {
+					itemTimer = 2;
+					ItemIds item = itemQueue.Dequeue();
+					Items.handleItem(item, false);
+				}
+				itemTimer -= Time.deltaTime;
+				foreach (GameObject fl in flintList) {
+					if (fl == null) continue;
+					if (Vector3.Distance(fl.transform.position, player.transform.position) > 100 && hasItem(ItemIds.COMBAT)) {
+						Vector3 pos = player.transform.position;
+						pos.y += 5;
+						fl.transform.position = pos;
+					}
+				}
+			}
 			if (slotData == null) return;
 			if ((long)slotData["labmode"] != 0 && currentSession != null) {
 				LabMode.checkForInput();
@@ -161,7 +192,9 @@ namespace Sparkipelago {
 		
 		private void setupPrefabs() {
 			GameObject prefabHolder = GameObject.Find("[PREFABS HOLDER]");
+			prefabHolder.transform.GetChild(0).gameObject.SetActive(true);
 			prefabHolder.transform.GetChild(12).gameObject.SetActive(true); // Should be AbyssPrefabs
+			Transform bosses = prefabHolder.transform.GetChild(2);
 			
 			GameObject prefabObject = new GameObject("AP Prefabs");
 			prefabObject.SetActive(false);
@@ -172,6 +205,11 @@ namespace Sparkipelago {
 			GameObject ragingPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/RagingGhost");
 			GameObject wanderingPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/MinorGhost");
 			GameObject lazerPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/LazerFirerer");
+			GameObject flintPrefab = bosses.Find("PowerFlintModel").gameObject;
+			GameObject eCapPrefab = GameObject.Find("[Core prefabs]/EnergyCapsule");
+			GameObject hCapPrefab = GameObject.Find("[Core prefabs]/Capsule");
+			GameObject sCapPrefab = GameObject.Find("[Core prefabs]/Capsule_Score");
+			GameObject eBubPrefab = GameObject.Find("[Core prefabs]/EnergyBubble");
 			
 			GameObject ragingInstance = UnityEngine.Object.Instantiate(ragingPrefab, prefabObject.transform);
 			setupPrefabChildren(ragingInstance);
@@ -190,13 +228,27 @@ namespace Sparkipelago {
 			setupPrefabChildren(grayWorld);
 			GrayWorldSequence graySeq = grayWorld.GetComponent<GrayWorldSequence>();
 			graySeq.GrayLazer = lazerInstance;
+
+			eBubble = UnityEngine.Object.Instantiate(eBubPrefab, prefabObject.transform);
+			setupPrefabChildren(eBubble);
+			eCapsule = UnityEngine.Object.Instantiate(eCapPrefab, prefabObject.transform);
+			setupPrefabChildren(eCapsule);
+			hCapsule = UnityEngine.Object.Instantiate(hCapPrefab, prefabObject.transform);
+			setupPrefabChildren(hCapsule);
+			sCapsule = UnityEngine.Object.Instantiate(sCapPrefab, prefabObject.transform);
+			setupPrefabChildren(sCapsule);
+			flint = UnityEngine.Object.Instantiate(flintPrefab, prefabObject.transform);
+			setupPrefabChildren(flint);
 		}
 		
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName) {
+			itemTimer = -1;
+			flintList.Clear();
 			MelonLogger.Msg("Scene Loaded: " + sceneName);
 			currentScene = sceneName;
 			player = GameObject.Find("Player_Fark");
 			if (player != null) {
+				if (hasItem(ItemIds.SCORE_MULTIPLIER)) ScoreManager.Charge = 30;
 				Collectibles.onSceneLoad(sceneName);
 				
 				GameObject fogMesh = GameObject.Find("PlayerObjects/Camera_Objects/Main Camera/FogMeshPlayer");

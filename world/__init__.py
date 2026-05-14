@@ -57,6 +57,12 @@ class Spark3World(World):
 		else:
 			self.ability_rando = False
 		
+		self.multipliers = []
+		if self.options.perfect_combo:
+			self.multipliers.append("Perfect Combo")
+		if self.options.score_multiplier:
+			self.multipliers.append("Score Multiplier")
+		
 		if self.options.spark2_stages:
 			self.spark2 = True
 			self.location_state.GATE_STAGE_COUNT = [10, 10, 11, 11, 11]
@@ -125,7 +131,7 @@ class Spark3World(World):
 		if self.options.coinsanity: location_count += 72
 		if self.explore_hunt: location_count += 30 if self.spark2 else 18
 
-		reserved_items = 28
+		reserved_items = 27 + len(self.multipliers)
 		if self.ability_rando: reserved_items += 8
 		if self.explore_hunt == 2: reserved_items += 300 if self.spark2 else 180
 		if self.coin_hunt: reserved_items += 72

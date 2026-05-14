@@ -1,5 +1,5 @@
 {
-	"version": 9,
+	"version": 10,
 	"difficulties": ["base"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
@@ -21,7 +21,10 @@
 		
 		{"name": "Nightmare Trap", "itemtype": "TRAP"},
 		{"name": "Laser Trap", "itemtype": "TRAP"},
-		{"name": "Dust Trap", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Flint Trap", "itemtype": "TRAP"},
+		
+		{"name": "Perfect Combo", "itemtype": "MULTIPLIER"},
+		{"name": "Score Multiplier", "itemtype": "MULTIPLIER"},
 		
 		{"name": "Spin Charge", "itemtype": "MOVE"},
 		{"name": "Dual Air Kick", "itemtype": "MOVE"},

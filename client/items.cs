@@ -30,34 +30,46 @@ namespace Sparkipelago {
 				return;
 			}
 		}
+
+		public static bool isStageItem(ItemIds item) {
+			switch (item) {
+				case ItemIds.SCORE_CAPSULE:
+				case ItemIds.HEALTH_CAPSULE:
+				case ItemIds.ENERGY_CAPSULE:
+				case ItemIds.ENERGY_BUBBLE:
+				case ItemIds.NIGHTMARE_TRAP:
+				case ItemIds.LASER_TRAP:
+				case ItemIds.FLINT_TRAP:
+					return true;
+				default:
+					return false;
+			}
+		}
 		
 		public static void handleItem(ItemIds item, bool catchup) {
 			Save.SaveFile save = Save.Saves[Save.CurrentSaveSlot];
 			
+			GameObject player = GameObject.Find("Player_Fark");
 			switch (item) {
 				case ItemIds.FREEDOM_MEDAL:
 					if (Sparkipelago.currentScene == "[WORLD MAP]") WorldMap.onMapLoad();
 					APSavedata data = APSave.getAPSave();
 					data.fpCount = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL];
 					break;
-				case ItemIds.SCORE_CAPSULE: // 1000 Score
-					ScoreManager.AddStageScore(1000, "Score-Capsule");
-					ScoreManager.AddMultiplier(0.1f);
-					break;
-				case ItemIds.HEALTH_CAPSULE: // 1 health
-					if (!catchup) PlayerHealthAndStats.PlayerHP += 1;
-					break;
-				case ItemIds.ENERGY_CAPSULE: PlayerHealthAndStats.AddEnergy(10); break; // 10 energy
+				case ItemIds.SCORE_CAPSULE: GameObject.Instantiate(Sparkipelago.sCapsule, player.transform); break;
+				case ItemIds.HEALTH_CAPSULE: GameObject.Instantiate(Sparkipelago.hCapsule, player.transform); break;
+				case ItemIds.ENERGY_CAPSULE: GameObject.Instantiate(Sparkipelago.eCapsule, player.transform); break;
 				case ItemIds.BIT_BUBBLE: if (!catchup) addBits(30); break; // 30 bits
-				case ItemIds.ENERGY_BUBBLE: PlayerHealthAndStats.AddEnergy(20); break; // 20 energy
+				case ItemIds.ENERGY_BUBBLE: GameObject.Instantiate(Sparkipelago.eBubble, player.transform); break;
 				case ItemIds.NIGHTMARE_TRAP:
 					if (Sparkipelago.playerRed != null) Sparkipelago.playerRed.SetActive(true);
 					break;
 				case ItemIds.LASER_TRAP:
 					if (Sparkipelago.playerGray != null) Sparkipelago.playerGray.SetActive(true);
 					break;
-				case ItemIds.DUST_TRAP: break;
-				
+				case ItemIds.FLINT_TRAP:
+					Sparkipelago.flintList.Add(GameObject.Instantiate(Sparkipelago.flint, new Vector3(0, 10000, 0), Quaternion.identity));
+					break;
 				case ItemIds.SPIN_CHARGE: save.Move00_SpinCharge = true; save.Move00_SpinCharge_Enabled = true; break;
 				case ItemIds.DUAL_AIR_KICK: save.Move01_DualAirKick = true; save.Move01_DualAirKick_Enabled = true; break;
 				case ItemIds.DUAL_AIR_SLASH: save.Move02_DualAirSlash = true; save.Move02_DualAirSlash_Enabled = true; break;
@@ -208,6 +220,13 @@ namespace Sparkipelago {
 				if (!Sparkipelago.hasItem(ItemIds.COPTER)) return false;
 				return true;
 			} 
+		}
+
+		[HarmonyPatch(typeof(PlayerHealthAndStats), "ComboManager")]
+		private static class CombatComboPatch {
+			private static void Prefix() {
+				if (Sparkipelago.hasItem(ItemIds.PERFECT_COMBO)) PlayerHealthAndStats.Combo = 1f;
+			}
 		}
 	}
 }
