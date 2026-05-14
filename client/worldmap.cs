@@ -7,6 +7,23 @@ using MelonLoader;
 
 namespace Sparkipelago {
 	class WorldMap {
+		[HarmonyPatch(typeof(Save), "GetCurrentFP")]
+		private class FPCountPatch {
+			private static bool Prefix(ref int __result) {
+				__result = 100000;
+				Save.CurrentFP = 100000;
+				return false;
+			}
+		}
+
+		[HarmonyPatch(typeof(UtopiaGate), "Start")]
+		private class LivesPatch {
+			private static void Postfix(UtopiaGate __instance, ref int ___Lives) {
+				___Lives = Sparkipelago.itemState[ItemIds.EXTRA_LIFE] + 3;
+				__instance.LivesText.text = "YOU HAVE A TOTAL OF [" + ___Lives + "]. LIVES\nComplete more checks to increase your lives.";
+			}
+		}
+		
 		public static void initializeSave() {
 			Save.SaveFile savefile = Save.Saves[Save.CurrentSaveSlot];
 			
@@ -29,16 +46,6 @@ namespace Sparkipelago {
 			savefile.Power_Sfarx_Unlocked = true;
 			savefile.Power_Float_Unlocked = true;
 			savefile.Power_Reaper_Unlocked = true;
-			
-			// Make sure the save has enough freedom medals (and unlock every level just to be safe)
-			int stagecount = savefile.StageUnlocked.Count();
-			for (int i = 0; i < stagecount; i++) {
-				savefile.StageUnlocked[i] = true;
-				savefile.StageJustUnlocked[i] = false;
-				if (i >= 200) {
-					savefile.StageCompleted[i] = true;
-				}
-			}
 			
 			SceneController.LoadMapScreen();
 		}
@@ -70,20 +77,34 @@ namespace Sparkipelago {
 			
 			int[] bossids = {9, 24, 37, 38};
 			
+			Save.SaveFile save = Save.GetCurrentSave();
 			int[] freedomReqs = new int[10];
+			int[] complReqs = new int[10];
 			int i = 0;
 			foreach (JToken freq in ((JArray)Sparkipelago.slotData["freedom_requirements"])) {
 				freedomReqs[i] = (int)freq;
 				i++;
 			}
+			i = 0;
+			foreach (JToken creq in ((JArray)Sparkipelago.slotData["completion_requirements"])) {
+				complReqs[i] = (int)creq;
+				i++;
+			}
+			
+			int numComplete = 0;
+			for (i = 0; i < save.StageCompleted.Length; i++) {
+				if (Locations.isLocationComplete(i, "COMPLETION")) save.StageCompleted[i] = true;
+				if (save.StageCompleted[i]) numComplete++;
+			}
 			
 			i = 0;
 			foreach (JToken boss in ((JArray)Sparkipelago.slotData["bosses"])) {
 				bossids[i] = (int)((float)boss[0]);
+				if (save.StageCompleted[bossids[i]]) numComplete--;
+				if (bossids[i] > 200) save.StageCompleted[bossids[i]] = true;
 				i++;
 			}
 			
-			Save.SaveFile save = Save.GetCurrentSave();
 			foreach(LevelData level in levels) {
 				bool unlocked = false;
 				if (level.ID == -99) {
@@ -97,7 +118,7 @@ namespace Sparkipelago {
 				
 				i = 0;
 				foreach (JToken boss in ((JArray)Sparkipelago.slotData["bosses"])) {
-					if (placeStage(boss, level) && Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[i]) unlocked = true;
+					if (placeStage(boss, level) && Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[i] && numComplete >= complReqs[i]) unlocked = true;
 					i++;
 				}
 				
@@ -106,7 +127,7 @@ namespace Sparkipelago {
 					if (i > 0 && i < 5) {
 						if (!save.StageCompleted[bossids[i-1]]) {i++; continue;}
 					} else if (i == 5) {
-						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[4] && save.Power_Fark && save.Power_Sfarx)) {i++; continue;}
+						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[4] && numComplete >= complReqs[i] && save.Power_Fark && save.Power_Sfarx)) {i++; continue;}
 					}
 					foreach (JToken lvlinfo in (JArray)gate) {
 						if (placeStage(lvlinfo, level)) unlocked = true;

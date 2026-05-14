@@ -63,8 +63,8 @@ namespace Sparkipelago {
 			if ((Locations.isLocationComplete(stage, "COMPLETION") || (Sparkipelago.slotData != null && (long)Sparkipelago.slotData["coin_hunt"] > 0)) && coins.Count > 0) {
 				CollectablesController collect = GameObject.Find("[ Collectable UI ]").GetComponent<CollectablesController>();
 				collect.StageTime = 30000;
-				if ((long)Sparkipelago.slotData["coin_hunt"] > 0) coinLeft = 0;
-				collect.MedalAmm = coinLeft > 0 ? coinLeft : 10000;
+				if ((long)Sparkipelago.slotData["coin_hunt"] > 0) coinLeft *= 1000;
+				collect.MedalAmm = coinLeft > 0 ? coinLeft : 1000000;
 			}
 			
 			GameObject player = GameObject.Find("Player_Fark");

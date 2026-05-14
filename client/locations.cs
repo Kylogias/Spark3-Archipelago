@@ -161,8 +161,8 @@ namespace Sparkipelago {
 					}
 				}
 				
-				MelonLogger.Msg("Unable to find stage {0}", level);
-				MelonLogger.Msg("Unable to find {0} check {1}", level, check);
+			//	MelonLogger.Msg("Unable to find stage {0}", level);
+			//	MelonLogger.Msg("Unable to find {0} check {1}", level, check);
 			}
 			return false;
 		}

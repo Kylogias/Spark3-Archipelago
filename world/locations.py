@@ -87,6 +87,8 @@ class LocationState:
 				completion_region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
 		else:
 			completion_region.add_locations(completion_locs, Spark3Location)
+		if stage["type"] != "boss":
+			completion_region.add_event(f"{stage['name']} GOAL REACHED", "Level Completion", location_type=Spark3Location, item_type=Spark3Item, show_in_spoiler=False);
 		stage_region.add_locations(locs, Spark3Location)
 
 		return [stage_region, completion_region]

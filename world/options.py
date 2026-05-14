@@ -83,26 +83,36 @@ class Coinsanity(Choice):
 class FreedomCount(Range):
 	"""
 	How many freedom medals to put into the item pool.
-	Under minimal settings (Ability Rando + No Sanities + No Spark 2), the maximum is 7 (43 stages, 26 shop unlocks, 2 vehicles, 8 abilities)
 	"""
 	display_name = "Freedom Medal Count"
 
 	range_start = 0
 	range_end = 100
 	
-	default = 7
+	default = 0
 
 class FreedomRequired(Range):
 	"""
 	What's the required percentage of freedom medals to unlock Utopia Shelter
 	Note that you still need Fark and Sfarx to unlock Utopia Shelter
 	"""
-	display_name = "Required Percentage"
+	display_name = "Required Freedom Medal Percentage"
 	
 	range_start = 0
 	range_end = 100
 	
-	default = 100
+	default = 0
+
+class RequiredCompletion(Range):
+	"""
+	What percentage of levels in a gate (rounding up) should be completed before unlocking the next?
+	"""
+	display_name = "Required Level Percentage"
+
+	range_start = 0
+	range_end = 100
+
+	default = 40
 
 class TrapChance(Range):
 	"""
@@ -146,6 +156,7 @@ class Spark3Options(PerGameCommonOptions):
 	spark2_stages: Spark2Stages
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
+	required_completion: RequiredCompletion
 	shopsanity: Shopsanity
 	speedsanity: Speedsanity
 	scoresanity: Scoresanity

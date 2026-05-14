@@ -31,14 +31,33 @@ class RuleToken(Enum):
 	CAR    = 17
 	COPTER = 18
 	
-	ONE_CANCEL = 19
-	TWO_CANCEL = 20
+	SPEED_BUFF = 19
+	HYPER_SURGE = 20
+	ENERGY_DASH = 21
+	OVERCHARGE = 22
+	SNAP_PORTAL = 23
+	MULTISHOT_BLAST = 24
+	CLOUD_SHOT = 25
+	CHARGED_SHOT = 26
+	RAIL_BOOST = 27
+	REGEN_BREAKING = 28
+	JESTER_SWIPE = 29
+	ONE_CANCEL = 30
+	TWO_CANCEL = 31
 
-STRING_TO_TOKEN = ["asdf", "(", ")", "+", "|", "jd", "da", "cd", "dd", "wj", "ww", "dj", "co", "fa", "sf", "fl", "re", "ca", "pc", "1c", "2c"]
+
+STRING_TO_TOKEN = [
+	"asdf", "(", ")", "+", "|",
+	"jd", "da", "cd", "dd", "wj", "ww", "dj", "co",
+	"fa", "sf", "fl", "re", "ca", "pc",
+	"sb", "hs", "ed", "oc", "sp", "mb", "cl", "cs", "rb", "br", "js",
+	"1c", "2c"
+]
 
 class RulesState:
 	def __init__(self):
 		self.FREEDOM_REQUIREMENTS = [4, 8, 12, 16, 20]
+		self.COMPLETION_REQUIREMENTS = [4, 4, 4, 4, 4]
 	
 	def add_to_rule(self, op, rule, add):
 		print(f"{rule} {op} {add}")
@@ -74,6 +93,18 @@ class RulesState:
 				case RuleToken.COPTER: rule = self.add_to_rule(op, rule, Has(COPTER))
 				case RuleToken.ONE_CANCEL: rule = self.add_to_rule(op, rule, HasAny(DOUBLE_JUMP, CHARGED_DASH, DASH))
 				case RuleToken.TWO_CANCEL: rule = self.add_to_rule(op, rule, HasFromList(DOUBLE_JUMP, CHARGED_DASH, DASH, count=2))
+				case RuleToken.SPEED_BUFF: rule = self.add_to_rule(op, rule, Has(SPEED_BUFF))
+				case RuleToken.HYPER_SURGE: rule = self.add_to_rule(op, rule, Has(HYPER_SURGE))
+				case RuleToken.ENERGY_DASH: rule = self.add_to_rule(op, rule, Has(ENERGY_DASH))
+				case RuleToken.OVERCHARGE: rule = self.add_to_rule(op, rule, Has(OVERCHARGE))
+				case RuleToken.SNAP_PORTAL: rule = self.add_to_rule(op, rule, Has(SNAP_PORTAL))
+				case RuleToken.MULTISHOT_BLAST: rule = self.add_to_rule(op, rule, Has(MULTISHOT_BLAST))
+				case RuleToken.CLOUD_SHOT: rule = self.add_to_rule(op, rule, Has(CLOUD_SHOT))
+				case RuleToken.CHARGED_SHOT: rule = self.add_to_rule(op, rule, Has(CHARGED_SHOT))
+				case RuleToken.RAIL_BOOST: rule = self.add_to_rule(op, rule, Has(RAIL_BOOST))
+				case RuleToken.REGEN_BREAKING: rule = self.add_to_rule(op, rule, Has(REGEN_BREAKING))
+				case RuleToken.JESTER_SWIPE: rule = self.add_to_rule(op, rule, Has(JESTER_SWIPE))
+				
 		if rule == None:
 			rule = True_()
 		print(f"\t{rule}")
@@ -105,11 +136,11 @@ class RulesState:
 			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
 			has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[i])
 			has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
-			world.set_rule(gate_entrance, has_freedom)
+			world.set_rule(gate_entrance, has_freedom & Has("Level Completion", count=self.COMPLETION_REQUIREMENTS[i]))
 		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
 		has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[4])
 		has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
-		world.set_rule(utopia_entrance, has_freedom)
+		world.set_rule(utopia_entrance, has_freedom & Has("Level Completion", count=self.COMPLETION_REQUIREMENTS[4]))
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			stage_region = world.location_state.stage_regions[stage_name]

@@ -6,6 +6,8 @@ from .apshared import location_name_to_id as loctoid
 from .apshared import item_name_to_id as itemtoid
 from .apshared import apshared
 
+import math
+
 class Spark3World(World):
 	game = GAME_NAME
 	ut_can_gen_without_yaml = True
@@ -86,11 +88,19 @@ class Spark3World(World):
 		self.item_state.FREEDOM_COUNT = self.options.freedom_count.value
 		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))
 		self.rules_state.FREEDOM_REQUIREMENTS = [int(req_freedom/5), int(2*req_freedom/5), int(3*req_freedom/5), int(4*req_freedom/5), int(req_freedom)]
+
+		self.rules_state.COMPLETION_REQUIREMENTS = []
+		completion_total = 0
+		for i in range(5):
+			cur = int(math.ceil(self.location_state.GATE_STAGE_COUNT[i] * (self.options.required_completion.value * 0.01)))
+			completion_total += cur
+			self.rules_state.COMPLETION_REQUIREMENTS.append(completion_total)
 		
 		re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
 		if re_gen_passthrough and self.game in re_gen_passthrough:
 			slot_data = re_gen_passthrough[self.game]
 			self.rules_state.FREEDOM_REQUIREMENTS = slot_data["freedom_requirements"]
+			self.rules_state.COMPLETION_REQUIREMENTS = slot_data["completion_requirements"]
 			self.difficulty = slot_data["difficulty"]
 			self.location_state.sanities = slot_data["sanities"]
 			self.location_state.gate_data = slot_data["gates"]
@@ -150,6 +160,7 @@ class Spark3World(World):
 		slot_data = {
 			"version": apshared["version"],
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
+			"completion_requirements": self.rules_state.COMPLETION_REQUIREMENTS,
 			"labmode": self.options.labmode.value,
 			"sanities": self.location_state.sanities,
 			"explore_hunt": self.explore_hunt,
