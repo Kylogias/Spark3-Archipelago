@@ -116,7 +116,8 @@ class RulesState:
 			stage_data = stage_region[1]
 			stage_region = stage_region[0]
 			completion_entrance = world.get_entrance(f"{stage_name} GOAL")
-			
+
+			has_coin = False
 			for check in stage_data["checks"]:
 				if check["sanity"] in world.location_state.sanities or (check["sanity"] == "explore" and world.explore_hunt):
 					loc = world.get_location(f"{stage_data['name']} {check['name']}")
@@ -124,6 +125,10 @@ class RulesState:
 					if check["sanity"] == "base":
 						rule = self.parse_location_rules(world, check['requires'])
 						world.set_rule(completion_entrance, rule)
+						if world.coin_hunt == 1 and stage_data["coin_count"]:
+							world.set_rule(loc, Has(f"{stage_name} COIN", count=stage_data["coin_req"]))
+						if world.coin_hunt == 2 and stage_data["coin_count"]:
+							world.set_rule(loc, Has(f"{stage_name} COIN", count=stage_data["coin_count"]))
 					if check["sanity"] == "hunt" and world.explore_hunt:
 						world.set_rule(loc, Has(f"{stage_name} EXPLORE MEDAL", count=10))
 

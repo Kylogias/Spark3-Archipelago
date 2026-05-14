@@ -54,15 +54,18 @@ namespace Sparkipelago {
 			int coinLeft = 0;
 			for (int i = 0; i < coins.Count; i++) {
 				if (Locations.isLocationCompleteByIndex(stage, "coin", i)) {
-					Material mat = coins[i].transform.Find("Pivot/CoinMesh").gameObject.GetComponent<MeshRenderer>().material;
-					mat.color = new Color(1f, 1f, 1f, 1f);
+					GameObject.Destroy(coins[i].gameObject);
+					CollectableCoin.CollectableCoinList.Remove(coins[i]);
+				//	Material mat = coins[i].transform.Find("Pivot/CoinMesh").gameObject.GetComponent<MeshRenderer>().material;
+				//	mat.color = new Color(1f, 1f, 1f, 1f);
 				} else coinLeft += 1;
 			}
-			if (Locations.isLocationComplete(stage, "COMPLETION") && coins.Count > 0) {
+			if ((Locations.isLocationComplete(stage, "COMPLETION") || (Sparkipelago.slotData != null && (long)Sparkipelago.slotData["coin_hunt"] > 0)) && coins.Count > 0) {
 				CollectablesController collect = GameObject.Find("[ Collectable UI ]").GetComponent<CollectablesController>();
 				collect.StageTime = 30000;
-				collect.MedalAmm = coinLeft > 0 ? coinLeft : 100;
-			} 
+				if ((long)Sparkipelago.slotData["coin_hunt"] > 0) coinLeft = 0;
+				collect.MedalAmm = coinLeft > 0 ? coinLeft : 10000;
+			}
 			
 			GameObject player = GameObject.Find("Player_Fark");
 			Action_13_NewSuperMoves nsm = player.GetComponent<Action_13_NewSuperMoves>();

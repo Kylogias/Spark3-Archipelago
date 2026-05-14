@@ -236,7 +236,8 @@ namespace Sparkipelago {
 			int numExplore = Save.GetAmmountOfExploreMedalsInSaveFile(savefile, idx);
 			long exploreHunt = (long)Sparkipelago.slotData["explore_hunt"];
 			if (exploreHunt == 1 && numExplore == 10) sendLocationCheck(idx, "EXPLORE HUNT");
-			if (exploreHunt == 2 && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+idx] >= 10) sendLocationCheck(idx, "EXPLORE HUNT");
+			if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+idx))
+				if (exploreHunt == 2 && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+idx] >= 10) sendLocationCheck(idx, "EXPLORE HUNT");
 		}
 		
 		[HarmonyPatch(typeof(WorldMedal), "SetExploreMedal")]

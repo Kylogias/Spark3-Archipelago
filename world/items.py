@@ -18,8 +18,9 @@ class ItemType(Enum):
 	ABILITY = 7
 	EXPLORE3 = 8
 	EXPLORE2 = 9
-	VEHICLE = 10
-	UNIMPLEMENTED = 11
+	COIN = 10
+	VEHICLE = 11
+	UNIMPLEMENTED = 12
 from .apshared import item_name_to_id, apshared
 
 class ItemState:
@@ -31,6 +32,7 @@ class ItemState:
 		self.PROGRESSION_ITEMS = []
 		self.FREEDOM_ITEMS = []
 		self.EXPLORE_ITEMS = []
+		self.COIN_ITEMS = []
 		self.FREEDOM_COUNT = 20
 		self.TRAP_CHANCE = 0
 	
@@ -44,6 +46,9 @@ class ItemState:
 			if i["type"] in [ItemType.EXPLORE2, ItemType.EXPLORE3]:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 				self.EXPLORE_ITEMS.append([i["name"], i["type"]])
+			if i["type"] == ItemType.COIN:
+				self.COIN_ITEMS.append([i["name"], i["count"]])
+				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 			if i["type"] == ItemType.JUNK:
 				self.FILLER_ITEMS.append(i["name"])
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.filler
@@ -82,6 +87,10 @@ class ItemState:
 				itempool.append(world.create_item(i))
 			else:
 				precollect.append(i)
+		if world.coin_hunt:
+			for i in self.COIN_ITEMS:
+				for j in range(i[1]):
+					itempool.append(world.create_item(i[0]))
 		if world.explore_hunt == 2:
 			for explore in self.EXPLORE_ITEMS:
 				include = False

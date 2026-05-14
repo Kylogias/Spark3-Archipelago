@@ -38,6 +38,12 @@ class Spark3World(World):
 			self.location_state.sanities.append("explore")
 		if self.options.coinsanity:
 			self.location_state.sanities.append("coin")
+		if self.options.coinsanity == 2:
+			self.coin_hunt = 1
+		elif self.options.coinsanity == 3:
+			self.coin_hunt = 2
+		else:
+			self.coin_hunt = 0;
 		
 		if self.options.shopsanity:
 			self.shop_enabled = True
@@ -112,6 +118,7 @@ class Spark3World(World):
 		reserved_items = 28
 		if self.ability_rando: reserved_items += 8
 		if self.explore_hunt == 2: reserved_items += 300 if self.spark2 else 180
+		if self.coin_hunt: reserved_items += 72
 		if reserved_items > location_count:
 			raise ValueError(f"Too many items in the pool! {reserved_items} items and {location_count} locations")
 		if self.options.freedom_count.value > location_count - reserved_items:
@@ -146,6 +153,7 @@ class Spark3World(World):
 			"labmode": self.options.labmode.value,
 			"sanities": self.location_state.sanities,
 			"explore_hunt": self.explore_hunt,
+			"coin_hunt": self.coin_hunt,
 			"difficulty": self.difficulty,
 			"gates": self.location_state.gate_data,
 			"bosses": self.location_state.boss_data,

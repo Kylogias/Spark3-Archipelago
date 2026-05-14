@@ -68,11 +68,17 @@ class Exploresanity(Toggle):
 	"""
 	display_name = "ExploreSanity"
 
-class Coinsanity(Toggle):
+class Coinsanity(Choice):
 	"""
-	Adds the 72 collectable coins in the collectathon stages as checks
+	Adds the 72 collectable coins in the collectathon stages as checks and optionally put them in the item pool
 	"""
 	display_name = "CoinSanity"
+
+	option_off = 0
+	option_on = 1
+	option_shuffle_coins = 2
+	option_shuffle_and_require_all = 3
+	default = option_off
 
 class FreedomCount(Range):
 	"""

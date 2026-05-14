@@ -1,5 +1,5 @@
 {
-	"version": 8,
+	"version": 9,
 	"difficulties": ["base"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
@@ -58,7 +58,12 @@
 		{"name": "Shop Moves", "itemtype": "SHOP"},
 		{"name": "Shop Powers", "itemtype": "SHOP"},
 		{"name": "Shop Upgrades", "itemtype": "SHOP"},
-		{"name": "Shop Characters", "itemtype": "SHOP"}
+		{"name": "Shop Characters", "itemtype": "SHOP"},
+
+		{"name": "A.M VILLAGE COIN", "itemtype": "COIN", "count": 15},
+		{"name": "ARID HOLE COIN", "itemtype": "COIN", "count": 15},
+		{"name": "SQUABBLE SPILLWAY COIN", "itemtype": "COIN", "count": 15},
+		{"name": "DROPSHIP DAYBREAK COIN", "itemtype": "COIN", "count": 27}
 	],
 	"shop": [
 		{"name": "Spin Charge", "page": "Moves"},
@@ -469,7 +474,7 @@
 			{"name": "BIT BUBBLE #1", "index": 4, "sanity": "bubble", "requires": ""},
 			{"name": "BIT BUBBLE #2", "index": 2, "sanity": "bubble", "requires": ""}
 		]},
-		{"name": "A.M VILLAGE", "id": 4, "type": "stage", "checks": [
+		{"name": "A.M VILLAGE", "id": 4, "type": "stage", "coin_count": 15, "coin_req": 10, "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
 			{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
 			{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
@@ -573,7 +578,7 @@
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
 		]},
-		{"name": "ARID HOLE", "id": 11, "type": "stage", "checks": [
+		{"name": "ARID HOLE", "id": 11, "type": "stage", "coin_count": 15, "coin_req": 10, "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
 			{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
 			{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
@@ -802,7 +807,7 @@
 			{"name": "HEALTH CAPSULE #5", "index": 0, "sanity": "capsule", "requires": "(wj|cd|dj|ww)+pc"},
 			{"name": "HEALTH CAPSULE #6", "index": 16, "sanity": "capsule", "requires": "(wj|cd|dj|ww)+pc"}
 		]},
-		{"name": "SQUABBLE SPILLWAY", "id": 21, "type": "stage", "checks": [
+		{"name": "SQUABBLE SPILLWAY", "id": 21, "type": "stage", "coin_count": 15, "coin_req": 13, "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
 			{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
 			{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
@@ -964,7 +969,7 @@
 			{"name": "HEALTH CAPSULE #22", "index": 49, "sanity": "capsule", "requires": "co+(dj|(wj+1c))"},
 			{"name": "HEALTH CAPSULE #23", "index": 46, "sanity": "capsule", "requires": "co+(dj|(wj+1c))"}
 		]},
-		{"name": "DROPSHIP DAYBREAK", "id": 27, "type": "stage", "checks": [
+		{"name": "DROPSHIP DAYBREAK", "id": 27, "type": "stage", "coin_count": 27, "coin_req": 15, "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "co"},
 			{"name": "NIGHT BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
 			{"name": "NIGHT BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},

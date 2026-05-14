@@ -59,6 +59,9 @@ for sanity in sanity_priority:
 itemID = 16295351000
 for stage in shared["stages"]:
 	explore_rules = []
+	if not "coin_count" in stage:
+		stage["coin_count"] = 0
+		stage["coin_req"] = 0
 	sanity_max = {"checkpoint": -1, "capsule": -1, "bubble": -1}
 	sanity_seen = {"checkpoint": [], "capsule": [], "bubble": []}
 	for sanity in sanity_priority:
@@ -104,7 +107,7 @@ for sanity in sanity_priority:
 with open("world/apshared.py", "w") as appy:
 	appy.write("from .items import ItemType\n")
 	appy.write("apshared = ")
-	shared_str = json.dumps(shared, indent='\t')
+	shared_str = json.dumps(shared)
 	index = shared_str.find("itemtype")
 	while True:
 		index = shared_str.find("itemtype")
@@ -115,9 +118,9 @@ with open("world/apshared.py", "w") as appy:
 		shared_str = "".join([shared_str, part[0], part[2]])
 	appy.write(shared_str)
 	appy.write("\nlocation_name_to_id = ")
-	appy.write(json.dumps(location_name_to_id, indent='\t'))
+	appy.write(json.dumps(location_name_to_id))
 	appy.write("\nitem_name_to_id = ")
-	appy.write(json.dumps(item_name_to_id, indent='\t'))
+	appy.write(json.dumps(item_name_to_id))
 
 with open("client/apshared.cs", "w") as apcs:
 	apcs.write("namespace Sparkipelago {\n")
