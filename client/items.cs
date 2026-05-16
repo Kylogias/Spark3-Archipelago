@@ -60,7 +60,7 @@ namespace Sparkipelago {
 				case ItemIds.HEALTH_CAPSULE: GameObject.Instantiate(Sparkipelago.hCapsule, player.transform); break;
 				case ItemIds.ENERGY_CAPSULE: GameObject.Instantiate(Sparkipelago.eCapsule, player.transform); break;
 				case ItemIds.BIT_BUBBLE: if (!catchup) addBits(30); break; // 30 bits
-				case ItemIds.ENERGY_BUBBLE: GameObject.Instantiate(Sparkipelago.eBubble, player.transform); break;
+				case ItemIds.ENERGY_BUBBLE: GameObject.Instantiate(Sparkipelago.eBubble, player.transform.position, Quaternion.identity); break;
 				case ItemIds.NIGHTMARE_TRAP:
 					if (Sparkipelago.playerRed != null) Sparkipelago.playerRed.SetActive(true);
 					break;
@@ -68,7 +68,7 @@ namespace Sparkipelago {
 					if (Sparkipelago.playerGray != null) Sparkipelago.playerGray.SetActive(true);
 					break;
 				case ItemIds.FLINT_TRAP:
-					Sparkipelago.flintList.Add(GameObject.Instantiate(Sparkipelago.flint, new Vector3(0, 10000, 0), Quaternion.identity));
+					Sparkipelago.flintList.Add(GameObject.Instantiate(Sparkipelago.flint, player.transform.position, Quaternion.identity));
 					break;
 				case ItemIds.SPIN_CHARGE: save.Move00_SpinCharge = true; save.Move00_SpinCharge_Enabled = true; break;
 				case ItemIds.DUAL_AIR_KICK: save.Move01_DualAirKick = true; save.Move01_DualAirKick_Enabled = true; break;
@@ -136,7 +136,7 @@ namespace Sparkipelago {
 			}
 		}
 		
-		[HarmonyPatch(typeof(Action02_Homing), "FixedUpdate")]
+	//	[HarmonyPatch(typeof(Action02_Homing), "FixedUpdate")]
 		private static class ExhaustedMagdashPatch {
 			private static void Prefix(Action02_Homing __instance) {
 				// There's no easily accessible variable so this'll have to do

@@ -60,11 +60,14 @@ namespace Sparkipelago {
 				//	mat.color = new Color(1f, 1f, 1f, 1f);
 				} else coinLeft += 1;
 			}
-			if ((Locations.isLocationComplete(stage, "COMPLETION") || (Sparkipelago.slotData != null && (long)Sparkipelago.slotData["coin_hunt"] > 0)) && coins.Count > 0) {
+			if (coins.Count > 0) {
 				CollectablesController collect = GameObject.Find("[ Collectable UI ]").GetComponent<CollectablesController>();
-				collect.StageTime = 30000;
-				if ((long)Sparkipelago.slotData["coin_hunt"] > 0) coinLeft *= 1000;
-				collect.MedalAmm = coinLeft > 0 ? coinLeft : 1000000;
+				if (collect.MedalAmm > coinLeft) collect.MedalAmm = coinLeft;
+				if ((Locations.isLocationComplete(stage, "COMPLETION") || (Sparkipelago.slotData != null && (long)Sparkipelago.slotData["coin_hunt"] > 0))) {
+					collect.StageTime = 30000;
+					if ((long)Sparkipelago.slotData["coin_hunt"] > 0) coinLeft *= 1000;
+					collect.MedalAmm = coinLeft > 0 ? coinLeft : 1000000;
+				}
 			}
 			
 			GameObject player = GameObject.Find("Player_Fark");

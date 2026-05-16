@@ -46,6 +46,10 @@ namespace Sparkipelago {
 			savefile.Power_Sfarx_Unlocked = true;
 			savefile.Power_Float_Unlocked = true;
 			savefile.Power_Reaper_Unlocked = true;
+
+			for (int i = 0; i < savefile.StageUnlocked.Count(); i++) {
+				savefile.StageUnlocked[i] = true;
+			}
 			
 			SceneController.LoadMapScreen();
 		}

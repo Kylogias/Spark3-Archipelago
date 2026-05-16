@@ -1232,7 +1232,7 @@
 			{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+			{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
 			{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 			{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 
