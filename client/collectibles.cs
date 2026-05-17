@@ -14,6 +14,7 @@ namespace Sparkipelago {
 		static List<CheckPointData> checkpoints;
 		static List<MonitorData> bubbles;
 		static List<CollectableCoin> coins;
+		static List<GameObject> batteries;
 
 		static int layers;
 		
@@ -29,6 +30,24 @@ namespace Sparkipelago {
 					recurseGameObject(parent.transform.GetChild(i).gameObject, comps, getLayer);
 				}
 			}
+		}
+
+		static void recurseForTag(GameObject parent, List<GameObject> objects, string tag) {
+			ActivateOnDistance aod = parent.GetComponent<ActivateOnDistance>();
+			if (parent.activeSelf || aod != null || parent.name == "Area_2 (Day)") {
+				if (parent.tag == tag) objects.Add(parent);
+				for (int i = 0; i < parent.transform.childCount; i++) {
+					recurseForTag(parent.transform.GetChild(i).gameObject, objects, tag);
+				}
+			}
+		}
+		
+		static List<GameObject> getAllWithTag(Scene scn, string tag) {
+			List<GameObject> tagged = new List<GameObject>();
+			foreach (GameObject go in scn.GetRootGameObjects()) {
+				recurseForTag(go, tagged, tag);
+			}
+			return tagged;
 		}
 		
 		static List<T> getAllComponents<T>(Scene scn, bool getLayer) where T : Component {
@@ -48,6 +67,7 @@ namespace Sparkipelago {
 			checkpoints = getAllComponents<CheckPointData>(scn, false);
 			bubbles = getAllComponents<MonitorData>(scn, true);
 			coins = getAllComponents<CollectableCoin>(scn, false); // There's an easier way but shrug
+			batteries = getAllWithTag(scn, "Battery");
 			
 			// The normal index isn't initialized yet
 			int stage = GameObject.Find("[OffStageVaribales]").GetComponent<GameProgressVariables>().StageIndex;
@@ -91,7 +111,7 @@ namespace Sparkipelago {
 			}
 			nsm.CollectableDots = dots;
 			
-			MelonLogger.Msg("{0} Capsules, {1} Checkpoints, {2} Bubbles", capsules.Count, checkpoints.Count, bubbles.Count);
+			MelonLogger.Msg("{0} Capsules, {1} Checkpoints, {2} Bubbles, {3} Batteries", capsules.Count, checkpoints.Count, bubbles.Count, batteries.Count);
 		}
 
 		[HarmonyPatch(typeof(Action_13_NewSuperMoves))]
@@ -159,6 +179,18 @@ namespace Sparkipelago {
 					Sparkipelago.debugLog("Collected Coin #{0}", idx);
 					Locations.sendLocationByIndex(Save.CurrentStageIndex, "coin", idx);
 					coins[idx] = null;
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(CarCollectables), "OnTriggerEnter")]
+		private static class BatteryPatch {
+			private static void Prefix(Collider col) {
+				if (col.tag == "Battery" && batteries.Contains(col.gameObject)) {
+					int idx = batteries.IndexOf(col.gameObject);
+					Sparkipelago.debugLog("Collected Battery #{0}", idx);
+					Locations.sendLocationByIndex(Save.CurrentStageIndex, "battery", idx);
+					batteries[idx] = null;
 				}
 			}
 		}

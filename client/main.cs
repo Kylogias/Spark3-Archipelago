@@ -270,7 +270,7 @@ namespace Sparkipelago {
 				SceneManager.LoadScene("[STAGE 0X - LEVEL TEMPLATE]");
 			}
 			
-			if (sceneName == "[STAGE 0X - LEVEL TEMPLATE]") {
+			if (sceneName == "[STAGE 0X - LEVEL TEMPLATE]" && redWorld == null && grayWorld == null) {
 				setupPrefabs();
 				SceneManager.LoadScene("[LOGO]");
 			}

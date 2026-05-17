@@ -11,7 +11,7 @@
 		{"name": "Wall Walk", "itemtype": "ABILITY"},
 		{"name": "Double Jump", "itemtype": "ABILITY"},
 		{"name": "Combat", "itemtype": "ABILITY"},
-		{"name": "Parry", "itemtype": "ABILITY"},
+		{"name": "Parry", "itemtype": "UNIMPLEMENTED"},
 		
 		{"name": "Score Capsule", "itemtype": "JUNK"},
 		{"name": "Health Capsule", "itemtype": "JUNK"},
@@ -76,6 +76,8 @@
 		{"name": "Abyss Bracer", "itemtype": "UNIMPLEMENTED"},
 		{"name": "Air Bubbles", "itemtype": "UNIMPLEMENTED"},
 		{"name": "Protestors", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Car Boost Pads", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Abyss Boosters", "itemtype": "UNIMPLEMENTED"},
 		
 		{"name": "A.M VILLAGE COIN", "itemtype": "COIN", "count": 15},
 		{"name": "ARID HOLE COIN", "itemtype": "COIN", "count": 15},
@@ -123,7 +125,11 @@
 			{"name": "CHECKPOINT #1", "index": 3, "sanity": "checkpoint", "requires": ""},
 			{"name": "CHECKPOINT #2", "index": 2, "sanity": "checkpoint", "requires": ""},
 			{"name": "CHECKPOINT #3", "index": 1, "sanity": "checkpoint", "requires": ""},
-			{"name": "CHECKPOINT #4", "index": 0, "sanity": "checkpoint", "requires": ""}
+			{"name": "CHECKPOINT #4", "index": 0, "sanity": "checkpoint", "requires": ""},
+
+			{"name": "BATTERY #1", "index": 0, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #2", "index": 1, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #3", "index": 2, "sanity": "battery", "requires": "ca"}
 		]},
 		{"name": "DOUBLEMOON VILLA", "id": 1, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
@@ -762,7 +768,10 @@
 		{"name": "ROADWAY RALLY", "id": 23, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": ""},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
-			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
+			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""},
+
+			{"name": "BATTERY #1", "index": 0, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #2", "index": 1, "sanity": "battery", "requires": "ca"}
 		]},
 		{"name": "STRIKE SEWERS", "id": 20, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "(wj|cd|dj|ww)+pc"},
@@ -1359,7 +1368,16 @@
 			{"name": "ENERGY BUBBLE #1", "index": 6, "sanity": "bubble", "requires": ""},
 			{"name": "ENERGY BUBBLE #2", "index": 5, "sanity": "bubble", "requires": ""},
 			{"name": "ENERGY BUBBLE #3", "index": 3, "sanity": "bubble", "requires": ""},
-			{"name": "ENERGY BUBBLE #4", "index": 2, "sanity": "bubble", "requires": ""}
+			{"name": "ENERGY BUBBLE #4", "index": 2, "sanity": "bubble", "requires": ""},
+
+			{"name": "BATTERY #1", "index": 0, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #2", "index": 1, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #3", "index": 2, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #4", "index": 3, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #5", "index": 4, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #6", "index": 5, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #7", "index": 6, "sanity": "battery", "requires": "ca"},
+			{"name": "BATTERY #8", "index": 7, "sanity": "battery", "requires": "ca"}
 		]},
 		{"name": "MAYDAY MIDDAY", "id": 32, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "jd"},

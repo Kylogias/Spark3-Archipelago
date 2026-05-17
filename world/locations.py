@@ -18,7 +18,7 @@ class LocationState:
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11] # Gate 0 excludes Alpine Carrera in the count
 		
-		self.sanities = ["base"]
+		self.sanities = ["base", "battery"]
 		self.stages = []
 		self.spark2 = []
 		self.bosses = []

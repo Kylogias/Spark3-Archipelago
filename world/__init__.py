@@ -123,7 +123,7 @@ class Spark3World(World):
 	#	if self.ability_rando and (self.options.scoresanity.value or self.options.speedsanity.value):
 	#		raise ValueError("Ability logic not implemented for Score/Speed Sanities")
 
-		location_count = 43
+		location_count = 56 + self.location_state.ENDLESS_COUNT
 		if self.spark2: location_count += 14
 		if self.shop_enabled: location_count += 26
 		if self.options.scoresanity & 1: location_count += 28 if self.spark2 else 14
