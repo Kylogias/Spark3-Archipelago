@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using MelonLoader;
 using Archipelago.MultiClient.Net;
@@ -33,6 +34,8 @@ namespace Sparkipelago {
 		public static GameObject playerRed;
 		public static GameObject playerGray;
 
+		public static int enemyRando;
+
 		public static GameObject eBubble;
 		public static GameObject eCapsule;
 		public static GameObject hCapsule;
@@ -59,6 +62,7 @@ namespace Sparkipelago {
 		}
 		
 		public void ConnectToArchipelago(bool newServer) {
+			enemyRando = 0;
 			if (newServer) {
 				foreach (long id in APShared.itemIDs) {
 					itemState[(ItemIds)id] = 0;
@@ -109,6 +113,8 @@ namespace Sparkipelago {
 				foreach (long location in data.checkedLocations) {
 					currentSession.Locations.CompleteLocationChecks(location);
 				}
+
+				enemyRando = (int)(long)slotData["enemy_rando"];
 				
 				musicRando = (int)(long)slotData["musicchoice"];
 				musicSeed = (int)(long)slotData["musicseed"];
@@ -182,11 +188,12 @@ namespace Sparkipelago {
 			}
 		}
 		
-		private void setupPrefabChildren(GameObject prefab) {
+		public static void setupPrefabChildren(GameObject prefab, bool center, string[] exclude) {
+			if (exclude != null && exclude.Contains(prefab.name)) return;
 			prefab.hideFlags = HideFlags.HideAndDontSave;
-			prefab.transform.position = new Vector3(0, 0, 0);
+			if (center) prefab.transform.position = new Vector3(0, 0, 0);
 			for (int i = 0; i < prefab.transform.childCount; i++) {
-				setupPrefabChildren(prefab.transform.GetChild(i).gameObject);
+				setupPrefabChildren(prefab.transform.GetChild(i).gameObject, center, exclude);
 			}
 		}
 		
@@ -194,51 +201,53 @@ namespace Sparkipelago {
 			GameObject prefabHolder = GameObject.Find("[PREFABS HOLDER]");
 			prefabHolder.transform.GetChild(0).gameObject.SetActive(true);
 			prefabHolder.transform.GetChild(12).gameObject.SetActive(true); // Should be AbyssPrefabs
-			Transform bosses = prefabHolder.transform.GetChild(2);
+			Transform bossXfrm = prefabHolder.transform.GetChild(2);
 			
 			GameObject prefabObject = new GameObject("AP Prefabs");
 			prefabObject.SetActive(false);
 			prefabObject.hideFlags = HideFlags.HideAndDontSave;
+
+			EnemyRando.setupEnemyRando(prefabHolder, prefabObject);
 			
 			GameObject redPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/RedGhostWorld");
 			GameObject grayPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/GrayGhostWorld");
 			GameObject ragingPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/RagingGhost");
 			GameObject wanderingPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/MinorGhost");
 			GameObject lazerPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/LazerFirerer");
-			GameObject flintPrefab = bosses.Find("PowerFlintModel").gameObject;
+			GameObject flintPrefab = bossXfrm.Find("PowerFlintModel").gameObject;
 			GameObject eCapPrefab = GameObject.Find("[Core prefabs]/EnergyCapsule");
 			GameObject hCapPrefab = GameObject.Find("[Core prefabs]/Capsule");
 			GameObject sCapPrefab = GameObject.Find("[Core prefabs]/Capsule_Score");
 			GameObject eBubPrefab = GameObject.Find("[Core prefabs]/EnergyBubble");
 			
 			GameObject ragingInstance = UnityEngine.Object.Instantiate(ragingPrefab, prefabObject.transform);
-			setupPrefabChildren(ragingInstance);
+			setupPrefabChildren(ragingInstance, true, null);
 			GameObject wanderingInstance = UnityEngine.Object.Instantiate(wanderingPrefab, prefabObject.transform);
-			setupPrefabChildren(wanderingInstance);
+			setupPrefabChildren(wanderingInstance, true, null);
 			GameObject lazerInstance = UnityEngine.Object.Instantiate(lazerPrefab, prefabObject.transform);
-			setupPrefabChildren(lazerInstance);
+			setupPrefabChildren(lazerInstance, true, null);
 			
 			redWorld = UnityEngine.Object.Instantiate(redPrefab, prefabObject.transform);
-			setupPrefabChildren(redWorld);
+			setupPrefabChildren(redWorld, true, null);
 			RedWorldSequence redSeq = redWorld.GetComponent<RedWorldSequence>();
 			redSeq.RagingGhost = ragingInstance;
 			redSeq.WanderingGhost = wanderingInstance;
 			
 			grayWorld = UnityEngine.Object.Instantiate(grayPrefab, prefabObject.transform);
-			setupPrefabChildren(grayWorld);
+			setupPrefabChildren(grayWorld, true, null);
 			GrayWorldSequence graySeq = grayWorld.GetComponent<GrayWorldSequence>();
 			graySeq.GrayLazer = lazerInstance;
 
 			eBubble = UnityEngine.Object.Instantiate(eBubPrefab, prefabObject.transform);
-			setupPrefabChildren(eBubble);
+			setupPrefabChildren(eBubble, true, null);
 			eCapsule = UnityEngine.Object.Instantiate(eCapPrefab, prefabObject.transform);
-			setupPrefabChildren(eCapsule);
+			setupPrefabChildren(eCapsule, true, null);
 			hCapsule = UnityEngine.Object.Instantiate(hCapPrefab, prefabObject.transform);
-			setupPrefabChildren(hCapsule);
+			setupPrefabChildren(hCapsule, true, null);
 			sCapsule = UnityEngine.Object.Instantiate(sCapPrefab, prefabObject.transform);
-			setupPrefabChildren(sCapsule);
+			setupPrefabChildren(sCapsule, true, null);
 			flint = UnityEngine.Object.Instantiate(flintPrefab, prefabObject.transform);
-			setupPrefabChildren(flint);
+			setupPrefabChildren(flint, true, null);
 		}
 		
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName) {

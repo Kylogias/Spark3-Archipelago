@@ -182,7 +182,19 @@ class EndlessDiveFloors(Range):
 	range_start = 1
 	range_end = 10
 
-	default = 0
+	default = 1
+
+class EnemyRando(Choice):
+	"""
+	How should enemies be randomized?
+	"""
+	display_name = "Enemy Rando"
+
+	option_vanilla = 0
+	option_only_enemies = 1
+	option_bosses_on_enemies = 2
+
+	default = option_vanilla
 
 @dataclass
 class Spark3Options(PerGameCommonOptions):
@@ -204,4 +216,5 @@ class Spark3Options(PerGameCommonOptions):
 	required_completion: RequiredCompletion
 	trap_chance: TrapChance
 	music_rando: MusicChoice
+	enemy_rando: EnemyRando
 	labmode: LabMode
