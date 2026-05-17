@@ -108,9 +108,11 @@ namespace Sparkipelago {
 				if (bossids[i] > 200) save.StageCompleted[bossids[i]] = true;
 				i++;
 			}
+
 			
 			foreach(LevelData level in levels) {
 				bool unlocked = false;
+				if (Sparkipelago.hasItem(ItemIds.OOB_CLIP) && level.ID == 155) unlocked = true;
 				if (level.ID == -99) {
 					Vector3 newpos;
 					newpos.x = 0;

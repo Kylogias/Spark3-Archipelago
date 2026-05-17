@@ -11,6 +11,7 @@
 		{"name": "Wall Walk", "itemtype": "ABILITY"},
 		{"name": "Double Jump", "itemtype": "ABILITY"},
 		{"name": "Combat", "itemtype": "ABILITY"},
+		{"name": "Parry", "itemtype": "ABILITY"},
 		
 		{"name": "Score Capsule", "itemtype": "JUNK"},
 		{"name": "Health Capsule", "itemtype": "JUNK"},
@@ -59,12 +60,23 @@
 		
 		{"name": "Car", "itemtype": "VEHICLE"},
 		{"name": "Copter", "itemtype": "VEHICLE"},
+		{"name": "OoB Clip", "itemtype": "VEHICLE"},
 		
 		{"name": "Shop Moves", "itemtype": "SHOP"},
 		{"name": "Shop Powers", "itemtype": "SHOP"},
 		{"name": "Shop Upgrades", "itemtype": "SHOP"},
 		{"name": "Shop Characters", "itemtype": "SHOP"},
-
+		
+		{"name": "Springs", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Speed Pads", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Dash Rings", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Pulleys", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Prison Rockets", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Jester Dash Rings", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Abyss Bracer", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Air Bubbles", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Protestors", "itemtype": "UNIMPLEMENTED"},
+		
 		{"name": "A.M VILLAGE COIN", "itemtype": "COIN", "count": 15},
 		{"name": "ARID HOLE COIN", "itemtype": "COIN", "count": 15},
 		{"name": "SQUABBLE SPILLWAY COIN", "itemtype": "COIN", "count": 15},
@@ -102,6 +114,7 @@
 		{"name": "Sfarx", "page": "Characters"}
 	],
 	"stages": [
+		{"name": "ENDLESS DIVE", "id": 155, "type": "endless", "checks": []},
 		{"name": "ALPINE CARRERA", "id": 0, "type": "stage", "checks": [
 			{"name": "COMPLETION", "sanity": "base", "requires": "cd|da"},
 			{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},

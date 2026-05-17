@@ -62,6 +62,9 @@ for stage in shared["stages"]:
 	if not "coin_count" in stage:
 		stage["coin_count"] = 0
 		stage["coin_req"] = 0
+	if stage["type"] == "endless":
+		for i in range(110):
+			stage["checks"].append({"name": f"#{i+1}", "index": i+1, "sanity": "base", "requires": ""})
 	sanity_max = {"checkpoint": -1, "capsule": -1, "bubble": -1}
 	sanity_seen = {"checkpoint": [], "capsule": [], "bubble": []}
 	for sanity in sanity_priority:

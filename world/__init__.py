@@ -95,6 +95,8 @@ class Spark3World(World):
 		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))
 		self.rules_state.FREEDOM_REQUIREMENTS = [int(req_freedom/5), int(2*req_freedom/5), int(3*req_freedom/5), int(4*req_freedom/5), int(req_freedom)]
 
+		self.location_state.ENDLESS_COUNT = self.options.endless_dive_checks.value
+
 		self.rules_state.COMPLETION_REQUIREMENTS = []
 		completion_total = 0
 		for i in range(5):
@@ -111,6 +113,7 @@ class Spark3World(World):
 			self.location_state.sanities = slot_data["sanities"]
 			self.location_state.gate_data = slot_data["gates"]
 			self.location_state.boss_data = slot_data["bosses"]
+			self.location_state.ENDLESS_COUNT = slot_data["endless_checks"]
 			self.location_state.regen = True
 			self.spark2 = True
 			self.shop_enabled = True
@@ -131,8 +134,8 @@ class Spark3World(World):
 		if self.options.coinsanity: location_count += 72
 		if self.explore_hunt: location_count += 30 if self.spark2 else 18
 
-		reserved_items = 27 + len(self.multipliers)
-		if self.ability_rando: reserved_items += 8
+		reserved_items = 28 + len(self.multipliers)
+		if self.ability_rando: reserved_items += 9
 		if self.explore_hunt == 2: reserved_items += 300 if self.spark2 else 180
 		if self.coin_hunt: reserved_items += 72
 		if reserved_items > location_count:
@@ -167,6 +170,8 @@ class Spark3World(World):
 			"version": apshared["version"],
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
 			"completion_requirements": self.rules_state.COMPLETION_REQUIREMENTS,
+			"endless_checks": self.location_state.ENDLESS_COUNT,
+			"endless_floors": self.options.endless_dive_floors.value,
 			"labmode": self.options.labmode.value,
 			"sanities": self.location_state.sanities,
 			"explore_hunt": self.explore_hunt,

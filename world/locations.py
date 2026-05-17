@@ -4,6 +4,7 @@ from .constants import *
 from .items import Spark3Item
 from worlds.generic.Rules import CollectionRule
 from enum import Enum, IntFlag
+from rule_builder.rules import Has
 
 from .apshared import apshared, location_name_to_id
 
@@ -13,6 +14,7 @@ class Spark3Location(Location):
 class LocationState:
 	def __init__(self):
 		self.SHOP_LOCATIONS = {}
+		self.ENDLESS_COUNT = 0
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11] # Gate 0 excludes Alpine Carrera in the count
 		
@@ -125,6 +127,15 @@ class LocationState:
 	#	gates[1].connect(gates[2], "Gate 1 to 2")
 	#	gates[2].connect(gates[3], "Gate 2 to 3")
 	#	gates[3].connect(gates[4], "Gate 3 to 4")
+		
+		dive_locations = {}
+		for i in range(self.ENDLESS_COUNT):
+			dive_locations[f"ENDLESS DIVE #{i+1}"] = location_name_to_id[f"ENDLESS DIVE #{i+1}"]
+
+		dive_region = Region("ENDLESS DIVE", world.player, world.multiworld)
+		world.multiworld.regions += [dive_region]
+		gates[0].connect(dive_region, "Gate 0 to Endless Dive", Has("OoB Clip") & Has(COMBAT))
+		dive_region.add_locations(dive_locations, Spark3Location)
 		
 		if world.spark2:
 			self.stages += self.spark2

@@ -175,6 +175,7 @@ namespace Sparkipelago {
 					foreach (APStageCheck ch in stage.checks) {
 						if (ch.sanity == sanity && ch.index == index) {
 							sendLocationToServer(ch.id);
+							MelonLogger.Msg("Found Check! ID is {0}", ch.id);
 							foundCheck = true;
 							break;
 						}
@@ -245,6 +246,42 @@ namespace Sparkipelago {
 			private static void Postfix(int medal) {
 				MelonLogger.Msg("Sending " + Save.CurrentStageIndex.ToString() + " Medal " + medal.ToString());
 				sendLocationCheck(Save.CurrentStageIndex, string.Format("{0} EXPLORATION MEDAL", MEDALNAMES[medal]));
+			}
+		}
+
+		[HarmonyPatch(typeof(Arena), "Start")]
+		private static class DiveShufflePatch {
+			private static void Prefix(Arena __instance) {
+				System.Random rng = new System.Random(Sparkipelago.musicSeed);
+				for (int i = 0; i < 1000; i++) rng.Next();
+				int[] idxShuffle = new int[__instance.FloorData.Length];
+				ArenaSpawner[] newArena = new ArenaSpawner[__instance.FloorData.Length];
+				for (int i = 0; i < __instance.FloorData.Length; i++) {
+					idxShuffle[i] = -1;
+				}
+
+				for (int i = 0; i < __instance.FloorData.Length; i++) {
+					int newIdx = -1;
+					do {
+						newIdx = rng.Next(__instance.FloorData.Length);
+					} while (idxShuffle.Contains(newIdx));
+					idxShuffle[i] = newIdx;
+					newArena[newIdx] = __instance.FloorData[i];
+				}
+				__instance.FloorData = newArena;
+			}
+		}
+		
+		static int prevFloor;
+		[HarmonyPatch(typeof(Arena), "Update")]
+		private static class EndlessDivePatch {
+			private static void Postfix(Arena __instance) {
+				if (prevFloor != __instance.CurrentFloor) {
+					sendLocationByIndex(155, "base", __instance.CurrentFloor / (int)(long)Sparkipelago.slotData["endless_floors"]);
+					MelonLogger.Msg("Sending Check #{0}", __instance.CurrentFloor / (int)(long)Sparkipelago.slotData["endless_floors"]);
+				}
+				__instance.LivesMin = Sparkipelago.itemState[ItemIds.EXTRA_LIFE] + 2;
+				prevFloor = __instance.CurrentFloor;
 			}
 		}
 	}

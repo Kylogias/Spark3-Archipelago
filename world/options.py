@@ -160,22 +160,48 @@ class ExploreHunt(Choice):
 	option_locations_only = 1
 	option_shuffle_medals = 2
 
+	default = option_off
+
+class EndlessDiveChecks(Range):
+	"""
+	How many checks should be in Endless Dive
+	"""
+	display_name = "Endless Dive Check Count"
+
+	range_start = 0
+	range_end = 110
+
+	default = 0
+
+class EndlessDiveFloors(Range):
+	"""
+	How many floors should you complete for a check in Endless Dive? Total floor count is the check amount times floor amount
+	"""
+	display_name = "Endless Dive Floors per Check"
+
+	range_start = 1
+	range_end = 10
+
+	default = 0
+
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
 	difficulty: Difficulty
-	perfect_combo: PerfectCombo
-	score_multiplier: ScoreMultiplier
-	labmode: LabMode
 	spark2_stages: Spark2Stages
-	freedom_count: FreedomCount
-	freedom_required: FreedomRequired
-	required_completion: RequiredCompletion
+	endless_dive_checks: EndlessDiveChecks
+	endless_dive_floors: EndlessDiveFloors
 	shopsanity: Shopsanity
 	speedsanity: Speedsanity
 	scoresanity: Scoresanity
 	exploresanity: Exploresanity
-	explore_hunt: ExploreHunt
 	coinsanity: Coinsanity
+	explore_hunt: ExploreHunt
+	perfect_combo: PerfectCombo
+	score_multiplier: ScoreMultiplier
+	freedom_count: FreedomCount
+	freedom_required: FreedomRequired
+	required_completion: RequiredCompletion
 	trap_chance: TrapChance
 	music_rando: MusicChoice
+	labmode: LabMode

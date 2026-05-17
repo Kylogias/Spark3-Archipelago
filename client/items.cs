@@ -96,6 +96,7 @@ namespace Sparkipelago {
 				case ItemIds.FLOAT: save.Power_Float = true; if (!catchup) addDpadPower(9); break;
 				case ItemIds.FARK: save.Power_Fark = true; if (!catchup) addDpadPower(10); break;
 				case ItemIds.SFARX: save.Power_Sfarx = true; if (!catchup) addDpadPower(11); break;
+				case ItemIds.OOB_CLIP: if (!catchup) save.StageJustUnlocked[155] = true; break;
 				case ItemIds.AM_VILLAGE_COIN:
 					if ((long)Sparkipelago.slotData["coin_hunt"] == 1 && Sparkipelago.itemState[item] >= 10) Locations.sendLocationCheck(4, "COMPLETION");
 					if ((long)Sparkipelago.slotData["coin_hunt"] == 2 && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(4, "COMPLETION");
