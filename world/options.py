@@ -126,6 +126,23 @@ class RequiredCompletion(Range):
 
 	default = 40
 
+class RequiredExplore(Range):
+	"""
+	What percentage of stages should be explored to unlock Utopia Shelter
+	"""
+	display_name = "Required Explored Levels"
+
+	range_start = 0
+	range_end = 100
+
+	default = 0
+
+class ExplorePercentIsHunt(Toggle):
+	"""
+	Should the exploration percentage use Explore Hunt medals?
+	"""
+	display_name = "Explore Hunt Medals for Utopia"
+
 class TrapChance(Range):
 	"""
 	Chance to receive traps instead of filler
@@ -201,6 +218,11 @@ class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
 	difficulty: Difficulty
 	spark2_stages: Spark2Stages
+	freedom_count: FreedomCount
+	freedom_required: FreedomRequired
+	required_completion: RequiredCompletion
+	required_explore: RequiredExplore
+	utopia_hunt_medals: ExplorePercentIsHunt
 	endless_dive_checks: EndlessDiveChecks
 	endless_dive_floors: EndlessDiveFloors
 	shopsanity: Shopsanity
@@ -211,9 +233,6 @@ class Spark3Options(PerGameCommonOptions):
 	explore_hunt: ExploreHunt
 	perfect_combo: PerfectCombo
 	score_multiplier: ScoreMultiplier
-	freedom_count: FreedomCount
-	freedom_required: FreedomRequired
-	required_completion: RequiredCompletion
 	trap_chance: TrapChance
 	music_rando: MusicChoice
 	enemy_rando: EnemyRando

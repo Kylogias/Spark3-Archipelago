@@ -4,7 +4,7 @@ from .constants import *
 from .items import Spark3Item
 from worlds.generic.Rules import CollectionRule
 from enum import Enum, IntFlag
-from rule_builder.rules import Has
+from rule_builder.rules import Has, CanReachLocation, True_
 
 from .apshared import apshared, location_name_to_id
 
@@ -17,6 +17,8 @@ class LocationState:
 		self.ENDLESS_COUNT = 0
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11] # Gate 0 excludes Alpine Carrera in the count
+		
+		self.UTOPIA_HUNT_MEDALS = False
 		
 		self.sanities = ["base", "battery"]
 		self.stages = []
@@ -74,16 +76,18 @@ class LocationState:
 		locs = {}
 		completion_locs = {}
 		stage_region.connect(completion_region, f"{stage['name']} GOAL")
-
+		has_explore = False
+		
+		explore_locations = []
 		for check in stage["checks"]:
 			if check["sanity"] in self.sanities:
 				if check["sanity"] in completion_sanities:
 					completion_locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
 				else:
 					locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
-			elif check["sanity"] == "explore" and world.explore_hunt == 1:
-				stage_region.add_event(f"{stage['name']} {check['name']}", f"{stage['name']} EXPLORE MEDAL", location_type=Spark3Location, item_type=Spark3Item, show_in_spoiler=False)
-		
+			if check["sanity"] == "explore":
+				has_explore = True
+				explore_locations.append(f"{stage['name']} {check['name']}")
 		if event:
 			for loc in completion_locs.keys():
 				completion_region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
@@ -92,6 +96,35 @@ class LocationState:
 		if stage["type"] != "boss":
 			completion_region.add_event(f"{stage['name']} GOAL REACHED", "Level Completion", location_type=Spark3Location, item_type=Spark3Item, show_in_spoiler=False);
 		stage_region.add_locations(locs, Spark3Location)
+		if has_explore:
+			for xl in explore_locations:
+				event_name = f"{xl} EXPLORE EVENT" if "explore" in self.sanities else xl
+				stage_region.add_event(
+					event_name, f"{stage['name']} EVENT MEDAL",
+					location_type=Spark3Location, item_type=Spark3Item,
+					rule=CanReachLocation(xl) if "explore" in self.sanities else None, show_in_spoiler=False
+				)
+				if world.explore_hunt == 1:
+					stage_region.add_event(
+						f"{xl} HUNT EVENT", f"{stage['name']} EXPLORE MEDAL",
+						location_type=Spark3Location, item_type=Spark3Item,
+						rule=CanReachLocation(xl), show_in_spoiler=False
+					)
+			if self.UTOPIA_HUNT_MEDALS:
+				completion_region.add_event(
+					f"{stage['name']} EXPLORED", "Stage Explored",
+					location_type=Spark3Location, item_type=Spark3Item,
+					rule=Has(f"{stage['name']} EXPLORE MEDAL", count=10), show_in_spoiler=False
+				);
+			else:
+				rule = True_()
+				for xl in explore_locations:
+					rule = CanReachLocation(xl) & rule
+				completion_region.add_event(
+					f"{stage['name']} EXPLORED", "Stage Explored",
+					location_type=Spark3Location, item_type=Spark3Item,
+					rule=rule, show_in_spoiler=False
+				);
 
 		return [stage_region, completion_region]
 	

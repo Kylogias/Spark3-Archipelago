@@ -96,9 +96,16 @@ namespace Sparkipelago {
 			}
 			
 			int numComplete = 0;
+			int numExplore = 0;
+			int exploreReq = (int)(long)Sparkipelago.slotData["explore_requirement"];
 			for (i = 0; i < save.StageCompleted.Length; i++) {
 				if (Locations.isLocationComplete(i, "COMPLETION")) save.StageCompleted[i] = true;
 				if (save.StageCompleted[i]) numComplete++;
+				if ((bool)Sparkipelago.slotData["utopia_hunt_medals"]) {
+					if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+i) && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+i] >= 10) numExplore += 1;
+				} else {
+					if (Save.GetAmmountOfExploreMedalsInSaveFile(save, i) >= 10) numExplore += 1;
+				}
 			}
 			
 			i = 0;
@@ -133,7 +140,12 @@ namespace Sparkipelago {
 					if (i > 0 && i < 5) {
 						if (!save.StageCompleted[bossids[i-1]]) {i++; continue;}
 					} else if (i == 5) {
-						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[4] && numComplete >= complReqs[i] && save.Power_Fark && save.Power_Sfarx)) {i++; continue;}
+						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[4]
+							&& numComplete >= complReqs[i]
+							&& numExplore >= exploreReq
+							&& save.Power_Fark
+							&& save.Power_Sfarx
+						)) {i++; continue;}
 					}
 					foreach (JToken lvlinfo in (JArray)gate) {
 						if (placeStage(lvlinfo, level)) unlocked = true;

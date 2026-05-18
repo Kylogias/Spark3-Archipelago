@@ -95,6 +95,9 @@ class Spark3World(World):
 		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))
 		self.rules_state.FREEDOM_REQUIREMENTS = [int(req_freedom/5), int(2*req_freedom/5), int(3*req_freedom/5), int(4*req_freedom/5), int(req_freedom)]
 
+		self.location_state.UTOPIA_HUNT_MEDALS = self.options.utopia_hunt_medals.value
+		self.rules_state.EXPLORE_REQUIREMENT = int(math.ceil((self.options.required_explore.value*0.01) * (30 if self.spark2 else 18)))
+
 		self.location_state.ENDLESS_COUNT = self.options.endless_dive_checks.value
 
 		self.rules_state.COMPLETION_REQUIREMENTS = []
@@ -109,6 +112,8 @@ class Spark3World(World):
 			slot_data = re_gen_passthrough[self.game]
 			self.rules_state.FREEDOM_REQUIREMENTS = slot_data["freedom_requirements"]
 			self.rules_state.COMPLETION_REQUIREMENTS = slot_data["completion_requirements"]
+			self.rules_state.EXPLORE_REQUIREMENT = slot_data["explore_requirement"]
+			self.location_state.UTOPIA_HUNT_MEDALS = slot_data["utopia_hunt_medals"]
 			self.difficulty = slot_data["difficulty"]
 			self.location_state.sanities = slot_data["sanities"]
 			self.location_state.gate_data = slot_data["gates"]
@@ -170,6 +175,8 @@ class Spark3World(World):
 			"version": apshared["version"],
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
 			"completion_requirements": self.rules_state.COMPLETION_REQUIREMENTS,
+			"explore_requirement": self.rules_state.EXPLORE_REQUIREMENT,
+			"utopia_hunt_medals": self.location_state.UTOPIA_HUNT_MEDALS,
 			"endless_checks": self.location_state.ENDLESS_COUNT,
 			"endless_floors": self.options.endless_dive_floors.value,
 			"labmode": self.options.labmode.value,

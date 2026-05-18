@@ -58,6 +58,7 @@ class RulesState:
 	def __init__(self):
 		self.FREEDOM_REQUIREMENTS = [4, 8, 12, 16, 20]
 		self.COMPLETION_REQUIREMENTS = [4, 4, 4, 4, 4]
+		self.EXPLORE_REQUIREMENT = 0
 	
 	def add_to_rule(self, op, rule, add):
 		print(f"{rule} {op} {add}")
@@ -140,7 +141,7 @@ class RulesState:
 		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
 		has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[4])
 		has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
-		world.set_rule(utopia_entrance, has_freedom & Has("Level Completion", count=self.COMPLETION_REQUIREMENTS[4]))
+		world.set_rule(utopia_entrance, has_freedom & Has("Stage Explored", count=self.EXPLORE_REQUIREMENT) & Has("Level Completion", count=self.COMPLETION_REQUIREMENTS[4]))
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			stage_region = world.location_state.stage_regions[stage_name]
@@ -150,7 +151,7 @@ class RulesState:
 
 			has_coin = False
 			for check in stage_data["checks"]:
-				if check["sanity"] in world.location_state.sanities or (check["sanity"] == "explore" and world.explore_hunt):
+				if check["sanity"] in world.location_state.sanities or check["sanity"] == "explore":
 					loc = world.get_location(f"{stage_data['name']} {check['name']}")
 					world.set_rule(loc, self.parse_location_rules(world, check['requires']))
 					if check["sanity"] == "base":
