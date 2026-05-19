@@ -59,6 +59,8 @@ class RulesState:
 		self.FREEDOM_REQUIREMENTS = [4, 8, 12, 16, 20]
 		self.COMPLETION_REQUIREMENTS = [4, 4, 4, 4, 4]
 		self.EXPLORE_REQUIREMENT = 0
+		self.SCORE_REQUIREMENTS = [0, 0, 0, 0, 0]
+		self.SPEED_REQUIREMENTS = [0, 0, 0, 0, 0]
 	
 	def add_to_rule(self, op, rule, add):
 		print(f"{rule} {op} {add}")
@@ -131,17 +133,28 @@ class RulesState:
 		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_POWERS}"), Has(SHOP_POWERS))
 		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_UPGRADES}"), Has(SHOP_UPGRADES))
 		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_CHARACTERS}"), Has(SHOP_CHARACTERS))
+
+	def set_gate_entrance_rule(self, world, entrance, i, extra):
+		speed_rule = True_()
+		if world.speed_type == 1: speed_rule = Has("Gold Speed Medal", count=self.SPEED_REQUIREMENTS[i])
+		if world.speed_type == 2: speed_rule = Has("Diamond Speed Medal", count=self.SPEED_REQUIREMENTS[i])
+		if world.speed_type == 3: speed_rule = HasFromList("Gold Speed Medal", "Diamond Speed Medal", count=self.SPEED_REQUIREMENTS[i])
+		score_rule = True_()
+		if world.score_type == 1: score_rule = Has("Gold Score Medal", count=self.SCORE_REQUIREMENTS[i])
+		if world.score_type == 2: score_rule = Has("Diamond Score Medal", count=self.SCORE_REQUIREMENTS[i])
+		if world.score_type == 3: score_rule = HasFromList("Gold Score Medal", "Diamond Score Medal", count=self.SCORE_REQUIREMENTS[i])
+		
+		has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[i])
+		has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
+		world.set_rule(entrance, has_freedom & extra & speed_rule & score_rule & Has("Level Completion", count=self.COMPLETION_REQUIREMENTS[i]))
+		
 	
 	def set_stage_rules(self, world):
 		for i in range(4):
 			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
-			has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[i])
-			has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
-			world.set_rule(gate_entrance, has_freedom & Has("Level Completion", count=self.COMPLETION_REQUIREMENTS[i]))
+			self.set_gate_entrance_rule(world, gate_entrance, i, True_())
 		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
-		has_freedom = HasFromList(count=self.FREEDOM_REQUIREMENTS[4])
-		has_freedom.item_names = tuple(sorted(set(tuple(world.item_state.FREEDOM_ITEMS))))
-		world.set_rule(utopia_entrance, has_freedom & Has("Stage Explored", count=self.EXPLORE_REQUIREMENT) & Has("Level Completion", count=self.COMPLETION_REQUIREMENTS[4]))
+		self.set_gate_entrance_rule(world, utopia_entrance, 4, Has("Stage Explored", count=self.EXPLORE_REQUIREMENT) & Has(FARK) & Has(SFARX))
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			stage_region = world.location_state.stage_regions[stage_name]
@@ -151,7 +164,7 @@ class RulesState:
 
 			has_coin = False
 			for check in stage_data["checks"]:
-				if check["sanity"] in world.location_state.sanities or check["sanity"] == "explore":
+				if check["sanity"] in world.location_state.sanities or (stage_data["type"] != "boss" and check["sanity"] in ["explore", "speedgold", "speeddia", "scoregold", "scoredia"]):
 					loc = world.get_location(f"{stage_data['name']} {check['name']}")
 					world.set_rule(loc, self.parse_location_rules(world, check['requires']))
 					if check["sanity"] == "base":

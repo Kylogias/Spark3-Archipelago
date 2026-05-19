@@ -5,6 +5,7 @@ from .items import Spark3Item
 from worlds.generic.Rules import CollectionRule
 from enum import Enum, IntFlag
 from rule_builder.rules import Has, CanReachLocation, True_
+import math
 
 from .apshared import apshared, location_name_to_id
 
@@ -16,7 +17,12 @@ class LocationState:
 		self.SHOP_LOCATIONS = {}
 		self.ENDLESS_COUNT = 0
 		
-		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11] # Gate 0 excludes Alpine Carrera in the count
+		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11]
+
+		self.SPEED_PERCENT = 0
+		self.SCORE_PERCENT = 0
+		self.total_score = 0
+		self.total_speed = 0
 		
 		self.UTOPIA_HUNT_MEDALS = False
 		
@@ -77,14 +83,23 @@ class LocationState:
 		completion_locs = {}
 		stage_region.connect(completion_region, f"{stage['name']} GOAL")
 		has_explore = False
+		shuffled_locations = []
+		all_locations = []
 		
 		explore_locations = []
 		for check in stage["checks"]:
+			all_locations.append(check['name'])
 			if check["sanity"] in self.sanities:
 				if check["sanity"] in completion_sanities:
 					completion_locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
 				else:
 					locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
+				shuffled_locations.append(check['name'])
+			if stage["type"] != "boss":
+				if check["sanity"] == "speedgold" and world.speed_type & 1: self.total_speed += 1
+				if check["sanity"] == "speeddia" and world.speed_type & 2: self.total_speed += 1
+				if check["sanity"] == "scoregold" and world.score_type & 1: self.total_score += 1
+				if check["sanity"] == "scoredia" and world.score_type & 2: self.total_score += 1
 			if check["sanity"] == "explore":
 				has_explore = True
 				explore_locations.append(f"{stage['name']} {check['name']}")
@@ -94,7 +109,17 @@ class LocationState:
 		else:
 			completion_region.add_locations(completion_locs, Spark3Location)
 		if stage["type"] != "boss":
-			completion_region.add_event(f"{stage['name']} GOAL REACHED", "Level Completion", location_type=Spark3Location, item_type=Spark3Item, show_in_spoiler=False);
+			event_names = ["COMPLETION", "GOLD SPEED MEDAL", "DIAMOND SPEED MEDAL", "GOLD SCORE MEDAL", "DIAMOND SCORE MEDAL"]
+			event_items = ["Level Completion", "Gold Speed Medal", "Diamond Speed Medal", "Gold Score Medal", "Diamond Score Medal"]
+			for i in range(len(event_names)):
+				if not event_names[i] in all_locations: continue
+				event = f"{event_names[i]} EVENT" if event_names[i] in shuffled_locations else event_names[i]
+				rule = CanReachLocation(f"{stage['name']} {event_names[i]}") if event_names[i] in shuffled_locations else True_()
+				completion_region.add_event(
+					f"{stage['name']} {event}", event_items[i],
+					location_type=Spark3Location, item_type=Spark3Item,
+					rule=rule, show_in_spoiler=False
+				)
 		stage_region.add_locations(locs, Spark3Location)
 		if has_explore:
 			for xl in explore_locations:
@@ -205,26 +230,41 @@ class LocationState:
 			self.gate_data[0].append([self.stages[total]["id"], (i-10)*0.75, 0])
 			self.add_stage_to_gate(world, gates[0], self.stages[total])
 			total += 1
+		if not self.regen
+			world.rules_state.SPEED_REQUIREMENTS[0] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
+			world.rules_state.SCORE_REQUIREMENTS[0] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
 		self.spoiler_text += "Gate 1:\n"
 		for i in range(self.GATE_STAGE_COUNT[1]):
 			self.gate_data[1].append([self.stages[total]["id"], (i-10)*0.75, 1*0.75])
 			self.add_stage_to_gate(world, gates[1], self.stages[total])
 			total += 1
+		if not self.regen
+			world.rules_state.SPEED_REQUIREMENTS[1] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
+			world.rules_state.SCORE_REQUIREMENTS[1] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
 		self.spoiler_text += "Gate 2:\n"
 		for i in range(self.GATE_STAGE_COUNT[2]):
 			self.gate_data[2].append([self.stages[total]["id"], (i-10)*0.75, 2*0.75])
 			self.add_stage_to_gate(world, gates[2], self.stages[total])
 			total += 1
+		if not self.regen
+			world.rules_state.SPEED_REQUIREMENTS[2] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
+			world.rules_state.SCORE_REQUIREMENTS[2] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
 		self.spoiler_text += "Gate 3:\n"
 		for i in range(self.GATE_STAGE_COUNT[3]):
 			self.gate_data[3].append([self.stages[total]["id"], (i-10)*0.75, 3*0.75])
 			self.add_stage_to_gate(world, gates[3], self.stages[total])
 			total += 1
+		if not self.regen
+			world.rules_state.SPEED_REQUIREMENTS[3] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
+			world.rules_state.SCORE_REQUIREMENTS[3] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
 		self.spoiler_text += "Gate 4:\n"
 		for i in range(self.GATE_STAGE_COUNT[4]):
 			self.gate_data[4].append([self.stages[total]["id"], (i-10)*0.75, 4*0.75])
 			self.add_stage_to_gate(world, gates[4], self.stages[total])
 			total += 1
+		if not self.regen
+			world.rules_state.SPEED_REQUIREMENTS[4] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
+			world.rules_state.SCORE_REQUIREMENTS[4] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
 		
 		self.add_stage_to_gate(world, gates[0], self.utopia, event="Victory")
 		self.gate_data[5].append([self.utopia["id"], -10*0.75, 5*0.75])

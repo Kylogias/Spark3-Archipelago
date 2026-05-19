@@ -74,6 +74,16 @@ namespace Sparkipelago {
 			}
 			return false;
 		}
+
+		private static int[] fillReqArray(string key) {
+			int[] reqs = new int[10];
+			int i = 0;
+			foreach (JToken freq in ((JArray)Sparkipelago.slotData[key])) {
+				reqs[i] = (int)freq;
+				i++;
+			}
+			return reqs;
+		}
 		
 		public static void onMapLoad() {
 			// Randomize Entrances
@@ -82,26 +92,28 @@ namespace Sparkipelago {
 			int[] bossids = {9, 24, 37, 38};
 			
 			Save.SaveFile save = Save.GetCurrentSave();
-			int[] freedomReqs = new int[10];
-			int[] complReqs = new int[10];
-			int i = 0;
-			foreach (JToken freq in ((JArray)Sparkipelago.slotData["freedom_requirements"])) {
-				freedomReqs[i] = (int)freq;
-				i++;
-			}
-			i = 0;
-			foreach (JToken creq in ((JArray)Sparkipelago.slotData["completion_requirements"])) {
-				complReqs[i] = (int)creq;
-				i++;
-			}
+			int[] freedomReqs = fillReqArray("freedom_requirements");
+			int[] complReqs = fillReqArray("completion_requirements");
+			int[] scReqs = fillReqArray("score_requirements");
+			int[] spReqs = fillReqArray("speed_requirements");
+
+			int speedType = (int)(long)Sparkipelago.slotData["speed_type"];
+			int scoreType = (int)(long)Sparkipelago.slotData["score_type"];
 			
 			int numComplete = 0;
 			int numExplore = 0;
+			int numSpeed = 0;
+			int numScore = 0;
 			int exploreReq = (int)(long)Sparkipelago.slotData["explore_requirement"];
+			int i = 0;
 			for (i = 0; i < save.StageCompleted.Length; i++) {
 				if (Locations.isLocationComplete(i, "COMPLETION")) save.StageCompleted[i] = true;
 				if (save.StageCompleted[i]) numComplete++;
-				if ((bool)Sparkipelago.slotData["utopia_hunt_medals"]) {
+				if (save.SpeedGoldMedals[i] && (speedType & 1) != 0) numSpeed += 1;
+				if (save.SpeedDiaMedals[i] && (speedType & 2) != 0) numSpeed += 1;
+				if (save.ScoreGoldMedals[i] && (scoreType & 1) != 0) numScore += 1;
+				if (save.ScoreDiaMedals[i] && (scoreType & 2) != 0) numScore += 1;
+				if ((long)Sparkipelago.slotData["utopia_hunt_medals"] != 0) {
 					if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+i) && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+i] >= 10) numExplore += 1;
 				} else {
 					if (Save.GetAmmountOfExploreMedalsInSaveFile(save, i) >= 10) numExplore += 1;
@@ -112,6 +124,8 @@ namespace Sparkipelago {
 			foreach (JToken boss in ((JArray)Sparkipelago.slotData["bosses"])) {
 				bossids[i] = (int)((float)boss[0]);
 				if (save.StageCompleted[bossids[i]]) numComplete--;
+				if (save.SpeedGoldMedals[i] && (speedType & 1) != 0) numSpeed -= 1;
+				if (save.SpeedDiaMedals[i] && (speedType & 2) != 0) numSpeed -= 1;
 				if (bossids[i] > 200) save.StageCompleted[bossids[i]] = true;
 				i++;
 			}
@@ -131,7 +145,12 @@ namespace Sparkipelago {
 				
 				i = 0;
 				foreach (JToken boss in ((JArray)Sparkipelago.slotData["bosses"])) {
-					if (placeStage(boss, level) && Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[i] && numComplete >= complReqs[i]) unlocked = true;
+					if (placeStage(boss, level)
+						&& Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[i]
+						&& numComplete >= complReqs[i]
+						&& numSpeed >= spReqs[i]
+						&& numScore >= scReqs[i]
+					) unlocked = true;
 					i++;
 				}
 				
@@ -143,6 +162,8 @@ namespace Sparkipelago {
 						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[4]
 							&& numComplete >= complReqs[i]
 							&& numExplore >= exploreReq
+							&& numSpeed >= spReqs[i]
+							&& numScore >= scReqs[i]
 							&& save.Power_Fark
 							&& save.Power_Sfarx
 						)) {i++; continue;}

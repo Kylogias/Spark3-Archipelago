@@ -97,7 +97,12 @@ class Spark3World(World):
 
 		self.location_state.UTOPIA_HUNT_MEDALS = self.options.utopia_hunt_medals.value
 		self.rules_state.EXPLORE_REQUIREMENT = int(math.ceil((self.options.required_explore.value*0.01) * (30 if self.spark2 else 18)))
-
+		
+		self.location_state.SPEED_PERCENT = self.options.required_speed.value * 0.01
+		self.location_state.SCORE_PERCENT = self.options.required_score.value * 0.01
+		self.speed_type = self.options.speed_type.value
+		self.score_type = self.options.score_type.value
+		
 		self.location_state.ENDLESS_COUNT = self.options.endless_dive_checks.value
 
 		self.rules_state.COMPLETION_REQUIREMENTS = []
@@ -113,6 +118,10 @@ class Spark3World(World):
 			self.rules_state.FREEDOM_REQUIREMENTS = slot_data["freedom_requirements"]
 			self.rules_state.COMPLETION_REQUIREMENTS = slot_data["completion_requirements"]
 			self.rules_state.EXPLORE_REQUIREMENT = slot_data["explore_requirement"]
+			self.rules_state.SPEED_REQUIREMENTS = slot_data["speed_requirements"]
+			self.rules_state.SCORE_REQUIREMENTS = slot_data["score_requirements"]
+			self.speed_type = slot_data["speed_type"]
+			self.score_type = slot_data["score_type"]
 			self.location_state.UTOPIA_HUNT_MEDALS = slot_data["utopia_hunt_medals"]
 			self.difficulty = slot_data["difficulty"]
 			self.location_state.sanities = slot_data["sanities"]
@@ -175,6 +184,10 @@ class Spark3World(World):
 			"version": apshared["version"],
 			"freedom_requirements": self.rules_state.FREEDOM_REQUIREMENTS,
 			"completion_requirements": self.rules_state.COMPLETION_REQUIREMENTS,
+			"speed_requirements": self.rules_state.SPEED_REQUIREMENTS,
+			"score_requirements": self.rules_state.SCORE_REQUIREMENTS,
+			"speed_type": self.speed_type,
+			"score_type": self.score_type,
 			"explore_requirement": self.rules_state.EXPLORE_REQUIREMENT,
 			"utopia_hunt_medals": self.location_state.UTOPIA_HUNT_MEDALS,
 			"endless_checks": self.location_state.ENDLESS_COUNT,

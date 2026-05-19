@@ -126,6 +126,52 @@ class RequiredCompletion(Range):
 
 	default = 40
 
+class RequiredSpeed(Range):
+	"""
+	What percentage of speed medals should be required per level gate
+	"""
+	display_name = "Required Speed Medal Percentage"
+
+	range_start = 0
+	range_end = 100
+
+	default = 0
+
+class RequiredScore(Range):
+	"""
+	What percentage of score medals should be required per level gate
+	"""
+	display_name = "Required Score Medal Percentage"
+
+	range_start = 0
+	range_end = 100
+
+	default = 0
+
+class SpeedRequiredType(Choice):
+	"""
+	Should the required speed medals be gold, diamond or both
+	"""
+	display_name = "Required Speed Medal Type"
+
+	option_gold = 1
+	option_diamond = 2
+	option_both = 3
+
+	default = option_gold
+
+class ScoreRequiredType(Choice):
+	"""
+	Should the required score medals be gold, diamond or both
+	"""
+	display_name = "Required Score Medal Type"
+
+	option_gold = 1
+	option_diamond = 2
+	option_both = 3
+
+	default = option_gold
+
 class RequiredExplore(Range):
 	"""
 	What percentage of stages should be explored to unlock Utopia Shelter
@@ -221,6 +267,10 @@ class Spark3Options(PerGameCommonOptions):
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
 	required_completion: RequiredCompletion
+	required_speed: RequiredSpeed
+	speed_type: SpeedRequiredType
+	required_score: RequiredScore
+	score_type: ScoreRequiredType
 	required_explore: RequiredExplore
 	utopia_hunt_medals: ExplorePercentIsHunt
 	endless_dive_checks: EndlessDiveChecks
