@@ -122,6 +122,7 @@ namespace Sparkipelago {
 			
 			i = 0;
 			foreach (JToken boss in ((JArray)Sparkipelago.slotData["bosses"])) {
+				MelonLogger.Msg(boss[0].ToString());
 				bossids[i] = (int)((float)boss[0]);
 				if (save.StageCompleted[bossids[i]]) numComplete--;
 				if (save.SpeedGoldMedals[i] && (speedType & 1) != 0) numSpeed -= 1;
@@ -133,11 +134,13 @@ namespace Sparkipelago {
 			
 			foreach(LevelData level in levels) {
 				bool unlocked = false;
+				bool force = false;
 				if (Sparkipelago.hasItem(ItemIds.OOB_CLIP) && level.ID == 155) unlocked = true;
+				if ((long)Sparkipelago.slotData["labmode"] != 0) {unlocked = true; force = true;}
 				if (level.ID == -99) {
 					Vector3 newpos;
-					newpos.x = 0;
-					newpos.y = 0.75f;
+					newpos.x = -2.5f;
+					newpos.y = -0.5f;
 					newpos.z = level.gameObject.transform.position.z;
 					level.gameObject.transform.position = newpos;
 					unlocked = true;
@@ -157,9 +160,9 @@ namespace Sparkipelago {
 				i = 0;
 				foreach (JToken gate in ((JArray)Sparkipelago.slotData["gates"])) {
 					if (i > 0 && i < 5) {
-						if (!save.StageCompleted[bossids[i-1]]) {i++; continue;}
+						if (!force && !save.StageCompleted[bossids[i-1]]) {i++; continue;}
 					} else if (i == 5) {
-						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[4]
+						if (!force && !(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= freedomReqs[4]
 							&& numComplete >= complReqs[i]
 							&& numExplore >= exploreReq
 							&& numSpeed >= spReqs[i]
@@ -174,7 +177,6 @@ namespace Sparkipelago {
 					i++;
 				}
 				
-				// Check IDs against those unlocked in server
 				if (unlocked) {
 					level.gameObject.SetActive(true);
 				} else {
@@ -183,7 +185,7 @@ namespace Sparkipelago {
 			}
 
 			UnityEngine.UI.Text fplabel = GameObject.Find("UI/WorldMapInfo/Fp/FpText").GetComponent<UnityEngine.UI.Text>();
-			fplabel.text = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL].ToString(); // Edit to match server count
+			fplabel.text = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL].ToString();
 		}
 
 		static ShopaloShop shop;

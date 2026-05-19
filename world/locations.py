@@ -19,6 +19,22 @@ class LocationState:
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11]
 
+		self.BOSS_CENTERS = (
+			(-1.32, 2.3),
+			(3.0, 1.25),
+			(4.0, -3.4),
+			(2.5, -7.5)
+		)
+		self.UTOPIA_CENTER = (9.0, -7.75)
+		self.GATE_CENTERS = (
+			(-3.75, 1.8),
+			(1.0, 2.75),
+			(5.0, -0.4),
+			(1.25, -4.25),
+			(5.5, -7.3)
+		)
+		self.STAGE_DIST = 0.75
+
 		self.SPEED_PERCENT = 0
 		self.SCORE_PERCENT = 0
 		self.total_score = 0
@@ -171,6 +187,32 @@ class LocationState:
 			self.add_loc_to_dict(page, self.SHOP_LOCATIONS, locs) # I could refactor, or I could abuse the function :)
 			shop_pages[i].add_locations(locs, Spark3Location)
 			i += 1
+
+	def position_stages_in_gate(self, world, startidx, gate, gateidx):
+		curstage = startidx
+		self.spoiler_text += f"Gate {gateidx}:\n"
+		slots_taken = []
+		radius = 0
+		curx = 0
+		cury = 0
+		for i in range(self.GATE_STAGE_COUNT[gateidx]):
+			self.gate_data[gateidx].append([self.stages[curstage]["id"], curx*self.STAGE_DIST + self.GATE_CENTERS[gateidx][0], cury*self.STAGE_DIST + self.GATE_CENTERS[gateidx][1]])
+			self.add_stage_to_gate(world, gate, self.stages[curstage])
+			slots_taken.append((curx, cury))
+			while (curx, cury) in slots_taken:
+				curx += 1
+				if curx > radius:
+					cury += 1
+					curx = -radius
+				if cury > radius:
+					radius += 1
+					curx = -radius
+					cury = -radius
+			curstage += 1
+		if not self.regen:
+			world.rules_state.SPEED_REQUIREMENTS[gateidx] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
+			world.rules_state.SCORE_REQUIREMENTS[gateidx] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
+		return curstage
 	
 	def setup_gates(self, world):
 		gates = [
@@ -224,50 +266,12 @@ class LocationState:
 			world.random.shuffle(self.bosses)
 		
 		self.spoiler_text += f"\nLevel Gates for {world.multiworld.player_name[world.player]}:\n"
-		self.spoiler_text += "Gate 0:\n"
 		total = 0
-		for i in range(self.GATE_STAGE_COUNT[0]):
-			self.gate_data[0].append([self.stages[total]["id"], (i-10)*0.75, 0])
-			self.add_stage_to_gate(world, gates[0], self.stages[total])
-			total += 1
-		if not self.regen
-			world.rules_state.SPEED_REQUIREMENTS[0] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
-			world.rules_state.SCORE_REQUIREMENTS[0] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
-		self.spoiler_text += "Gate 1:\n"
-		for i in range(self.GATE_STAGE_COUNT[1]):
-			self.gate_data[1].append([self.stages[total]["id"], (i-10)*0.75, 1*0.75])
-			self.add_stage_to_gate(world, gates[1], self.stages[total])
-			total += 1
-		if not self.regen
-			world.rules_state.SPEED_REQUIREMENTS[1] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
-			world.rules_state.SCORE_REQUIREMENTS[1] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
-		self.spoiler_text += "Gate 2:\n"
-		for i in range(self.GATE_STAGE_COUNT[2]):
-			self.gate_data[2].append([self.stages[total]["id"], (i-10)*0.75, 2*0.75])
-			self.add_stage_to_gate(world, gates[2], self.stages[total])
-			total += 1
-		if not self.regen
-			world.rules_state.SPEED_REQUIREMENTS[2] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
-			world.rules_state.SCORE_REQUIREMENTS[2] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
-		self.spoiler_text += "Gate 3:\n"
-		for i in range(self.GATE_STAGE_COUNT[3]):
-			self.gate_data[3].append([self.stages[total]["id"], (i-10)*0.75, 3*0.75])
-			self.add_stage_to_gate(world, gates[3], self.stages[total])
-			total += 1
-		if not self.regen
-			world.rules_state.SPEED_REQUIREMENTS[3] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
-			world.rules_state.SCORE_REQUIREMENTS[3] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
-		self.spoiler_text += "Gate 4:\n"
-		for i in range(self.GATE_STAGE_COUNT[4]):
-			self.gate_data[4].append([self.stages[total]["id"], (i-10)*0.75, 4*0.75])
-			self.add_stage_to_gate(world, gates[4], self.stages[total])
-			total += 1
-		if not self.regen
-			world.rules_state.SPEED_REQUIREMENTS[4] = int(math.ceil(self.total_speed * self.SPEED_PERCENT))
-			world.rules_state.SCORE_REQUIREMENTS[4] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
+		for i in range(5):
+			total = self.position_stages_in_gate(world, total, gates[i], i)
 		
 		self.add_stage_to_gate(world, gates[0], self.utopia, event="Victory")
-		self.gate_data[5].append([self.utopia["id"], -10*0.75, 5*0.75])
+		self.gate_data[5].append([self.utopia["id"], self.UTOPIA_CENTER[0], self.UTOPIA_CENTER[1]])
 		
 		self.spoiler_text += "Boss Order:\n"
 		for i in range(4):
@@ -276,6 +280,6 @@ class LocationState:
 			goal_region = self.stage_regions[self.bosses[i]["name"]][2]
 			gates[i].connect(boss_region, f"Gate {i} to Boss")
 			goal_region.connect(gates[i+1], f"Boss to Gate {i+1}")
-			self.boss_data.append([self.bosses[i]["id"], 1, (i+1)*0.75])
+			self.boss_data.append([self.bosses[i]["id"], self.BOSS_CENTERS[i][0], self.BOSS_CENTERS[i][1]])
 		
 	#	world.get_region(STAGE_UTOPIA_SHELTER).add_event("Defeat Claritas Centralis", "Victory", location_type=Spark3Location, item_type=Spark3Item)

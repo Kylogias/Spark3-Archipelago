@@ -80,12 +80,6 @@ class Spark3World(World):
 		
 		if self.options.labmode:
 			self.spark2 = True
-			self.location_state.bosses = [
-				{"name": "LABTIME1", "id": 250, "type": "boss", "checks": []},
-				{"name": "LABTIME2", "id": 250, "type": "boss", "checks": []},
-				{"name": "LABTIME3", "id": 250, "type": "boss", "checks": []},
-				{"name": "LABTIME4", "id": 250, "type": "boss", "checks": []}
-			]
 			self.ability_rando = False
 			self.labbing = True
 		else:
