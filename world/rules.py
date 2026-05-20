@@ -166,18 +166,19 @@ class RulesState:
 			completion_entrance = world.get_entrance(f"{stage_name} GOAL")
 
 			has_coin = False
-			for check in stage_data["checks"]:
-				if check["sanity"] in world.location_state.sanities or (stage_data["type"] != "boss" and check["sanity"] in ["explore", "speedgold", "speeddia", "scoregold", "scoredia"]):
-					loc = world.get_location(f"{stage_data['name']} {check['name']}")
-					world.set_rule(loc, self.parse_location_rules(world, check['requires']))
-					if check["sanity"] == "base":
-						rule = self.parse_location_rules(world, check['requires'])
-						world.set_rule(completion_entrance, rule)
-						if world.coin_hunt == 1 and stage_data["coin_count"]:
-							world.set_rule(loc, Has(f"{stage_name} COIN", count=stage_data["coin_req"]))
-						if world.coin_hunt == 2 and stage_data["coin_count"]:
-							world.set_rule(loc, Has(f"{stage_name} COIN", count=stage_data["coin_count"]))
-					if check["sanity"] == "hunt" and world.explore_hunt:
-						world.set_rule(loc, Has(f"{stage_name} EXPLORE MEDAL", count=10))
+			for region in stage_data["regions"]:
+				entrance = world.get_entrance(f"{stage_data['name']} {region['name']}")
+				entrance_rule = self.parse_location_rules(world, region['requires'])
+				if region["name"] == "GOAL":
+					if stage_data["coin_count"]:
+						if world.coin_hunt == 1: entrance_rule = entrance_rule & Has(f"{stage_name} COIN", count=stage_data["coin_req"])
+						if world.coin_hunt == 2: entrance_rule = entrance_rule & Has(f"{stage_name} COIN", count=stage_data["coin_count"])
+				world.set_rule(entrance, entrance_rule)
+				for check in region["checks"]:
+					if check["sanity"] in world.location_state.sanities or check["sanity"] in ["explore"] or "event_item" in check:
+						loc = world.get_location(f"{stage_data['name']} {check['name']}")
+						world.set_rule(loc, self.parse_location_rules(world, check['requires']))
+						if check["sanity"] == "hunt" and world.explore_hunt:
+							world.set_rule(loc, Has(f"{stage_name} EXPLORE MEDAL", count=10))
 
 		world.multiworld.completion_condition[world.player] = lambda state: state.has("Victory", world.player)

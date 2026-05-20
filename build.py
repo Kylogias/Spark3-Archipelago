@@ -64,25 +64,28 @@ for stage in shared["stages"]:
 		stage["coin_req"] = 0
 	if stage["type"] == "endless":
 		for i in range(110):
-			stage["checks"].append({"name": f"#{i+1}", "index": i+1, "sanity": "base", "requires": ""})
+			stage["regions"][0]["checks"].append({"name": f"#{i+1}", "index": i+1, "sanity": "base", "requires": ""})
 	sanity_max = {"checkpoint": -1, "capsule": -1, "bubble": -1}
 	sanity_seen = {"checkpoint": [], "capsule": [], "bubble": []}
 	for sanity in sanity_priority:
 		sanity_max[sanity] = -1
 		sanity_seen[sanity] = []
-	for check in stage["checks"].copy():
-		if check["sanity"] == "explore":
-			explore_rules.append(f"({check['requires']})")
-		if check["sanity"] in sanity_max and "index" in check and check["index"] > sanity_max[check["sanity"]]:
-			sanity_max[check["sanity"]] = check["index"]
-		if check["sanity"] in sanity_seen and "index" in check:
-			if (check["index"] in sanity_seen[check["sanity"]]): print(f"WARNING: Found multiple {check['index']} in {stage['name']} {check['sanity']}")
-			sanity_seen[check["sanity"]].append(check["index"])
-		if check["sanity"] in sanities:
-			sanities[check["sanity"]].append([stage, check])
-		else:
-			stage["checks"].remove(check)
-			continue
+	for region in stage["regions"]:
+		if isinstance(region["requires"], str):
+			region["requires"] = {"base": region["requires"]}
+		for check in region["checks"].copy():
+			if check["sanity"] == "explore":
+				explore_rules.append(f"({check['requires']})")
+			if check["sanity"] in sanity_max and "index" in check and check["index"] > sanity_max[check["sanity"]]:
+				sanity_max[check["sanity"]] = check["index"]
+			if check["sanity"] in sanity_seen and "index" in check:
+				if (check["index"] in sanity_seen[check["sanity"]]): print(f"WARNING: Found multiple {check['index']} in {stage['name']} {check['sanity']}")
+				sanity_seen[check["sanity"]].append(check["index"])
+			if check["sanity"] in sanities:
+				sanities[check["sanity"]].append([stage, check])
+			else:
+				region["checks"].remove(check)
+				continue
 	for sanity in sanity_seen:
 		for i in range(sanity_max[sanity]+1):
 			if not i in sanity_seen[sanity]:
@@ -92,7 +95,9 @@ for stage in shared["stages"]:
 		item_name_to_id[explore_name] = itemID + stage["id"]
 		shared["items"].append({"name": explore_name, "itemtype": "EXPLORE2" if stage["type"] == "spark2" else "EXPLORE3", "id": itemID+stage["id"]})
 		check = {"name": "EXPLORE HUNT", "sanity": "hunt", "requires": ""}
-		stage["checks"].append(check)
+		for region in stage["regions"]:
+			if region["name"] == "GOAL":
+				region["checks"].append(check)
 		sanities["hunt"].append([stage, check])
 
 for sanity in sanity_priority:
@@ -149,9 +154,14 @@ with open("client/apshared.cs", "w") as apcs:
 	apcs.write("\t\t};\n")
 	apcs.write("\t\tpublic static APStageData[] stages = {\n")
 	for stage in shared["stages"]:
+		stage_checks = []
+		for region in stage["regions"]:
+			for check in region["checks"]:
+				stage_checks.append(check)
+
 		apcs.write(f"\t\t\tnew APStageData(\"{stage['name']}\", \"{stage['type']}\", {stage['id']}, new APStageCheck[]")
 		apcs.write("{\n")
-		for check in stage["checks"]:
+		for check in stage_checks:
 			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\", new string[]")
 			apcs.write("{")
 			difficulties = []
@@ -170,7 +180,7 @@ with open("client/apshared.cs", "w") as apcs:
 					apcs.write(", ")
 			apcs.write("}")
 			apcs.write(f", {check['id']}, {check['index']})")
-			if check != stage["checks"][-1]:
+			if check != stage_checks[-1]:
 				apcs.write(",")
 			apcs.write("\n")
 		apcs.write("\t\t\t})")

@@ -93,50 +93,45 @@ class LocationState:
 	
 	def setup_stage_region(self, world, stage, event=None):
 		stage_region = Region(stage["name"], world.player, world.multiworld)
-		completion_region = Region(f"{stage['name']} GOAL", world.player, world.multiworld)
-		world.multiworld.regions += [stage_region, completion_region]
-		locs = {}
-		completion_locs = {}
-		stage_region.connect(completion_region, f"{stage['name']} GOAL")
+		world.multiworld.regions += [stage_region]
 		has_explore = False
 		shuffled_locations = []
-		all_locations = []
 		
 		explore_locations = []
-		for check in stage["checks"]:
-			all_locations.append(check['name'])
-			if check["sanity"] in self.sanities:
-				if check["sanity"] in completion_sanities:
-					completion_locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
-				else:
-					locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
-				shuffled_locations.append(check['name'])
-			if stage["type"] != "boss":
-				if check["sanity"] == "speedgold" and world.speed_type & 1: self.total_speed += 1
-				if check["sanity"] == "speeddia" and world.speed_type & 2: self.total_speed += 1
-				if check["sanity"] == "scoregold" and world.score_type & 1: self.total_score += 1
-				if check["sanity"] == "scoredia" and world.score_type & 2: self.total_score += 1
-			if check["sanity"] == "explore":
-				has_explore = True
-				explore_locations.append(f"{stage['name']} {check['name']}")
-		if event:
-			for loc in completion_locs.keys():
-				completion_region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
-		else:
-			completion_region.add_locations(completion_locs, Spark3Location)
-		if stage["type"] != "boss":
-			event_names = ["COMPLETION", "GOLD SPEED MEDAL", "DIAMOND SPEED MEDAL", "GOLD SCORE MEDAL", "DIAMOND SCORE MEDAL"]
-			event_items = ["Level Completion", "Gold Speed Medal", "Diamond Speed Medal", "Gold Score Medal", "Diamond Score Medal"]
-			for i in range(len(event_names)):
-				if not event_names[i] in all_locations: continue
-				event = f"{event_names[i]} EVENT" if event_names[i] in shuffled_locations else event_names[i]
-				rule = CanReachLocation(f"{stage['name']} {event_names[i]}") if event_names[i] in shuffled_locations else True_()
-				completion_region.add_event(
-					f"{stage['name']} {event}", event_items[i],
+		for region in stage["regions"]:
+			new_region = Region(f"{stage['name']} {region['name']}", world.player, world.multiworld)
+			stage_region.connect(new_region, f"{stage['name']} {region['name']}")
+			region_locs = {}
+			event_locations = []
+			world.multiworld.regions += [new_region]
+			for check in region["checks"]:
+				if "event_item" in check:
+					event_locations.append(check)
+				if check["sanity"] in self.sanities:
+					region_locs[f"{stage['name']} {check['name']}"] = location_name_to_id[f"{stage['name']} {check['name']}"]
+					shuffled_locations.append(check['name'])
+				if stage["type"] != "boss":
+					if check["sanity"] == "speedgold" and world.speed_type & 1: self.total_speed += 1
+					if check["sanity"] == "speeddia" and world.speed_type & 2: self.total_speed += 1
+					if check["sanity"] == "scoregold" and world.score_type & 1: self.total_score += 1
+					if check["sanity"] == "scoredia" and world.score_type & 2: self.total_score += 1
+				if check["sanity"] == "explore":
+					has_explore = True
+					explore_locations.append(f"{stage['name']} {check['name']}")
+			if event and region["name"] == "GOAL":
+				for loc in region_locs.keys():
+					new_region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
+			else:
+				new_region.add_locations(region_locs)
+			for event_loc in event_locations:
+				event = f"{event_loc['name']} EVENT" if event_loc['name'] in shuffled_locations else event_loc['name']
+				rule = CanReachLocation(f"{stage['name']} {event_loc['name']}") if event_loc['name'] in shuffled_locations else True_()
+				new_region.add_event(
+					f"{stage['name']} {event}", event_loc['event_item'],
 					location_type=Spark3Location, item_type=Spark3Item,
 					rule=rule, show_in_spoiler=False
 				)
-		stage_region.add_locations(locs, Spark3Location)
+		completion_region = world.get_region(f"{stage['name']} GOAL")
 		if has_explore:
 			for xl in explore_locations:
 				event_name = f"{xl} EXPLORE EVENT" if "explore" in self.sanities else xl
