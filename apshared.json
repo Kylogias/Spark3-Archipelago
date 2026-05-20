@@ -1725,7 +1725,7 @@
 			{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
 		]},
 		{"name": "UTOPIA SHELTER", "id": 50, "type": "utopia", "checks": [
-			{"name": "COMPLETION", "sanity": "base", "requires": "co+cd+wj+ww+da+dj+fa+sf"}
+			{"name": "COMPLETION", "sanity": "base", "requires": "co+cd+wj+ww+da+dj"}
 		]}
 	]
 }

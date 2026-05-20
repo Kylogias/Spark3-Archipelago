@@ -42,7 +42,7 @@ class LocationState:
 		
 		self.UTOPIA_HUNT_MEDALS = False
 		
-		self.sanities = ["base", "battery"]
+		self.sanities = ["base"]
 		self.stages = []
 		self.spark2 = []
 		self.bosses = []

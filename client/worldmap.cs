@@ -168,8 +168,7 @@ namespace Sparkipelago {
 							&& numExplore >= exploreReq
 							&& numSpeed >= spReqs[i]
 							&& numScore >= scReqs[i]
-							&& save.Power_Fark
-							&& save.Power_Sfarx
+							&& ((save.Power_Fark && save.Power_Sfarx) || (long)Sparkipelago.slotData["require_characters"] == 0)
 						)) {i++; continue;}
 					}
 					foreach (JToken lvlinfo in (JArray)gate) {

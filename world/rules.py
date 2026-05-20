@@ -61,6 +61,7 @@ class RulesState:
 		self.EXPLORE_REQUIREMENT = 0
 		self.SCORE_REQUIREMENTS = [0, 0, 0, 0, 0]
 		self.SPEED_REQUIREMENTS = [0, 0, 0, 0, 0]
+		self.REQUIRE_CHARACTERS = True
 	
 	def add_to_rule(self, op, rule, add):
 		print(f"{rule} {op} {add}")
@@ -154,7 +155,9 @@ class RulesState:
 			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
 			self.set_gate_entrance_rule(world, gate_entrance, i, True_())
 		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
-		self.set_gate_entrance_rule(world, utopia_entrance, 4, Has("Stage Explored", count=self.EXPLORE_REQUIREMENT) & Has(FARK) & Has(SFARX))
+		utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
+		if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
+		self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			stage_region = world.location_state.stage_regions[stage_name]

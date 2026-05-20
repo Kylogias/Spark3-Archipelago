@@ -1,4 +1,4 @@
-from worlds.AutoWorld import World
+from worlds.AutoWorld import World, WebWorld
 from . import items, locations, rules
 from . import options as opts
 from .constants import GAME_NAME
@@ -8,9 +8,14 @@ from .apshared import apshared
 
 import math
 
+class Spark3WebWorld(WebWorld):
+	game = GAME_NAME
+	option_groups = opts.option_groups
+
 class Spark3World(World):
 	game = GAME_NAME
 	ut_can_gen_without_yaml = True
+	web = Spark3WebWorld()
 	
 	location_name_to_id = loctoid
 	item_name_to_id = itemtoid
@@ -40,6 +45,8 @@ class Spark3World(World):
 			self.location_state.sanities.append("explore")
 		if self.options.coinsanity:
 			self.location_state.sanities.append("coin")
+		if self.options.batterysanity:
+			self.location_state.sanities.append("battery")
 		if self.options.coinsanity == 2:
 			self.coin_hunt = 1
 		elif self.options.coinsanity == 3:
@@ -88,6 +95,7 @@ class Spark3World(World):
 		self.item_state.FREEDOM_COUNT = self.options.freedom_count.value
 		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))
 		self.rules_state.FREEDOM_REQUIREMENTS = [int(req_freedom/5), int(2*req_freedom/5), int(3*req_freedom/5), int(4*req_freedom/5), int(req_freedom)]
+		self.rules_state.REQUIRE_CHARACTERS = self.options.require_characters.value
 
 		self.location_state.UTOPIA_HUNT_MEDALS = self.options.utopia_hunt_medals.value
 		self.rules_state.EXPLORE_REQUIREMENT = int(math.ceil((self.options.required_explore.value*0.01) * (30 if self.spark2 else 18)))
@@ -114,6 +122,7 @@ class Spark3World(World):
 			self.rules_state.EXPLORE_REQUIREMENT = slot_data["explore_requirement"]
 			self.rules_state.SPEED_REQUIREMENTS = slot_data["speed_requirements"]
 			self.rules_state.SCORE_REQUIREMENTS = slot_data["score_requirements"]
+			self.rules_state.REQUIRE_CHARACTERS = slot_data["require_characters"]
 			self.speed_type = slot_data["speed_type"]
 			self.score_type = slot_data["score_type"]
 			self.location_state.UTOPIA_HUNT_MEDALS = slot_data["utopia_hunt_medals"]
@@ -131,7 +140,7 @@ class Spark3World(World):
 	#	if self.ability_rando and (self.options.scoresanity.value or self.options.speedsanity.value):
 	#		raise ValueError("Ability logic not implemented for Score/Speed Sanities")
 
-		location_count = 56 + self.location_state.ENDLESS_COUNT
+		location_count = 43 + self.location_state.ENDLESS_COUNT
 		if self.spark2: location_count += 14
 		if self.shop_enabled: location_count += 26
 		if self.options.scoresanity & 1: location_count += 28 if self.spark2 else 14
@@ -140,6 +149,7 @@ class Spark3World(World):
 		if self.options.speedsanity & 2: location_count += 44 if self.spark2 else 30
 		if self.options.exploresanity: location_count += 300 if self.spark2 else 180
 		if self.options.coinsanity: location_count += 72
+		if self.options.batterysanity: location_count += 13
 		if self.explore_hunt: location_count += 30 if self.spark2 else 18
 
 		reserved_items = 28 + len(self.multipliers)
@@ -180,6 +190,7 @@ class Spark3World(World):
 			"completion_requirements": self.rules_state.COMPLETION_REQUIREMENTS,
 			"speed_requirements": self.rules_state.SPEED_REQUIREMENTS,
 			"score_requirements": self.rules_state.SCORE_REQUIREMENTS,
+			"require_characters": self.rules_state.REQUIRE_CHARACTERS,
 			"speed_type": self.speed_type,
 			"score_type": self.score_type,
 			"explore_requirement": self.rules_state.EXPLORE_REQUIREMENT,

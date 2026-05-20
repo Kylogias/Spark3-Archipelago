@@ -92,6 +92,12 @@ class Coinsanity(Choice):
 	option_shuffle_and_require_all = 3
 	default = option_off
 
+class Batterysanity(Toggle):
+	"""
+	Adds the 13 batteries in car stages as checks (making the car not useless)
+	"""
+	display_name = "BatterySanity"
+
 class FreedomCount(Range):
 	"""
 	How many freedom medals to put into the item pool.
@@ -106,7 +112,6 @@ class FreedomCount(Range):
 class FreedomRequired(Range):
 	"""
 	What's the required percentage of freedom medals to unlock Utopia Shelter
-	Note that you still need Fark and Sfarx to unlock Utopia Shelter
 	"""
 	display_name = "Required Freedom Medal Percentage"
 	
@@ -189,6 +194,12 @@ class ExplorePercentIsHunt(Toggle):
 	"""
 	display_name = "Explore Hunt Medals for Utopia"
 
+class RequireCharacters(DefaultOnToggle):
+	"""
+	Should Fark and Sfarx be required to unlock Utopia Shelter?
+	"""
+	display_name = "Require Characters for Utopia"
+
 class TrapChance(Range):
 	"""
 	Chance to receive traps instead of filler
@@ -264,8 +275,10 @@ class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
 	difficulty: Difficulty
 	spark2_stages: Spark2Stages
+
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
+	require_characters: RequireCharacters
 	required_completion: RequiredCompletion
 	required_speed: RequiredSpeed
 	speed_type: SpeedRequiredType
@@ -273,17 +286,44 @@ class Spark3Options(PerGameCommonOptions):
 	score_type: ScoreRequiredType
 	required_explore: RequiredExplore
 	utopia_hunt_medals: ExplorePercentIsHunt
+
+	explore_hunt: ExploreHunt
+	exploresanity: Exploresanity
+	scoresanity: Scoresanity
+	speedsanity: Speedsanity
+	shopsanity: Shopsanity
+	coinsanity: Coinsanity
+	batterysanity: Batterysanity
 	endless_dive_checks: EndlessDiveChecks
 	endless_dive_floors: EndlessDiveFloors
-	shopsanity: Shopsanity
-	speedsanity: Speedsanity
-	scoresanity: Scoresanity
-	exploresanity: Exploresanity
-	coinsanity: Coinsanity
-	explore_hunt: ExploreHunt
+
 	perfect_combo: PerfectCombo
 	score_multiplier: ScoreMultiplier
 	trap_chance: TrapChance
+	
 	music_rando: MusicChoice
 	enemy_rando: EnemyRando
 	labmode: LabMode
+
+option_groups = [
+	OptionGroup(
+		"Basic Options",
+		[AbilityRando, Difficulty, Spark2Stages]
+	),
+	OptionGroup(
+		"Gate Options",
+		[FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
+	),
+	OptionGroup(
+		"Extra Checks",
+		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, EndlessDiveChecks, EndlessDiveFloors]
+	),
+	OptionGroup(
+		"Item Options",
+		[PerfectCombo, ScoreMultiplier, TrapChance]
+	),
+	OptionGroup(
+		"Miscellaneous",
+		[MusicChoice, EnemyRando, LabMode]
+	)
+]
