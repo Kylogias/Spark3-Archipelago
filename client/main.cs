@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using MelonLoader;
@@ -8,6 +10,8 @@ using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
+using Archipelago.MultiClient.Net.MessageLog.Messages;
+using Archipelago.MultiClient.Net.MessageLog.Parts;
 using Newtonsoft.Json.Linq;
 
 [assembly: MelonInfo(typeof(Sparkipelago.Sparkipelago), "Sparkipelago", "0.1.0", "Kylogias")]
@@ -26,6 +30,9 @@ namespace Sparkipelago {
 
 		private float itemTimer;
 		private static Queue<ItemIds> itemQueue;
+
+		private static Queue<LogMessage> messages;
+		private static GameObject messageText;
 		
 		private GameObject redWorld;
 		private GameObject grayWorld;
@@ -56,6 +63,7 @@ namespace Sparkipelago {
 			
 			LabMode.initPrefs();
 			itemQueue = new Queue<ItemIds>();
+			messages = new Queue<LogMessage>();
 			flintList = new List<GameObject>();
 			
 			MusicRandomization.registerMusic();
@@ -70,6 +78,7 @@ namespace Sparkipelago {
 				itemQueue.Clear();
 				if (currentSession != null) {
 					currentSession.Items.ItemReceived -= HandleItem;
+					currentSession.MessageLog.OnMessageReceived -= OnMessageReceived;
 				}
 			}
 			
@@ -102,6 +111,8 @@ namespace Sparkipelago {
 				}
 
 				currentSession.Items.ItemReceived += HandleItem;
+				currentSession.MessageLog.OnMessageReceived += OnMessageReceived;
+				currentSession.Say("Successful Connection to Spark 3! You may now collect checks");
 				data.room = curRoom;
 				int i = 0;
 				foreach (ItemInfo item in currentSession.Items.AllItemsReceived) {
@@ -145,6 +156,10 @@ namespace Sparkipelago {
 		public static bool hasItem(ItemIds item) {
 			return itemState[item] > 0;
 		}
+
+		public static void OnMessageReceived(LogMessage message) {
+			messages.Enqueue(message);
+		}
 		
 		public static void HandleItem(ReceivedItemsHelper itemHandler) {
 			APSavedata data = APSave.getAPSave();
@@ -181,6 +196,25 @@ namespace Sparkipelago {
 						fl.transform.position = pos;
 					}
 				}
+			}
+			if (messageText != null) {
+				if (messages.Count > 10) {
+					messageText.GetComponent<DeactivateAfterAWhile>().TimeToStop = 2.0f;
+				} else {
+					messageText.GetComponent<DeactivateAfterAWhile>().TimeToStop = 5.0f;
+				}
+			}
+			if (messages.Count > 0 && messageText != null && !messageText.activeSelf) {
+				messageText.SetActive(true);
+				Text text = messageText.GetComponent<Text>();
+				StringBuilder sb = new StringBuilder("", 65536);
+				LogMessage message = messages.Dequeue();
+				foreach (MessagePart part in message.Parts) {
+					if (!part.IsBackgroundColor) sb.AppendFormat("<color=#{0:X2}{1:X2}{2:X2}>", part.Color.R, part.Color.G, part.Color.B);
+					sb.Append(part.Text);
+					if (!part.IsBackgroundColor) sb.Append("</color>");
+				}
+				text.text = sb.ToString();
 			}
 			if (slotData == null) return;
 			if ((long)slotData["labmode"] != 0 && currentSession != null) {
@@ -256,6 +290,30 @@ namespace Sparkipelago {
 			MelonLogger.Msg("Scene Loaded: " + sceneName);
 			currentScene = sceneName;
 			player = GameObject.Find("Player_Fark");
+
+			if (APSave.sparkFont != null) {
+				GameObject canvasGO = new GameObject("APCanvas", typeof(Canvas), typeof(CanvasScaler));
+				Canvas canvas = canvasGO.GetComponent<Canvas>();
+				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+				GameObject textGO = new GameObject("APText", typeof(Text), typeof(DeactivateAfterAWhile));
+				messageText = textGO;
+				textGO.SetActive(false);
+				textGO.transform.parent = canvasGO.transform;
+				Text text = textGO.GetComponent<Text>();
+				text.font = APSave.sparkFont;
+				text.text = "chat looks a bit dead";
+				text.alignment = TextAnchor.MiddleCenter;
+				text.resizeTextForBestFit = true;
+				text.fontSize = 1000;
+				text.supportRichText = true;
+				RectTransform textRect = textGO.GetComponent<RectTransform>();
+				textRect.localPosition = new Vector3(0, -((Screen.height/2)-(Screen.height/16)), 0);
+				textRect.sizeDelta = new Vector2(Screen.width, Screen.height/8);
+				DeactivateAfterAWhile daaw = textGO.GetComponent<DeactivateAfterAWhile>();
+				daaw.TimeToStop = 5.0f;
+			}
+
 			if (player != null) {
 				if (hasItem(ItemIds.SCORE_MULTIPLIER)) ScoreManager.Charge = 30;
 				Collectibles.onSceneLoad(sceneName);

@@ -51,7 +51,8 @@ namespace Sparkipelago {
 	}
 	
 	class APSave {
-
+		public static Font sparkFont;
+		
 		[HarmonyPatch(typeof(GameProgressMenuController), "SetCompletionPercentage")]
 		private class CompletionPercentPatch {
 			private static bool Prefix(ref float __result, int savefileIndex) {
@@ -101,6 +102,10 @@ namespace Sparkipelago {
 
 			Text versionText = GameObject.Find("UI/VersionNumber").GetComponent<Text>();
 			Font font = versionText.font;
+			if (!sparkFont) {
+				sparkFont = font;
+				sparkFont.hideFlags = HideFlags.DontUnloadUnusedAsset;
+			}
 
 			float rowHeight = versionText.fontSize*2;
 			string[] rows = {"Info", "IP", "Port", "Slot", "Password", "If KB+M, Press"};

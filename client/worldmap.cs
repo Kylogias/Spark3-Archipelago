@@ -131,6 +131,7 @@ namespace Sparkipelago {
 				i++;
 			}
 
+			int stageidx = Save.CurrentStageIndex;
 			
 			foreach(LevelData level in levels) {
 				bool unlocked = false;
@@ -181,6 +182,11 @@ namespace Sparkipelago {
 					level.gameObject.SetActive(true);
 				} else {
 					level.gameObject.SetActive(false);
+				}
+
+				if (level.ID == stageidx) {
+					GameObject reticule = GameObject.Find("Reticule");
+					reticule.transform.position = level.gameObject.transform.position;
 				}
 			}
 
