@@ -1,5 +1,5 @@
 {
-	"version": 10,
+	"version": 11,
 	"difficulties": ["base"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
