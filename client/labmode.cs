@@ -1,144 +1,78 @@
 using MelonLoader;
 using UnityEngine;
 
+using System.Collections.Generic;
+
 namespace Sparkipelago {
 	class LabMode {
-		private static MelonPreferences_Entry<bool> dbgHasDA;
-		private static MelonPreferences_Entry<bool> dbgHasCD;
-		private static MelonPreferences_Entry<bool> dbgHasJD;
-		private static MelonPreferences_Entry<bool> dbgHasDD;
-		private static MelonPreferences_Entry<bool> dbgHasDJ;
-		private static MelonPreferences_Entry<bool> dbgHasWJ;
-		private static MelonPreferences_Entry<bool> dbgHasWW;
-		private static MelonPreferences_Entry<bool> dbgHasCO;
+		private class MoveDebugPref {
+			KeyCode hotkey;
+			ItemIds itemID;
+			string itemName;
+			MelonPreferences_Entry<bool> entry;
+			
+			public MoveDebugPref(string category, string entryName, ItemIds id, string name, KeyCode key) {
+				entry = MelonPreferences.CreateEntry<bool>(category, entryName, true);
+				entry.OnEntryValueChanged.Subscribe(onEvent, 100);
+				hotkey = key;
+				itemID = id;
+				itemName = name;
+			}
+			
+			public void onUpdate() {
+				if (Sparkipelago.hasItem(itemID) != entry.Value) Sparkipelago.itemState[itemID] = entry.Value ? 1 : 0;
+				if (Input.GetKeyDown(hotkey)) {
+					if (Sparkipelago.hasItem(itemID)) {
+						entry.Value = false;
+						Sparkipelago.debugLog("Disabling {0}", itemName);
+					} else {
+						entry.Value = true;
+						Sparkipelago.debugLog("Enabling {0}", itemName);
+					}
+				}
+			}
+			
+			private void onEvent(bool oldV, bool newV) {
+				Sparkipelago.itemState[itemID] = newV ? 1 : 0;
+			}
+		}
+		
+		private static List<MoveDebugPref> movedbg;
+
 		
 		public static void initPrefs() {
-			MelonPreferences.CreateCategory("APDebug");
-			dbgHasJD = MelonPreferences.CreateEntry<bool>("APDebug", "Has Jester Dash (Hotkey 5)", true);
-			dbgHasDA = MelonPreferences.CreateEntry<bool>("APDebug", "Has Dash (Hotkey 6)", true);
-			dbgHasCD = MelonPreferences.CreateEntry<bool>("APDebug", "Has Charged Dash (Hotkey 7)", true);
-			dbgHasWJ = MelonPreferences.CreateEntry<bool>("APDebug", "Has Wall Jump (Hotkey 8)", true);
-			dbgHasWW = MelonPreferences.CreateEntry<bool>("APDebug", "Has Wall Walk (Hotkey 9)", true);
-			dbgHasDJ = MelonPreferences.CreateEntry<bool>("APDebug", "Has Double Jump (Hotkey 0)", true);
-			dbgHasCO = MelonPreferences.CreateEntry<bool>("APDebug", "Has Combat (Hotkey -)", true);
-			dbgHasDD = MelonPreferences.CreateEntry<bool>("APDebug", "Has Down Dash (Hotkey +)", true);
+			movedbg = new List<MoveDebugPref>();
 			
-			dbgHasDA.OnEntryValueChanged.Subscribe(onChangeDA, 100);
-			dbgHasCD.OnEntryValueChanged.Subscribe(onChangeCD, 100);
-			dbgHasJD.OnEntryValueChanged.Subscribe(onChangeJD, 100);
-			dbgHasDD.OnEntryValueChanged.Subscribe(onChangeDD, 100);
-			dbgHasDJ.OnEntryValueChanged.Subscribe(onChangeDJ, 100);
-			dbgHasWJ.OnEntryValueChanged.Subscribe(onChangeWJ, 100);
-			dbgHasCO.OnEntryValueChanged.Subscribe(onChangeCO, 100);
+			MelonPreferences.CreateCategory("AP Abilities");
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Jester Dash (Hotkey 5)",  ItemIds.JESTER_DASH,         "JESTER_DASH",         KeyCode.Alpha5));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Dash (Hotkey 6)",         ItemIds.DASH,                "DASH",                KeyCode.Alpha6));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Charged Dash (Hotkey 7)", ItemIds.CHARGED_JESTER_DASH, "CHARGED_JESTER_DASH", KeyCode.Alpha7));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Wall Jump (Hotkey 8)",    ItemIds.WALL_JUMP,           "WALL_JUMP",           KeyCode.Alpha8));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Wall Walk (Hotkey 9)",    ItemIds.WALL_WALK,           "WALL_WALK",           KeyCode.Alpha9));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Double Jump (Hotkey 0)",  ItemIds.DOUBLE_JUMP,         "DOUBLE_JUMP",         KeyCode.Alpha0));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Combat (Hotkey -)",       ItemIds.COMBAT,              "COMBAT",              KeyCode.Minus));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Down Dash (Hotkey +)",    ItemIds.DOWN_DASH,           "DOWN_DASH",           KeyCode.Equals));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Car", ItemIds.CAR, "CAR", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Copter", ItemIds.COPTER, "COPTER", KeyCode.None));
+
+			MelonPreferences.CreateCategory("AP Gimmicks");
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Springs", ItemIds.SPRINGS, "SPRINGS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Speed Boosters", ItemIds.SPEED_PADS, "SPEED_PADS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Dash Rings", ItemIds.DASH_RINGS, "DASH_RINGS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Pulleys", ItemIds.PULLEYS, "PULLEYS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Prison Rockets", ItemIds.PRISON_ROCKETS, "PRISON_ROCKETS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Jester Dash Rings", ItemIds.JESTER_DASH_RINGS, "JESTER_DASH_RINGS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Abyss Bracers", ItemIds.ABYSS_BRACERS, "ABYSS_BRACERS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Ramps", ItemIds.RAMPS, "RAMPS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Protestors", ItemIds.PROTESTORS, "PROTESTORS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Car Boost Pads", ItemIds.CAR_BOOST_PADS, "CAR_BOOST_PADS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Abyss Boosters", ItemIds.ABYSS_BOOSTERS, "ABYSS_BOOSTERS", KeyCode.None));
 		}
 		
 		public static void checkForInput() {
-			if (Sparkipelago.hasItem(ItemIds.DASH) != dbgHasDA.Value) Sparkipelago.itemState[ItemIds.DASH] = dbgHasDA.Value ? 1 : 0;
-			if (Sparkipelago.hasItem(ItemIds.CHARGED_JESTER_DASH) != dbgHasCD.Value) Sparkipelago.itemState[ItemIds.CHARGED_JESTER_DASH] = dbgHasCD.Value ? 1 : 0;
-			if (Sparkipelago.hasItem(ItemIds.JESTER_DASH) != dbgHasJD.Value) Sparkipelago.itemState[ItemIds.JESTER_DASH] = dbgHasJD.Value ? 1 : 0;
-			if (Sparkipelago.hasItem(ItemIds.DOWN_DASH) != dbgHasDD.Value) Sparkipelago.itemState[ItemIds.DOWN_DASH] = dbgHasDD.Value ? 1 : 0;
-			if (Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP) != dbgHasDJ.Value) Sparkipelago.itemState[ItemIds.DOUBLE_JUMP] = dbgHasDJ.Value ? 1 : 0;
-			if (Sparkipelago.hasItem(ItemIds.WALL_JUMP) != dbgHasWJ.Value) Sparkipelago.itemState[ItemIds.WALL_JUMP] = dbgHasWJ.Value ? 1 : 0;
-			if (Sparkipelago.hasItem(ItemIds.WALL_WALK) != dbgHasWW.Value) Sparkipelago.itemState[ItemIds.WALL_WALK] = dbgHasWW.Value ? 1 : 0;
-			if (Sparkipelago.hasItem(ItemIds.COMBAT) != dbgHasCO.Value) Sparkipelago.itemState[ItemIds.COMBAT] = dbgHasCO.Value ? 1 : 0;
-			
-			if (Input.GetKeyDown(KeyCode.Alpha5)) {
-				if (Sparkipelago.hasItem(ItemIds.JESTER_DASH)) {
-					dbgHasJD.Value = false;
-					Sparkipelago.debugLog("Disabling JESTER_DASH");
-				} else {
-					dbgHasJD.Value = true;
-					Sparkipelago.debugLog("Enabling JESTER_DASH");
-				}
+			foreach (MoveDebugPref move in movedbg) {
+				move.onUpdate();
 			}
-			if (Input.GetKeyDown(KeyCode.Alpha6)) {
-				if (Sparkipelago.hasItem(ItemIds.DASH)) {
-					dbgHasDA.Value = false;
-					Sparkipelago.debugLog("Disabling DASH");
-				} else {
-					dbgHasDA.Value = true;
-					Sparkipelago.debugLog("Enabling DASH");
-				}
-			}
-			if (Input.GetKeyDown(KeyCode.Alpha7)) {
-				if (Sparkipelago.hasItem(ItemIds.CHARGED_JESTER_DASH)) {
-					dbgHasCD.Value = false;
-					Sparkipelago.debugLog("Disabling CHARGED_JESTER_DASH");
-				} else {
-					dbgHasCD.Value = true;
-					Sparkipelago.debugLog("Enabling CHARGED_JESTER_DASH");
-				}
-			}
-			if (Input.GetKeyDown(KeyCode.Alpha8)) {
-				if (Sparkipelago.hasItem(ItemIds.WALL_JUMP)) {
-					dbgHasWJ.Value = false;
-					Sparkipelago.debugLog("Disabling WALL_JUMP");
-				} else {
-					dbgHasWJ.Value = true;
-					Sparkipelago.debugLog("Enabling WALL_JUMP");
-				}
-			}
-			if (Input.GetKeyDown(KeyCode.Alpha9)) {
-				if (Sparkipelago.hasItem(ItemIds.WALL_WALK)) {
-					dbgHasWW.Value = false;
-					Sparkipelago.debugLog("Disabling WALL_WALK");
-				} else {
-					dbgHasWW.Value = true;
-					Sparkipelago.debugLog("Enabling WALL_WALK");
-				}
-			}
-			if (Input.GetKeyDown(KeyCode.Alpha0)) {
-				if (Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP)) {
-					dbgHasDJ.Value = false;
-					Sparkipelago.debugLog("Disabling DOUBLE_JUMP");
-				} else {
-					dbgHasDJ.Value = true;
-					Sparkipelago.debugLog("Enabling DOUBLE_JUMP");
-				}
-			}
-			if (Input.GetKeyDown(KeyCode.Minus)) {
-				if (Sparkipelago.hasItem(ItemIds.COMBAT)) {
-					dbgHasCO.Value = false;
-					Sparkipelago.debugLog("Disabling COMBAT");
-				} else {
-					dbgHasCO.Value = true;
-					Sparkipelago.debugLog("Enabling COMBAT");
-				}
-			}
-			if (Input.GetKeyDown(KeyCode.Equals)) {
-				if (Sparkipelago.hasItem(ItemIds.DOWN_DASH)) {
-					dbgHasDD.Value = false;
-					Sparkipelago.debugLog("Disabling DOWN_DASH");
-				} else {
-					dbgHasDD.Value = true;
-					Sparkipelago.debugLog("Enabling DOWN_DASH");
-				}
-			}
-		}
-		
-		private static void onChangeDA(bool oldV, bool newV) {
-			Sparkipelago.itemState[ItemIds.DASH] = newV ? 1 : 0;
-		}
-		private static void onChangeCD(bool oldV, bool newV) {
-			Sparkipelago.itemState[ItemIds.CHARGED_JESTER_DASH] = newV ? 1 : 0;
-		}
-		private static void onChangeJD(bool oldV, bool newV) {
-			Sparkipelago.itemState[ItemIds.JESTER_DASH] = newV ? 1 : 0;
-		}
-		private static void onChangeDD(bool oldV, bool newV) {
-			Sparkipelago.itemState[ItemIds.DOWN_DASH] = newV ? 1 : 0;
-		}
-		private static void onChangeDJ(bool oldV, bool newV) {
-			Sparkipelago.itemState[ItemIds.DOUBLE_JUMP] = newV ? 1 : 0;
-		}
-		private static void onChangeWJ(bool oldV, bool newV) {
-			Sparkipelago.itemState[ItemIds.WALL_JUMP] = newV ? 1 : 0;
-		}
-		private static void onChangeWW(bool oldV, bool newV) {
-			Sparkipelago.itemState[ItemIds.WALL_WALK] = newV ? 1 : 0;
-		}
-		private static void onChangeCO(bool oldV, bool newV) {
-			Sparkipelago.itemState[ItemIds.COMBAT] = newV ? 1 : 0;
 		}
 	}
 }

@@ -22,7 +22,8 @@ class ItemType(Enum):
 	VEHICLE = 11
 	POWER = 12
 	MULTIPLIER = 13
-	UNIMPLEMENTED = 14
+	GIMMICK = 14
+	UNIMPLEMENTED = 15
 from .apshared import item_name_to_id, apshared
 
 class ItemState:
@@ -43,7 +44,7 @@ class ItemState:
 			if i["type"] == ItemType.FREEDOM:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 				self.FREEDOM_ITEMS.append(i["name"])
-			if i["type"] in [ItemType.ABILITY, ItemType.SHOP, ItemType.CHARACTER, ItemType.VEHICLE, ItemType.POWER]:
+			if i["type"] in [ItemType.ABILITY, ItemType.SHOP, ItemType.GIMMICK, ItemType.CHARACTER, ItemType.VEHICLE, ItemType.POWER]:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 				self.PROGRESSION_ITEMS.append([i["name"], i["type"]])
 			if i["type"] in [ItemType.EXPLORE2, ItemType.EXPLORE3]:
@@ -82,6 +83,10 @@ class ItemState:
 					continue
 			if i[1] == ItemType.SHOP:
 				if not world.shop_enabled:
+					precollect.append(i[0])
+					continue
+			if i[1] == ItemType.GIMMICK:
+				if not world.gimmick_rando:
 					precollect.append(i[0])
 					continue
 			itempool.append(world.create_item(i[0]))

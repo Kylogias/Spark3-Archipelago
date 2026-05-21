@@ -229,5 +229,124 @@ namespace Sparkipelago {
 				if (Sparkipelago.hasItem(ItemIds.PERFECT_COMBO)) PlayerHealthAndStats.Combo = 1f;
 			}
 		}
+
+		[HarmonyPatch(typeof(Objects_Interaction), "OnTriggerEnter")]
+		private static class ObjectEnterPatch {
+			private static bool Prefix(Collider col) {
+				if (col.tag == "Spring" && !Sparkipelago.hasItem(ItemIds.SPRINGS)) return false;
+				if (col.tag == "SpeedPad") {
+					// There are multiple gimmicks that use this component
+					SpeedPadData pad = col.GetComponent<SpeedPadData>();
+					if (pad.isDashRing) {
+						if (col.GetComponentInChildren<HomingInfo>(true) != null) {
+							if (!Sparkipelago.hasItem(ItemIds.JESTER_DASH_RINGS)) return false;
+						} else if (!Sparkipelago.hasItem(ItemIds.DASH_RINGS)) return false;
+					} else if (!Sparkipelago.hasItem(ItemIds.SPEED_PADS)) return false;
+				}
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(Objects_Interaction), "OnTriggerStay")]
+		private static class ObjectStayPatch {
+			private static bool Prefix(Collider col) {
+				if (col.tag == "Spring" && !Sparkipelago.hasItem(ItemIds.SPRINGS)) return false;
+				return true;
+			}
+		}
+
+		// Base Game Bug: The game will attempt homing attack even after going past the target
+		[HarmonyPatch(typeof(Action02_Homing), "FixedUpdate")]
+		private static class ObjectHomingPatch {
+			private static void Prefix(Vector3 ___direction, float ___Timer, ref Vector3 __state) {
+				if (___Timer == 0) __state = new Vector3(0, 0, 0);
+				else __state = ___direction;
+			}
+			private static void Postfix(Action02_Homing __instance, Vector3 ___direction, Vector3 __state, PlayerBhysics ___Player) {
+				if (Vector3.Dot(__state, ___direction.normalized) < 0) {
+					___Player.rigid.velocity = new Vector3(0, 0, 0);
+					__instance.Actions.ChangeAction(1);
+				}
+			}
+		}
+		
+		[HarmonyPatch(typeof(JetPulley), "OnTriggerEnter")]
+		private static class PrisonRocketPatch {
+			private static bool Prefix(Collider col) {
+				if (col.tag == "Player" && !Sparkipelago.hasItem(ItemIds.PRISON_ROCKETS)) return false;
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(BouncyProtesters), "OnTriggerEnter")]
+		private static class ProtestorPatch1 {
+			private static bool Prefix(Collider col) {
+				if (col.tag == "Player" && !Sparkipelago.hasItem(ItemIds.PROTESTORS)) return false;
+				return true;
+			}
+		}
+		[HarmonyPatch(typeof(BouncyProtesters), "OnTriggerStay")]
+		private static class ProtestorPatch2 {
+			private static bool Prefix(Collider col) {
+				if (col.tag == "Player" && !Sparkipelago.hasItem(ItemIds.PROTESTORS)) return false;
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(AbyssBracer), "OnTriggerEnter")]
+		private static class AbyssBracerPatch {
+			private static bool Prefix(Collider col) {
+				if (col.tag == "Player" && !Sparkipelago.hasItem(ItemIds.ABYSS_BRACERS)) return false;
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(SpeedUpGate), "OnTriggerStay")]
+		private static class AbyssBoosterPatch {
+			private static bool Prefix(SpeedUpGate __instance, Collider col) {
+				if (col.tag == "Player") {
+					if (__instance.GetComponentInParent<BoostPadData>() != null) {
+						if (!Sparkipelago.hasItem(ItemIds.CAR_BOOST_PADS)) return false;
+					} else if (!Sparkipelago.hasItem(ItemIds.ABYSS_BOOSTERS)) return false;
+				}
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(Pulley), "OnTriggerEnter")]
+		private static class PulleyPatch {
+			private static bool Prefix(Collider col) {
+				if (col.tag == "Player" && !Sparkipelago.hasItem(ItemIds.PULLEYS)) return false;
+				return true;
+			}
+		}
+
+	//	[HarmonyPatch(typeof(SpeedThreadmill), "OnCollisionEnter")]
+		private static class RampPatch1 {
+			private static bool Prefix(Collider col) {
+				if (col.gameObject.tag == "Player" && !Sparkipelago.hasItem(ItemIds.RAMPS)) return false;
+				return true;
+			}
+		}
+
+	//	[HarmonyPatch(typeof(SpeedThreadmill), "OnTriggerEnter")]
+		private static class RampPatch2 {
+			private static bool Prefix(Collider col) {
+				if (col.gameObject.tag == "Player" && !Sparkipelago.hasItem(ItemIds.RAMPS)) return false;
+				return true;
+			}
+		}
+
+		[HarmonyPatch(typeof(CarCollectables), "OnTriggerEnter")]
+		private static class BoostPadPatch {
+			private static bool Prefix(Collider col) {
+				if (col.tag == "BoostPad" && !Sparkipelago.hasItem(ItemIds.CAR_BOOST_PADS)) return false;
+				return true;
+			}
+		}
+
+	//	SPRINGS -- Jester Dash sends you flying
+	//	JESTER_DASH_RINGS -- Ditto to springs
+	//	RAMPS -- Crashes the game
 	}
 }

@@ -63,6 +63,11 @@ class Spark3World(World):
 			self.ability_rando = True
 		else:
 			self.ability_rando = False
+
+		if self.options.gimmick_rando:
+			self.gimmick_rando = True
+		else:
+			self.gimmick_rando = False
 		
 		self.multipliers = []
 		if self.options.perfect_combo:
@@ -88,6 +93,7 @@ class Spark3World(World):
 		if self.options.labmode:
 			self.spark2 = True
 			self.ability_rando = False
+			self.gimmick_rando = False
 			self.labbing = True
 		else:
 			self.labbing = False
@@ -154,6 +160,7 @@ class Spark3World(World):
 
 		reserved_items = 28 + len(self.multipliers)
 		if self.ability_rando: reserved_items += 9
+		if self.gimmick_rando: reserved_items += 11
 		if self.explore_hunt == 2: reserved_items += 300 if self.spark2 else 180
 		if self.coin_hunt: reserved_items += 72
 		if reserved_items > location_count:

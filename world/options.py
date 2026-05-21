@@ -29,6 +29,12 @@ class AbilityRando(DefaultOnToggle):
 	"""
 	display_name = "Randomize Abilities"
 
+class GimmickRando(Toggle):
+	"""
+	Puts the stage gimmicks into the item pool
+	"""
+	display_name = "Randomize Gimmicks"
+
 class PerfectCombo(DefaultOnToggle):
 	"""
 	When enabled, puts permanent max combo into the item pool
@@ -273,6 +279,7 @@ class EnemyRando(Choice):
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
+	gimmick_rando: GimmickRando
 	difficulty: Difficulty
 	spark2_stages: Spark2Stages
 
@@ -308,7 +315,7 @@ class Spark3Options(PerGameCommonOptions):
 option_groups = [
 	OptionGroup(
 		"Basic Options",
-		[AbilityRando, Difficulty, Spark2Stages]
+		[AbilityRando, GimmickRando, Difficulty, Spark2Stages]
 	),
 	OptionGroup(
 		"Gate Options",

@@ -40,10 +40,22 @@ location_name_to_id = {}
 item_name_to_id = {}
 
 itemID = 16295350000
+rules = {" ": "BASE WHITESPACE", "(": "BASE LPAREN", ")": "BASE RPAREN", "+": "BASE AND", "|": "BASE OR"}
 for item in shared["items"]:
+	if "rule" in item:
+		for rule in rules.keys():
+			if item["rule"].startswith(rule) or rule.startswith(item["rule"]):
+				print(f"RULE CONFLICT: {item['name']} and {rules[rule]}")
+		rules[item["rule"]] = item["name"]
 	item_name_to_id[item["name"]] = itemID
 	item["id"] = itemID
 	itemID += 1
+
+for macro in shared["rule_macros"]:
+	for rule in rules.keys():
+		if macro["rule"].startswith(rule) or rule.startswith(macro["rule"]):
+			print(f"RULE CONFLICT: Macro {macro['rule']} and {rules[rule]}")
+	rules[macro['rule']] = f"Macro {macro['rule']}"
 
 curID = 16295300000
 for shop in shared["shop"]:
