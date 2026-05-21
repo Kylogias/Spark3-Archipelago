@@ -100,7 +100,8 @@ class LocationState:
 		explore_locations = []
 		for region in stage["regions"]:
 			new_region = Region(f"{stage['name']} {region['name']}", world.player, world.multiworld)
-			stage_region.connect(new_region, f"{stage['name']} {region['name']}")
+			if region["name"] == "START":
+				stage_region.connect(new_region, f"{stage['name']} {region['name']}")
 			region_locs = {}
 			event_locations = []
 			world.multiworld.regions += [new_region]

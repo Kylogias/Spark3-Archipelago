@@ -125,17 +125,19 @@ class RulesState:
 			stage_region = world.location_state.stage_regions[stage_name]
 			stage_data = stage_region[1]
 			stage_region = stage_region[0]
-			completion_entrance = world.get_entrance(f"{stage_name} GOAL")
 
 			has_coin = False
 			for region in stage_data["regions"]:
-				entrance = world.get_entrance(f"{stage_data['name']} {region['name']}")
-				entrance_rule = self.parse_location_rules(world, region['requires'])
-				if region["name"] == "GOAL":
-					if stage_data["coin_count"]:
-						if world.coin_hunt == 1: entrance_rule = entrance_rule & Has(f"{stage_name} COIN", count=stage_data["coin_req"])
-						if world.coin_hunt == 2: entrance_rule = entrance_rule & Has(f"{stage_name} COIN", count=stage_data["coin_count"])
-				world.set_rule(entrance, entrance_rule)
+				for enter in region["entrances"].keys():
+					from_region = world.get_region(f"{stage_data['name']} {enter}")
+					entrance = from_region.connect(world.get_region(f"{stage_data['name']} {region['name']}"), f"{stage_data['name']} {enter} TO {region['name']}")
+					entrance_rule = self.parse_location_rules(world, region['entrances'][enter])
+					if region["name"] == "GOAL":
+						if stage_data["coin_count"]:
+							if world.coin_hunt == 1: entrance_rule = entrance_rule & Has(f"{stage_name} COIN", count=stage_data["coin_req"])
+							if world.coin_hunt == 2: entrance_rule = entrance_rule & Has(f"{stage_name} COIN", count=stage_data["coin_count"])
+					world.set_rule(entrance, entrance_rule)
+				
 				for check in region["checks"]:
 					if check["sanity"] in world.location_state.sanities or check["sanity"] in ["explore"] or "event_item" in check:
 						loc = world.get_location(f"{stage_data['name']} {check['name']}")

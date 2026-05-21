@@ -83,8 +83,9 @@ for stage in shared["stages"]:
 		sanity_max[sanity] = -1
 		sanity_seen[sanity] = []
 	for region in stage["regions"]:
-		if isinstance(region["requires"], str):
-			region["requires"] = {"base": region["requires"]}
+		for entrance in region["entrances"].keys():
+			if isinstance(region["entrances"][entrance], str):
+				region["entrances"][entrance] = {"base": region["entrances"][entrance]}
 		for check in region["checks"].copy():
 			if check["sanity"] == "explore":
 				explore_rules.append(f"({check['requires']})")

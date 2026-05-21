@@ -119,28 +119,28 @@
 		{"name": "Sfarx", "page": "Characters"}
 	],
 	"stages": [
-		{"name": "ENDLESS DIVE", "id": 155, "type": "endless", "regions": [{"name": "STAGE", "requires": "", "checks": []}]},
+		{"name": "ENDLESS DIVE", "id": 155, "type": "endless", "regions": [{"name": "START", "entrances": {}, "checks": []}]},
 		{"name": "ALPINE CARRERA", "id": 0, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "cd|da", "checks": [
+			{"name": "GOAL", "entrances": {"START": "cd|da"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "BATTERY #1", "index": 0, "sanity": "battery", "requires": "ca"},
 				{"name": "BATTERY #2", "index": 1, "sanity": "battery", "requires": "ca"},
 				{"name": "BATTERY #3", "index": 2, "sanity": "battery", "requires": "ca"}
 			]}
 		]},
 		{"name": "DOUBLEMOON VILLA", "id": 1, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -154,14 +154,14 @@
 			]}
 		]},
 		{"name": "HIGH-RISE TRACKS", "id": 2, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": "co"}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -175,17 +175,18 @@
 			]}
 		]},
 		{"name": "COLD-DRY DESERT", "id": 3, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "A.M VILLAGE", "id": 4, "type": "stage", "coin_count": 15, "coin_req": 10, "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
 				{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
 				{"name": "BLUE COIN #3", "index": 2, "sanity": "coin", "requires": ""},
@@ -204,14 +205,14 @@
 			]}
 		]},
 		{"name": "LOST RIVIERA", "id": 5, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -225,12 +226,12 @@
 			]}
 		]},
 		{"name": "LOST RAVINE", "id": 6, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "wj+co+1c", "checks": [
+			{"name": "GOAL", "entrances": {"START": "wj+co+1c"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -244,12 +245,12 @@
 			]}
 		]},
 		{"name": "CANYON ZERO", "id": 7, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj|(ww+cd)"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -263,17 +264,18 @@
 			]}
 		]},
 		{"name": "BEATDOWN TOWER", "id": 13, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "ARID HOLE", "id": 11, "type": "stage", "coin_count": 15, "coin_req": 10, "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
 				{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
 				{"name": "BLUE COIN #3", "index": 2, "sanity": "coin", "requires": ""},
@@ -292,21 +294,22 @@
 			]}
 		]},
 		{"name": "SPLASH GROTTO", "id": 12, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "DISTRICT 5", "id": 8, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+2c"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+(dj|cd)"},
@@ -320,14 +323,14 @@
 			]}
 		]},
 		{"name": "DISTRICT 6", "id": 14, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "cd|da", "checks": [
+			{"name": "GOAL", "entrances": {"START": "cd|da"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
@@ -341,12 +344,12 @@
 			]}
 		]},
 		{"name": "DISTRICT 9", "id": 15, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "1c", "checks": [
+			{"name": "GOAL", "entrances": {"START": "1c"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "da"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -360,21 +363,22 @@
 			]}
 		]},
 		{"name": "DISTRICT 4", "id": 16, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "DISTRICT 79", "id": 17, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "co+dj", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co+dj"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|cd"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "co"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "co"},
@@ -388,14 +392,14 @@
 			]}
 		]},
 		{"name": "DOWNTOWN DISSENT", "id": 10, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "(dj|ww)+pc", "checks": [
+			{"name": "GOAL", "entrances": {"START": "(dj|ww)+pc"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|wj"},
@@ -409,14 +413,14 @@
 			]}
 		]},
 		{"name": "RESIDENTIAL RATTLE", "id": 22, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -430,25 +434,25 @@
 			]}
 		]},
 		{"name": "ROADWAY RALLY", "id": 23, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "BATTERY #1", "index": 0, "sanity": "battery", "requires": "ca"},
 				{"name": "BATTERY #2", "index": 1, "sanity": "battery", "requires": "ca"}
 			]}
 		]},
 		{"name": "STRIKE SEWERS", "id": 20, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "(wj|cd|dj|ww)+pc", "checks": [
+			{"name": "GOAL", "entrances": {"START": "(wj|cd|dj|ww)+pc"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "(wj|cd|dj|ww)+pc"},
@@ -462,10 +466,10 @@
 			]}
 		]},
 		{"name": "SQUABBLE SPILLWAY", "id": 21, "type": "stage", "coin_count": 15, "coin_req": 13, "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
 				{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
 				{"name": "BLUE COIN #3", "index": 2, "sanity": "coin", "requires": ""},
@@ -484,14 +488,14 @@
 			]}
 		]},
 		{"name": "NIGHTTIME PHENOMENA", "id": 18, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "co+(dj|(wj+1c))", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co+(dj|(wj+1c))"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
@@ -505,10 +509,10 @@
 			]}
 		]},
 		{"name": "DROPSHIP DAYBREAK", "id": 27, "type": "stage", "coin_count": 27, "coin_req": 15, "regions": [
-			{"name": "GOAL", "requires": "co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "NIGHT BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
 				{"name": "NIGHT BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
 				{"name": "NIGHT BLUE COIN #3", "index": 2, "sanity": "coin", "requires": ""},
@@ -539,21 +543,22 @@
 			]}
 		]},
 		{"name": "HEAVEN PARK", "id": 28, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "dj|cd", "checks": [
+			{"name": "GOAL", "entrances": {"START": "dj|cd"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "ENDLESS HALL", "id": 29, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "co"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "co"},
@@ -567,12 +572,12 @@
 			]}
 		]},
 		{"name": "BALLOON FIESTA", "id": 30, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "jd+co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "jd+co"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "jd+(cd|dj)"},
@@ -586,14 +591,14 @@
 			]}
 		]},
 		{"name": "AIRSTRIP MADNESS", "id": 25, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -607,21 +612,22 @@
 			]}
 		]},
 		{"name": "TWO-STAGE LIFTOFF", "id": 33, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "jd", "checks": [
+			{"name": "GOAL", "entrances": {"START": "jd"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "SUBORBITAL SCRAMBLE", "id": 34, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "jd+(dj|wj)", "checks": [
+			{"name": "GOAL", "entrances": {"START": "jd+(dj|wj)"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -635,12 +641,12 @@
 			]}
 		]},
 		{"name": "AVIATOR HIGHWAY", "id": 31, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "BATTERY #1", "index": 0, "sanity": "battery", "requires": "ca"},
 				{"name": "BATTERY #2", "index": 1, "sanity": "battery", "requires": "ca"},
 				{"name": "BATTERY #3", "index": 2, "sanity": "battery", "requires": "ca"},
@@ -652,19 +658,20 @@
 			]}
 		]},
 		{"name": "MAYDAY MIDDAY", "id": 32, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "jd", "checks": [
-				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
-				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
-				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
-			]}
-		]},
-		{"name": "DEEP DESCENT", "id": 26, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "jd+1c+(dj|wj)", "checks": [
+			{"name": "GOAL", "entrances": {"START": "jd"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": []}
+		]},
+		{"name": "DEEP DESCENT", "id": 26, "type": "stage", "regions": [
+			{"name": "GOAL", "entrances": {"START": "jd+1c+(dj|wj)"}, "checks": [
+				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
+				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
+				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
+			]},
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+da+dj"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
@@ -678,49 +685,56 @@
 			]}
 		]},
 		{"name": "SLOPE JUMPING", "id": 100, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "JESTER DASH", "id": 101, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "jd+1c", "checks": [
+			{"name": "GOAL", "entrances": {"START": "jd+1c"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "CHARGED JESTER DASH", "id": 102, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "cd+dj", "checks": [
+			{"name": "GOAL", "entrances": {"START": "cd+dj"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "HIGH SPEEDS", "id": 103, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "dj", "checks": [
+			{"name": "GOAL", "entrances": {"START": "dj"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "WALL JUMPING", "id": 104, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "wj", "checks": [
+			{"name": "GOAL", "entrances": {"START": "wj"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "WALL WALKING", "id": 105, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "ww+(dj|cd|wj)", "checks": [
+			{"name": "GOAL", "entrances": {"START": "ww+(dj|cd|wj)"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "FALL DAMAGE", "id": 106, "type": "stage", "regions": [
-			{"name": "GOAL", "requires": "2c", "checks": [
+			{"name": "GOAL", "entrances": {"START": "2c"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "F.M CITY", "id": 141, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "dj", "checks": [
+			{"name": "GOAL", "entrances": {"START": "dj"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj"},
@@ -734,14 +748,14 @@
 			]}
 		]},
 		{"name": "F.M DOWNTOWN", "id": 142, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -755,14 +769,14 @@
 			]}
 		]},
 		{"name": "FLORIA HIGHWAY", "id": 143, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "wj+1c", "checks": [
+			{"name": "GOAL", "entrances": {"START": "wj+1c"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj+(cd|da)"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
@@ -776,14 +790,14 @@
 			]}
 		]},
 		{"name": "FLORIA PLANT", "id": 144, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+da+dj+cd"},
@@ -797,14 +811,14 @@
 			]}
 		]},
 		{"name": "FLORESTA BLANCA", "id": 145, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "dj|(wj+1c)", "checks": [
+			{"name": "GOAL", "entrances": {"START": "dj|(wj+1c)"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -818,23 +832,24 @@
 			]}
 		]},
 		{"name": "CASTELA BLANCA", "id": 152, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "wj+(cd|da)", "checks": [
-				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
-				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
-				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
-				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
-				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
-			]}
-		]},
-		{"name": "SHANTORIA TOWN", "id": 146, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": "wj+(cd|da)"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": []}
+		]},
+		{"name": "SHANTORIA TOWN", "id": 146, "type": "spark2", "regions": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
+				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
+				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
+				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
+				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
+				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
+			]},
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -848,14 +863,14 @@
 			]}
 		]},
 		{"name": "TECHNORIA CITY", "id": 147, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "jd", "checks": [
+			{"name": "GOAL", "entrances": {"START": "jd"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "jd"},
@@ -869,14 +884,14 @@
 			]}
 		]},
 		{"name": "TERMINAL DRAGON", "id": 148, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "1c", "checks": [
+			{"name": "GOAL", "entrances": {"START": "1c"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "1c"},
@@ -890,14 +905,14 @@
 			]}
 		]},
 		{"name": "SCARIA STROPOLIS", "id": 149, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -911,14 +926,14 @@
 			]}
 		]},
 		{"name": "TITANIC TOWER", "id": 150, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -932,23 +947,24 @@
 			]}
 		]},
 		{"name": "PLANETARY STRIPE", "id": 151, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
-				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
-				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
-				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
-				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
-				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
-			]}
-		]},
-		{"name": "HYPERATH FLEET", "id": 153, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "cd|dj", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": []}
+		]},
+		{"name": "HYPERATH FLEET", "id": 153, "type": "spark2", "regions": [
+			{"name": "GOAL", "entrances": {"START": "cd|dj"}, "checks": [
+				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
+				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
+				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
+				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
+				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
+			]},
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj|(dj+cd)"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "da"},
@@ -962,14 +978,14 @@
 			]}
 		]},
 		{"name": "APOCALYPSE THRUSTER", "id": 154, "type": "spark2", "regions": [
-			{"name": "GOAL", "requires": "", "checks": [
+			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "STAGE", "requires": "", "checks": [
+			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "cd"},
@@ -983,35 +999,40 @@
 			]}
 		]},
 		{"name": "BOSS: SAW-MAN", "id": 9, "type": "boss", "regions": [
-			{"name": "GOAL", "requires": "co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
 				{"name": "COMPLETION", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "BOSS: ON THE RUN", "id": 24, "type": "boss", "regions": [
-			{"name": "GOAL", "requires": "co+pc", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co+pc"}, "checks": [
 				{"name": "COMPLETION", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "BOSS: THROWBACK", "id": 37, "type": "boss", "regions": [
-			{"name": "GOAL", "requires": "co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
 				{"name": "COMPLETION", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "BOSS: MECHA MADNESS", "id": 38, "type": "boss", "regions": [
-			{"name": "GOAL", "requires": "co", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
 				{"name": "COMPLETION", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "UTOPIA SHELTER", "id": 50, "type": "utopia", "regions": [
-			{"name": "GOAL", "requires": "co+cd+wj+ww+da+dj", "checks": [
+			{"name": "GOAL", "entrances": {"START": "co+cd+wj+ww+da+dj"}, "checks": [
 				{"name": "COMPLETION", "sanity": "base", "requires": ""}
-			]}
+			]},
+			{"name": "START", "entrances": {}, "checks": []}
 		]}
 	]
 }
