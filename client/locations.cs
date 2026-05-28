@@ -130,6 +130,54 @@ namespace Sparkipelago {
 			}
 		}
 
+		public static bool hasLocationByIndex(int level, string sanity, int index) {
+			foreach (APStageData stage in APShared.stages) {
+				if (stage.id == level) {
+					foreach (APStageCheck ch in stage.checks) {
+						if (ch.sanity == sanity && ch.index == index) {
+							return Sparkipelago.currentSession.Locations.AllLocations.Contains(ch.id);
+						}
+					}
+				}
+			}
+			return false;
+		}
+
+		public static bool hasLocation(int level, string check) {
+			foreach (APStageData stage in APShared.stages) {
+				if (stage.id == level) {
+					foreach (APStageCheck ch in stage.checks) {
+						if (ch.name == check) {
+							return Sparkipelago.currentSession.Locations.AllLocations.Contains(ch.id);
+						}
+					}
+				}
+			}
+			return false;
+		}
+
+		public static long getLocationByIndex(int level, string sanity, int index) {
+			foreach (APStageData stage in APShared.stages) {
+				if (stage.id == level) {
+					foreach (APStageCheck ch in stage.checks) {
+						if (ch.sanity == sanity && ch.index == index) return ch.id;
+					}
+				}
+			}
+			return -1;
+		}
+		
+		public static long getLocation(int level, string check) {
+			foreach (APStageData stage in APShared.stages) {
+				if (stage.id == level) {
+					foreach (APStageCheck ch in stage.checks) {
+						if (ch.name == check) return ch.id;
+					}
+				}
+			}
+			return -1;
+		}
+		
 		public static bool isLocationCompleteByIndex(int level, string sanity, int index) {
 			foreach (APStageData stage in APShared.stages) {
 				if (stage.id == level) {

@@ -52,6 +52,7 @@ namespace Sparkipelago {
 	
 	class APSave {
 		public static Font sparkFont;
+		public static Texture2D cursorImage;
 		
 		[HarmonyPatch(typeof(GameProgressMenuController), "SetCompletionPercentage")]
 		private class CompletionPercentPatch {
@@ -105,6 +106,10 @@ namespace Sparkipelago {
 			if (!sparkFont) {
 				sparkFont = font;
 				sparkFont.hideFlags = HideFlags.DontUnloadUnusedAsset;
+			}
+			if (!cursorImage) {
+			//	cursorImage = GameObject.Find("UI/Cursor/Image").GetComponent<Image>().mainTexture;
+			//	cursorImage.hideFlags = HideFlags.DontUnloadUnusedAsset;
 			}
 
 			float rowHeight = versionText.fontSize*2;

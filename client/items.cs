@@ -1,5 +1,6 @@
 using UnityEngine;
 using HarmonyLib;
+using MelonLoader;
 using Archipelago.MultiClient.Net.Models;
 
 namespace Sparkipelago {
@@ -190,6 +191,13 @@ namespace Sparkipelago {
 				return true;
 			}
 		}
+
+		[HarmonyPatch(typeof(Action_12_Block), "BlockInput")]
+		private static class ParryPatch {
+			private static void Prefix(Action_12_Block __instance) {
+				if (!Sparkipelago.hasItem(ItemIds.PARRY)) __instance.BlockCounter = -1;
+			}
+		}
 		
 		[HarmonyPatch(typeof(StratoMech), "CheckForAttackAction")]
 		private static class MechCombatPatch {
@@ -321,18 +329,18 @@ namespace Sparkipelago {
 			}
 		}
 
-	//	[HarmonyPatch(typeof(SpeedThreadmill), "OnCollisionEnter")]
+		[HarmonyPatch(typeof(SpeedThreadmill), "OnCollisionStay")]
 		private static class RampPatch1 {
 			private static bool Prefix(Collider col) {
-				if (col.gameObject.tag == "Player" && !Sparkipelago.hasItem(ItemIds.RAMPS)) return false;
+				if (!Sparkipelago.hasItem(ItemIds.RAMPS)) return false;
 				return true;
 			}
 		}
 
-	//	[HarmonyPatch(typeof(SpeedThreadmill), "OnTriggerEnter")]
+		[HarmonyPatch(typeof(SpeedThreadmill), "OnTriggerStay")]
 		private static class RampPatch2 {
 			private static bool Prefix(Collider col) {
-				if (col.gameObject.tag == "Player" && !Sparkipelago.hasItem(ItemIds.RAMPS)) return false;
+				if (!Sparkipelago.hasItem(ItemIds.RAMPS)) return false;
 				return true;
 			}
 		}

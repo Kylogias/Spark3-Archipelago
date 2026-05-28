@@ -52,6 +52,7 @@ namespace Sparkipelago {
 			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Double Jump (Hotkey 0)",  ItemIds.DOUBLE_JUMP,         "DOUBLE_JUMP",         KeyCode.Alpha0));
 			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Combat (Hotkey -)",       ItemIds.COMBAT,              "COMBAT",              KeyCode.Minus));
 			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Down Dash (Hotkey +)",    ItemIds.DOWN_DASH,           "DOWN_DASH",           KeyCode.Equals));
+			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Parry",                   ItemIds.PARRY,               "PARRY",               KeyCode.None));
 			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Car", ItemIds.CAR, "CAR", KeyCode.None));
 			movedbg.Add(new MoveDebugPref("AP Abilities", "Has Copter", ItemIds.COPTER, "COPTER", KeyCode.None));
 
@@ -72,6 +73,12 @@ namespace Sparkipelago {
 		public static void checkForInput() {
 			foreach (MoveDebugPref move in movedbg) {
 				move.onUpdate();
+				if (Input.GetKeyDown(KeyCode.Keypad0)) PlayerHealthAndStats.AddEnergy(100);
+				if (Input.GetKeyDown(KeyCode.Keypad1) && CharacterAnimatorChange.StaticReference != null) {
+					int newCharacter = CharacterAnimatorChange.Character + 1;
+					if (newCharacter == 5) newCharacter = 0;
+					CharacterAnimatorChange.StaticReference.Switch(newCharacter);
+				}
 			}
 		}
 	}

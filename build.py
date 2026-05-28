@@ -175,23 +175,7 @@ with open("client/apshared.cs", "w") as apcs:
 		apcs.write(f"\t\t\tnew APStageData(\"{stage['name']}\", \"{stage['type']}\", {stage['id']}, new APStageCheck[]")
 		apcs.write("{\n")
 		for check in stage_checks:
-			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\", new string[]")
-			apcs.write("{")
-			difficulties = []
-			requires = []
-			for k in check['requires'].keys():
-				difficulties.append(k)
-				requires.append(check['requires'][k])
-			for k in difficulties:
-				apcs.write(f"\"{k}\"")
-				if k != difficulties[-1]:
-					apcs.write(", ")
-			apcs.write("}, new string[]{")
-			for v in requires:
-				apcs.write(f"\"{v}\"")
-				if v != requires[-1]:
-					apcs.write(", ")
-			apcs.write("}")
+			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\"")
 			apcs.write(f", {check['id']}, {check['index']})")
 			if check != stage_checks[-1]:
 				apcs.write(",")

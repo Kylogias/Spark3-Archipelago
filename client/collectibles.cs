@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System;
 using HarmonyLib;
+using Archipelago.MultiClient.Net.Enums;
 
 namespace Sparkipelago {
 	class Collectibles {
@@ -17,60 +18,133 @@ namespace Sparkipelago {
 		static List<GameObject> batteries;
 
 		static int layers;
+		static int stage;
+		static CollectibleScout scout;
 		
-		static void recurseGameObject<T>(GameObject parent, List<T> comps, bool getLayer) where T : Component {
+		class CollectibleScout {
+			Dictionary<long, GameObject> locids;
+			
+			public CollectibleScout() {
+				locids = new Dictionary<long, GameObject>();
+			}
+
+			public void addLocation(GameObject go, string sanity, int index) {
+				long key = Locations.getLocationByIndex(stage, sanity, index);
+				if (key != -1) locids.Add(key, go);
+			}
+			
+			public void addLocation(GameObject go, string name) {
+				long key = Locations.getLocation(stage, name);
+				if (key != -1) locids.Add(key, go);
+			}
+
+			public void sendScout() {
+				List<long> keys = new List<long>();
+				foreach (long key in locids.Keys) {
+					keys.Add(key);
+				}
+				if (Sparkipelago.currentSession != null) Sparkipelago.currentSession.Locations.ScoutLocationsAsync(HandleScout, keys.ToArray());
+			}
+
+			private void HandleScout(Dictionary<long, Archipelago.MultiClient.Net.Models.ScoutedItemInfo> scouted) {
+				foreach (long key in scouted.Keys) {
+					Color color = new Color(0.2f, 1, 1, 1);
+					if ((scouted[key].Flags & ItemFlags.NeverExclude) != 0) color = new Color(0.2f, 1, 0.2f, 1);
+					if ((scouted[key].Flags & ItemFlags.Advancement) != 0) color = new Color(1, 0.8f, 0.2f, 1);
+					if (Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(key)) color = new Color(0.5f, 0.5f, 0.5f, 1);
+					LineRenderer lr = locids[key].GetComponent<LineRenderer>();
+					lr.material.SetColor("_EmissionColor", color);
+					locids.Remove(key);
+				}
+			}
+		}
+		
+		static void createCheckArrow(GameObject parent, string sanity, int index, Vector3 start, Vector3 end) {
+			GameObject arrow = new GameObject("Arrow", typeof(LineRenderer));
+			arrow.transform.SetParent(parent.transform);
+			arrow.transform.localPosition = new Vector3(0, 0, 0);
+			arrow.transform.localScale = new Vector3(1, 1, 1);
+			LineRenderer lr = arrow.GetComponent<LineRenderer>();
+			lr.startWidth = 2;
+			lr.endWidth = 0.1f;
+			lr.numCapVertices = 16;
+			lr.useWorldSpace = false;
+			lr.material.EnableKeyword("_EMISSION");
+			lr.material.color = new Color(0, 0, 0, 1);
+			lr.material.SetTexture("_EmissionMap", Texture2D.whiteTexture);
+			lr.SetPositions(new Vector3[]{start, end});
+			scout.addLocation(arrow, sanity, index);
+		}
+		
+		static void recurseGameObject<T>(GameObject parent, List<T> comps, bool getLayer, string sanity) where T : Component {
 			ActivateOnDistance aod = parent.GetComponent<ActivateOnDistance>();
 			if (parent.activeSelf || aod != null || parent.name == "Area_2 (Day)") {
 				T comp = parent.GetComponent<T>();
 				if (comp != null) {
 					if (getLayer) layers |= 1 << parent.layer;
+				//	if (Locations.hasLocationByIndex(stage, sanity, comps.Count)) {
+						Vector3 start = Vector3.zero, end = Vector3.zero;
+						if (sanity == "bubble") {start = new Vector3(0, 2, 0); end = new Vector3(0, 1.25f, 0);}
+						if (sanity == "capsule") {start = new Vector3(0, 6, 0); end = new Vector3(0, 4, 0);}
+						if (sanity == "checkpoint") {start = new Vector3(0, 10, -20); end = new Vector3(0, 8, -20);}
+						if (sanity == "coin") {start = new Vector3(0, 1.875f, 0); end = new Vector3(0, 1.25f, 0);}
+						createCheckArrow(parent, sanity, comps.Count, start, end);
+				//	}
 					comps.Add(comp);
 				}
 				for (int i = 0; i < parent.transform.childCount; i++) {
-					recurseGameObject(parent.transform.GetChild(i).gameObject, comps, getLayer);
+					recurseGameObject(parent.transform.GetChild(i).gameObject, comps, getLayer, sanity);
 				}
 			}
 		}
 
-		static void recurseForTag(GameObject parent, List<GameObject> objects, string tag) {
+		static void recurseForTag(GameObject parent, List<GameObject> objects, string tag, string sanity) {
 			ActivateOnDistance aod = parent.GetComponent<ActivateOnDistance>();
 			if (parent.activeSelf || aod != null || parent.name == "Area_2 (Day)") {
-				if (parent.tag == tag) objects.Add(parent);
+				if (parent.tag == tag) {
+			//		if (Locations.hasLocationByIndex(stage, sanity, objects.Count)) {
+						
+			//		}
+					objects.Add(parent);
+				}
 				for (int i = 0; i < parent.transform.childCount; i++) {
-					recurseForTag(parent.transform.GetChild(i).gameObject, objects, tag);
+					recurseForTag(parent.transform.GetChild(i).gameObject, objects, tag, sanity);
 				}
 			}
 		}
 		
-		static List<GameObject> getAllWithTag(Scene scn, string tag) {
+		static List<GameObject> getAllWithTag(Scene scn, string tag, string sanity) {
 			List<GameObject> tagged = new List<GameObject>();
 			foreach (GameObject go in scn.GetRootGameObjects()) {
-				recurseForTag(go, tagged, tag);
+				recurseForTag(go, tagged, tag, sanity);
 			}
 			return tagged;
 		}
 		
-		static List<T> getAllComponents<T>(Scene scn, bool getLayer) where T : Component {
+		static List<T> getAllComponents<T>(Scene scn, bool getLayer, string sanity) where T : Component {
 			List<T> rotring = new List<T>();
 			foreach (GameObject go in scn.GetRootGameObjects()) {
-				recurseGameObject<T>(go, rotring, getLayer);
+				recurseGameObject<T>(go, rotring, getLayer, sanity);
 			}
 			
 			return rotring;
 		}
 		
 		public static void onSceneLoad(string name) {
+			// The normal index isn't initialized yet
+			stage = GameObject.Find("[OffStageVaribales]").GetComponent<GameProgressVariables>().StageIndex;
+
 			Scene scn = SceneManager.GetSceneByName(name);
+			scout = new CollectibleScout();
 
 			layers = 0;
-			capsules = getAllComponents<RotateRing>(scn, true);
-			checkpoints = getAllComponents<CheckPointData>(scn, false);
-			bubbles = getAllComponents<MonitorData>(scn, true);
-			coins = getAllComponents<CollectableCoin>(scn, false); // There's an easier way but shrug
-			batteries = getAllWithTag(scn, "Battery");
+			capsules = getAllComponents<RotateRing>(scn, true, "capsule");
+			checkpoints = getAllComponents<CheckPointData>(scn, false, "checkpoint");
+			bubbles = getAllComponents<MonitorData>(scn, true, "bubble");
+			coins = getAllComponents<CollectableCoin>(scn, false, "coin"); // There's an easier way but shrug
+			batteries = getAllWithTag(scn, "Battery", "battery");
+			scout.sendScout();
 			
-			// The normal index isn't initialized yet
-			int stage = GameObject.Find("[OffStageVaribales]").GetComponent<GameProgressVariables>().StageIndex;
 			int coinLeft = 0;
 			for (int i = 0; i < coins.Count; i++) {
 				if (Locations.isLocationCompleteByIndex(stage, "coin", i)) {

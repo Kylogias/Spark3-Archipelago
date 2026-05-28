@@ -11,7 +11,7 @@
 		{"name": "Wall Walk", "rule": "ww", "itemtype": "ABILITY"},
 		{"name": "Double Jump", "rule": "dj", "itemtype": "ABILITY"},
 		{"name": "Combat", "rule": "co", "itemtype": "ABILITY"},
-		{"name": "Parry", "rule": "pa", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Parry", "rule": "pa", "itemtype": "ABILITY"},
 		
 		{"name": "Score Capsule", "itemtype": "JUNK"},
 		{"name": "Health Capsule", "itemtype": "JUNK"},
@@ -73,7 +73,7 @@
 		{"name": "Prison Rockets", "rule": "pr", "itemtype": "GIMMICK"},
 		{"name": "Jester Dash Rings", "rule": "jr", "itemtype": "GIMMICK"},
 		{"name": "Abyss Bracers", "rule": "abr", "itemtype": "GIMMICK"},
-		{"name": "Ramps", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Ramps", "rule": "ra", "itemtype": "GIMMICK"},
 		{"name": "Protestors", "rule": "pt", "itemtype": "GIMMICK"},
 		{"name": "Car Boost Pads", "rule": "cb", "itemtype": "GIMMICK"},
 		{"name": "Abyss Boosters", "rule": "abo", "itemtype": "GIMMICK"},
@@ -85,7 +85,9 @@
 	],
 	"rule_macros": [
 		{"rule": "1c", "expansion": "(dj|cd|da)"},
-		{"rule": "2c", "expansion": "((dj+cd)|(cd+da)|(da+dj))"}
+		{"rule": "2c", "expansion": "((dj+cd)|(cd+da)|(da+dj)|(fa+da))"},
+		{"rule": "e1c", "expansion": "(dj|cd|da|cl|ed)"},
+		{"rule": "e2c", "expansion": "(2c|cl|ed)"}
 	],
 	"shop": [
 		{"name": "Spin Charge", "page": "Moves"},
@@ -121,7 +123,7 @@
 	"stages": [
 		{"name": "ENDLESS DIVE", "id": 155, "type": "endless", "regions": [{"name": "START", "entrances": {}, "checks": []}]},
 		{"name": "ALPINE CARRERA", "id": 0, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "cd|da"}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "cd|da|wj"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
@@ -133,28 +135,63 @@
 			]}
 		]},
 		{"name": "DOUBLEMOON VILLA", "id": 1, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
+			{"name": "GOAL", "entrances": {"END CANALS": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": [
+			{"name": "START", "entrances": {}, "checks": []},
+			{"name": "ABOVE START", "entrances": {"START": "1c|sf", "ROAD #1 RIGHT NEIGHBORHOOD LOWER": ""}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"},
-				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj"},
-				{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "cd|da"}
-			]}
+				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "ROAD #1", "entrances": {"START": "spr|ww|wj", "ABOVE START": ""}, "checks": []},
+			{"name": "ROAD #1 LEFT NEIGHBORHOOD", "entrances": {"ROAD #1": ""}, "checks": []},
+			{"name": "ROAD #1 RIGHT NEIGHBORHOOD LOWER", "entrances": {"ROAD #1": ""}, "checks": []},
+			{"name": "ROAD #1 RIGHT NEIGHBORHOOD MIDDLE", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD LOWER": ""}, "checks": []},
+			{"name": "ROAD #1 RIGHT NEIGHBORHOOD UPPER LEFT", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": []},
+			{"name": "ROAD #1 RIGHT NEIGHBORHOOD UPPER RIGHT", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": [
+				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "START TIPPY", "entrances": {"ABOVE START": "cd|ed", "ROAD #1 RIGHT NEIGHBORHOOD UPPER RIGHT": "da|rb"}, "checks": [
+				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+				{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "START PLAYGROUND", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": [
+				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "HIGHWAY NEIGHBORHOOD #1", "entrances": {"ROAD #1": ""}, "checks": []},
+			{"name": "STEPPING STONES NEIGHBORHOOD", "entrances": {"HIGHWAY NEIGHBORHOOD #1": ""}, "checks": [
+				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "SPIRAL NEIGHBORHOOD", "entrances": {"STEPPING STONES NEIGHBORHOOD": ""}, "checks": []},
+			{"name": "STEPPING STONES NEIGHBORHOOD UPPER", "entrances": {"SPIRAL NEIGHBORHOOD UPPER": ""}, "checks": []},
+			{"name": "SPIRAL NEIGHBORHOOD UPPER", "entrances": {"SPIRAL NEIGHBORHOOD": ""}, "checks": []},
+			{"name": "STEPPING STONES TIPPY", "entrances": {"STEPPING STONES NEIGHBORHOOD UPPER": "cd|ed|cl|(wj+(dj|fl|(fa+da)))"}, "checks": [
+				{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "HIGHWAY NEIGHBORHOOD #2", "entrances": {"STEPPING STONES NEIGHBORHOOD": ""}, "checks": []},
+			{"name": "BIG HIGHWAY LOOP RIGHT", "entrances": {"HIGHWAY NEIGHBORHOOD #2": ""}, "checks": []},
+			{"name": "BIG HIGHWAY LOOP LEFT", "entrances": {"HIGHWAY NEIGHBORHOOD #2": "spr|(wj+dj)", "BIG HIGHWAY LOOP RIGHT": "1c|fl"}, "checks": []},
+			{"name": "BIG HIGHWAY LOOP TIPPY", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": []},
+			{"name": "BIG HIGHWAY", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": []},
+			{"name": "NEIGHBORHOOD AFTER BIG HIGHWAY", "entrances": {"BIG HIGHWAY": ""}, "checks": []},
+			{"name": "END NEIGHBORHOOD RIGHT UPPER", "entrances": {"END NEIGHBORHOOD LEFT": ""}, "checks": []},
+			{"name": "END NEIGHBORHOOD RIGHT LOWER", "entrances": {"END NEIGHBORHOOD RIGHT UPPER": ""}, "checks": [
+				{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "END NEIGHBORHOOD LEFT", "entrances": {"NEIGHBORHOOD AFTER BIG HIGHWAY": ""}, "checks": []},
+			{"name": "END NEIGHBORHOOD BACK LEFT", "entrances": {"END NEIGHBORHOOD LEFT": ""}, "checks": []},
+			{"name": "END NEIGHBORHOOD BACK MIDDLE", "entrances": {"END NEIGHBORHOOD BACK LEFT": ""}, "checks": [
+				{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "END NEIGHBORHOOD BACK RIGHT", "entrances": {"END NEIGHBORHOOD BACK MIDDLE": ""}, "checks": []},
+			{"name": "END CANALS", "entrances": {"NEIGHBORHOOD AFTER BIG HIGHWAY": ""}, "checks": []}
 		]},
 		{"name": "HIGH-RISE TRACKS", "id": 2, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
+			{"name": "GOAL", "entrances": {"TRAINS": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
@@ -164,12 +201,19 @@
 			{"name": "START", "entrances": {}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+				{"name": "ENERGY CAPSULE #1", "index": 9, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #1", "index": 8, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #1", "index": 7, "sanity": "capsule", "requires": ""},
+				{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+				{"name": "HEALTH CAPSULE #2", "index": 6, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #1", "index": 2, "sanity": "bubble", "requires": ""},
+				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "TRAINS", "entrances": {"START": "ra|1c|fa|sf|fl"}, "checks": [
 				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 			]}
@@ -180,28 +224,44 @@
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": []}
+			{"name": "START", "entrances": {}, "checks": [
+				{"name": "ENERGY CAPSULE #1", "index": 4, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #2", "index": 5, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #1", "index": 5, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #1", "index": 4, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #2", "index": 3, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #2", "index": 2, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #3", "index": 3, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #4", "index": 6, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #5", "index": 7, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #3", "index": 1, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #6", "index": 2, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #1", "index": 1, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #4", "index": 0, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #7", "index": 0, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #8", "index": 8, "sanity": "capsule", "requires": ""}
+			]}
 		]},
 		{"name": "A.M VILLAGE", "id": 4, "type": "stage", "coin_count": 15, "coin_req": 10, "regions": [
 			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": [
-				{"name": "BLUE COIN #1", "index": 0,  "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #2", "index": 1, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #3", "index": 2, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #4", "index": 3, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #5", "index": 4, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #6", "index": 14, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #7", "index": 6, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #8", "index": 7, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #9", "index": 8, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #10", "index": 9,  "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #11", "index": 10, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #12", "index": 11, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #13", "index": 12, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #14", "index": 13, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #15", "index": 5, "sanity": "coin", "requires": "cd"}
+				{"name": "BLUE COIN AT START", "index": 0,  "sanity": "coin", "requires": ""},
+				{"name": "LAKEBED BLUE COIN", "index": 1, "sanity": "coin", "requires": ""},
+				{"name": "START CLOCKTOWER BLUE COIN", "index": 2, "sanity": "coin", "requires": ""},
+				{"name": "LEFT NEIGHBORHOOD NEAR START BLUE COIN", "index": 3, "sanity": "coin", "requires": ""},
+				{"name": "BLUE COIN #5", "index": 4, "sanity": "coin", "requires": "spr|(wj+(cl|ed|(dj+(cd|da)))"},
+				{"name": "RADIO TOWER BLUE COIN", "index": 5, "sanity": "coin", "requires": "spr+cd"},
+				{"name": "BACK LEFT NEIGHBORHOOD BLUE COIN", "index": 6, "sanity": "coin", "requires": ""},
+				{"name": "BACK BLUE COIN", "index": 7, "sanity": "coin", "requires": ""},
+				{"name": "UPPER BACK BLUE COIN", "index": 8, "sanity": "coin", "requires": ""},
+				{"name": "RIGHT NEIGHBORHOOD NEAR START BLUE COIN", "index": 9,  "sanity": "coin", "requires": ""},
+				{"name": "TRAIN TRACK BLUE COIN", "index": 10, "sanity": "coin", "requires": ""},
+				{"name": "MANHOLE BLUE COIN", "index": 11, "sanity": "coin", "requires": ""},
+				{"name": "SEWER BLUE COIN", "index": 12, "sanity": "coin", "requires": ""},
+				{"name": "BACK RIGHT NEIGHBORHOOD BLUE COIN", "index": 13, "sanity": "coin", "requires": ""},
+				{"name": "RIGHT ALLEYWAY BLUE COIN", "index": 14, "sanity": "coin", "requires": ""}
 			]}
 		]},
 		{"name": "LOST RIVIERA", "id": 5, "type": "stage", "regions": [
@@ -213,9 +273,14 @@
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": [
-				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "BOARDWALK #1", "entrances": {"START": ""}, "checks": [
 				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "RAIL #2", "entrances": {"BOARDWALK #1": ""}, "checks": []},
+			{"name": "BOARDWALK #2", "entrances": {"RAIL #2": ""}, "checks": [
 				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
@@ -643,8 +708,8 @@
 		{"name": "AVIATOR HIGHWAY", "id": 31, "type": "stage", "regions": [
 			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
-				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
-				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
+				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": "cb"},
+				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": "cb+js"}
 			]},
 			{"name": "START", "entrances": {}, "checks": [
 				{"name": "BATTERY #1", "index": 0, "sanity": "battery", "requires": "ca"},
@@ -685,25 +750,25 @@
 			]}
 		]},
 		{"name": "SLOPE JUMPING", "id": 100, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "spe|cd|(dj+da)"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "JESTER DASH", "id": 101, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "jd+1c"}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "jd+(cd|ed|sb|cl|fa|(dj+(da|sf))|(spe+1c)|(fl+1c)|(spe+fl))"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "CHARGED JESTER DASH", "id": 102, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "cd+dj"}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "cd+spr+(dj|(wj+da))"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "HIGH SPEEDS", "id": 103, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "dj"}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "dj|sf|((wj|ww|da)+(cd|da|fl))"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": []}
@@ -715,7 +780,7 @@
 			{"name": "START", "entrances": {}, "checks": []}
 		]},
 		{"name": "WALL WALKING", "id": 105, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "ww+(dj|cd|wj)"}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "(ww|wj)+(1c|wj|sf|fl)"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": []}
@@ -999,7 +1064,7 @@
 			]}
 		]},
 		{"name": "BOSS: SAW-MAN", "id": 9, "type": "boss", "regions": [
-			{"name": "GOAL", "entrances": {"START": "co"}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "co+pa"}, "checks": [
 				{"name": "COMPLETION", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "sanity": "speeddia", "requires": ""}
