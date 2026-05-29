@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace Sparkipelago {
 	class Locations {
-		static string[] MEDALNAMES = {"CYAN", "GREEN", "YELLOW", "RED", "MAGENTA", "PURPLE", "BLUE", "GREY", "WHITE", "BROWN"};
 		
 		[HarmonyPatch(typeof(ShopItenDetails), "PurchaseIten")]
 		private static class PurchasePatch {
@@ -287,14 +286,6 @@ namespace Sparkipelago {
 			if (exploreHunt == 1 && numExplore == 10) sendLocationCheck(idx, "EXPLORE HUNT");
 			if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+idx))
 				if (exploreHunt == 2 && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+idx] >= 10) sendLocationCheck(idx, "EXPLORE HUNT");
-		}
-		
-		[HarmonyPatch(typeof(WorldMedal), "SetExploreMedal")]
-		private static class WorldMedalPatch {
-			private static void Postfix(int medal) {
-				MelonLogger.Msg("Sending " + Save.CurrentStageIndex.ToString() + " Medal " + medal.ToString());
-				sendLocationCheck(Save.CurrentStageIndex, string.Format("{0} EXPLORATION MEDAL", MEDALNAMES[medal]));
-			}
 		}
 
 		[HarmonyPatch(typeof(Arena), "Start")]

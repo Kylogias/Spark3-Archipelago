@@ -73,13 +73,14 @@ namespace Sparkipelago {
 		public static void checkForInput() {
 			foreach (MoveDebugPref move in movedbg) {
 				move.onUpdate();
-				if (Input.GetKeyDown(KeyCode.Keypad0)) PlayerHealthAndStats.AddEnergy(100);
-				if (Input.GetKeyDown(KeyCode.Keypad1) && CharacterAnimatorChange.StaticReference != null) {
-					int newCharacter = CharacterAnimatorChange.Character + 1;
-					if (newCharacter == 5) newCharacter = 0;
-					CharacterAnimatorChange.StaticReference.Switch(newCharacter);
-				}
 			}
+			if (Input.GetKeyDown(KeyCode.Keypad0)) PlayerHealthAndStats.AddEnergy(100);
+			if (Input.GetKeyDown(KeyCode.Keypad1) && CharacterAnimatorChange.StaticReference != null) {
+				int newCharacter = CharacterAnimatorChange.Character + 1;
+				if (newCharacter == 5) newCharacter = 0;
+				CharacterAnimatorChange.StaticReference.Switch(newCharacter);
+			}
+			if (Input.GetKeyDown(KeyCode.Keypad2)) UnityEngine.Object.Instantiate(Sparkipelago.copter, Sparkipelago.player.transform.position, Quaternion.identity);
 		}
 	}
 }

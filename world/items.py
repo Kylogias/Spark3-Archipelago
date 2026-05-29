@@ -89,7 +89,10 @@ class ItemState:
 				if not world.gimmick_rando:
 					precollect.append(i[0])
 					continue
-			itempool.append(world.create_item(i[0]))
+			if not world.labbing:
+				itempool.append(world.create_item(i[0]))
+			else:
+				precollect.append(i[0])
 		for i in range(self.FREEDOM_COUNT):
 			itempool.append(world.create_item(world.random.choice(self.FREEDOM_ITEMS)))
 		for i in self.MOVE_ITEMS:

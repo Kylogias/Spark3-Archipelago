@@ -11,31 +11,44 @@ using Archipelago.MultiClient.Net.Enums;
 
 namespace Sparkipelago {
 	class Collectibles {
+		static string[] MEDALNAMES = {"CYAN", "GREEN", "YELLOW", "RED", "MAGENTA", "PURPLE", "BLUE", "GREY", "WHITE", "BROWN"};
 		static List<RotateRing> capsules;
 		static List<CheckPointData> checkpoints;
 		static List<MonitorData> bubbles;
 		static List<CollectableCoin> coins;
 		static List<GameObject> batteries;
+		static List<WorldMedal> medals;
 
 		static int layers;
 		static int stage;
 		static CollectibleScout scout;
 		
 		class CollectibleScout {
-			Dictionary<long, GameObject> locids;
+			public class ScoutData {
+				public GameObject go;
+				public ItemFlags flags;
+				public bool collected;
+			};
+			
+			public Dictionary<long, ScoutData> locids;
 			
 			public CollectibleScout() {
-				locids = new Dictionary<long, GameObject>();
+				locids = new Dictionary<long, ScoutData>();
 			}
 
 			public void addLocation(GameObject go, string sanity, int index) {
+				if (sanity == "_FAKE") return;
 				long key = Locations.getLocationByIndex(stage, sanity, index);
-				if (key != -1) locids.Add(key, go);
+				ScoutData sd = new ScoutData();
+				sd.go = go;
+				if (key != -1) locids.Add(key, sd);
 			}
 			
 			public void addLocation(GameObject go, string name) {
 				long key = Locations.getLocation(stage, name);
-				if (key != -1) locids.Add(key, go);
+				ScoutData sd = new ScoutData();
+				sd.go = go;
+				if (key != -1) locids.Add(key, sd);
 			}
 
 			public void sendScout() {
@@ -51,15 +64,18 @@ namespace Sparkipelago {
 					Color color = new Color(0.2f, 1, 1, 1);
 					if ((scouted[key].Flags & ItemFlags.NeverExclude) != 0) color = new Color(0.2f, 1, 0.2f, 1);
 					if ((scouted[key].Flags & ItemFlags.Advancement) != 0) color = new Color(1, 0.8f, 0.2f, 1);
-					if (Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(key)) color = new Color(0.5f, 0.5f, 0.5f, 1);
-					LineRenderer lr = locids[key].GetComponent<LineRenderer>();
+					if (Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(key)) {
+						color = new Color(0.5f, 0.5f, 0.5f, 1);
+						locids[key].collected = true;
+					}
+					locids[key].flags = scouted[key].Flags;
+					LineRenderer lr = locids[key].go.GetComponent<LineRenderer>();
 					lr.material.SetColor("_EmissionColor", color);
-					locids.Remove(key);
 				}
 			}
 		}
 		
-		static void createCheckArrow(GameObject parent, string sanity, int index, Vector3 start, Vector3 end) {
+		static GameObject createCheckArrow(GameObject parent, string sanity, int index, Vector3 start, Vector3 end) {
 			GameObject arrow = new GameObject("Arrow", typeof(LineRenderer));
 			arrow.transform.SetParent(parent.transform);
 			arrow.transform.localPosition = new Vector3(0, 0, 0);
@@ -74,6 +90,7 @@ namespace Sparkipelago {
 			lr.material.SetTexture("_EmissionMap", Texture2D.whiteTexture);
 			lr.SetPositions(new Vector3[]{start, end});
 			scout.addLocation(arrow, sanity, index);
+			return arrow;
 		}
 		
 		static void recurseGameObject<T>(GameObject parent, List<T> comps, bool getLayer, string sanity) where T : Component {
@@ -84,7 +101,7 @@ namespace Sparkipelago {
 					if (getLayer) layers |= 1 << parent.layer;
 				//	if (Locations.hasLocationByIndex(stage, sanity, comps.Count)) {
 						Vector3 start = Vector3.zero, end = Vector3.zero;
-						if (sanity == "bubble") {start = new Vector3(0, 2, 0); end = new Vector3(0, 1.25f, 0);}
+						if (sanity == "bubble" || sanity == "explore") {start = new Vector3(0, 2, 0); end = new Vector3(0, 1.25f, 0);}
 						if (sanity == "capsule") {start = new Vector3(0, 6, 0); end = new Vector3(0, 4, 0);}
 						if (sanity == "checkpoint") {start = new Vector3(0, 10, -20); end = new Vector3(0, 8, -20);}
 						if (sanity == "coin") {start = new Vector3(0, 1.875f, 0); end = new Vector3(0, 1.25f, 0);}
@@ -129,6 +146,74 @@ namespace Sparkipelago {
 			
 			return rotring;
 		}
+
+		public enum TrackType : int {
+			NONE,
+			NEAREST_ANY,
+			NEAREST_USEFUL,
+			NEAREST_PROGRESSION,
+			FIXED
+		};
+		public static TrackType trackType = TrackType.NEAREST_ANY;
+		public static Transform trackXfrm;
+		static GameObject playerArrow;
+
+		public static void trackCheckByName(string name) {
+			trackType = TrackType.FIXED;
+		}
+
+		public static void trackCheckByIndex(string sanity, int index) {
+			trackType = TrackType.FIXED;
+		}
+		
+		public static void updateTracker() {
+			if (playerArrow == null) return;
+			Vector3 playerPos = playerArrow.transform.position;
+			if (trackType == TrackType.NONE) {
+				trackXfrm = null;
+			} else if (trackType != TrackType.FIXED) {
+				Transform nearestAny = null;
+				float anyDist = 10000000;
+				Transform nearestUseful = null;
+				float usefulDist = 10000000;
+				Transform nearestProg = null;
+				float progDist = 10000000;
+
+				foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
+					if (sd.collected) continue;
+					Vector3 xfrmPos = sd.go.transform.position;
+					float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
+					if ((sd.flags & ItemFlags.Advancement) != 0 && xfrmDist < progDist) {
+						progDist = xfrmDist;
+						nearestProg = sd.go.transform;
+					}
+					if ((sd.flags & (ItemFlags.NeverExclude | ItemFlags.Advancement)) != 0 && xfrmDist < usefulDist) {
+						usefulDist = xfrmDist;
+						nearestUseful = sd.go.transform;
+					}
+					if (xfrmDist < anyDist) {
+						anyDist = xfrmDist;
+						nearestAny = sd.go.transform;
+					}
+				}
+				
+				switch (trackType) {
+					case TrackType.NEAREST_ANY:
+						trackXfrm = nearestAny;
+						break;
+					case TrackType.NEAREST_USEFUL:
+						trackXfrm = nearestUseful;
+						break;
+					case TrackType.NEAREST_PROGRESSION:
+						trackXfrm = nearestProg;
+						break;
+				}
+			}
+			if (trackXfrm) {
+				playerArrow.SetActive(true);
+				playerArrow.transform.LookAt(trackXfrm);
+			} else playerArrow.SetActive(false);
+		}
 		
 		public static void onSceneLoad(string name) {
 			// The normal index isn't initialized yet
@@ -137,10 +222,51 @@ namespace Sparkipelago {
 			Scene scn = SceneManager.GetSceneByName(name);
 			scout = new CollectibleScout();
 
+			GameObject arrowObject = new GameObject("Arrow", typeof(MeshFilter), typeof(MeshRenderer));
+			List<Vector3> vertices = new List<Vector3>();
+			List<int> triangles = new List<int>();
+			vertices.Add(new Vector3(0, 0, 1.5f));
+			int VCOUNT = 32;
+			for (float i = 0; i < VCOUNT+1; i += 1) {
+				float rad = (i/VCOUNT)*(2*Mathf.PI);
+				float xpos = Mathf.Cos(rad)*0.5f;
+				float ypos = Mathf.Sin(rad)*0.5f;
+				vertices.Add(new Vector3(xpos, ypos, 0));
+				vertices.Add(new Vector3(xpos, ypos, 0.2f));
+			}
+			for (int i = 1; i < VCOUNT+1; i += 1) {
+				triangles.Add(0);
+				triangles.Add(i*2);
+				triangles.Add((i+1)*2);
+				triangles.Add(i*2);
+				triangles.Add(i*2+1);
+				triangles.Add((i+1)*2);
+				triangles.Add(i*2);
+				triangles.Add(i*2-1);
+				triangles.Add(i*2+1);
+			}
+			Mesh mesh = new Mesh();
+			mesh.vertices = vertices.ToArray();
+			mesh.triangles = triangles.ToArray();
+			mesh.RecalculateNormals();
+			arrowObject.GetComponent<MeshFilter>().mesh = mesh;
+			
+			playerArrow = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+			Component.Destroy(playerArrow.GetComponent<SphereCollider>());
+			playerArrow.transform.SetParent(Sparkipelago.player.transform);
+			playerArrow.transform.localPosition = new Vector3(0, 4.5f, 0);
+			playerArrow.transform.localScale = Vector3.one;
+
+			arrowObject.transform.SetParent(playerArrow.transform);
+			arrowObject.GetComponent<MeshRenderer>().material = playerArrow.GetComponent<MeshRenderer>().material;
+			arrowObject.transform.localPosition = Vector3.zero;
+			arrowObject.transform.localScale = Vector3.one;
+
 			layers = 0;
 			capsules = getAllComponents<RotateRing>(scn, true, "capsule");
 			checkpoints = getAllComponents<CheckPointData>(scn, false, "checkpoint");
 			bubbles = getAllComponents<MonitorData>(scn, true, "bubble");
+			medals = getAllComponents<WorldMedal>(scn, false, "explore");
 			coins = getAllComponents<CollectableCoin>(scn, false, "coin"); // There's an easier way but shrug
 			batteries = getAllWithTag(scn, "Battery", "battery");
 			scout.sendScout();
@@ -206,6 +332,14 @@ namespace Sparkipelago {
 				if (col.tag == "Monitor") img.color = new Color(1f, 0.9289f, 0f, 1f);
 				else if (col.tag == "Ring" || col.tag == "ScoreCapsule" || col.tag == "EnergyCap") img.color = new Color(0.5f, 1f, 0.5f, 1f);
 				else img.color = new Color(0f, 0f, 0f, 0f);
+			}
+		}
+
+		[HarmonyPatch(typeof(WorldMedal), "SetExploreMedal")]
+		private static class WorldMedalPatch {
+			private static void Postfix(int medal) {
+				MelonLogger.Msg("Sending " + Save.CurrentStageIndex.ToString() + " Medal " + medal.ToString());
+				Locations.sendLocationCheck(Save.CurrentStageIndex, string.Format("{0} EXPLORATION MEDAL", MEDALNAMES[medal]));
 			}
 		}
 		

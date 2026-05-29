@@ -68,6 +68,19 @@ sanities = {}
 for sanity in sanity_priority:
 	sanities[sanity] = []
 
+medal_names = [
+	"CYAN EXPLORATION MEDAL",
+	"GREEN EXPLORATION MEDAL",
+	"YELLOW EXPLORATION MEDAL",
+	"RED EXPLORATION MEDAL",
+	"MAGENTA EXPLORATION MEDAL",
+	"PURPLE EXPLORATION MEDAL",
+	"BLUE EXPLORATION MEDAL",
+	"GREY EXPLORATION MEDAL",
+	"WHITE EXPLORATION MEDAL",
+	"BROWN EXPLORATION MEDAL"
+]
+
 itemID = 16295351000
 for stage in shared["stages"]:
 	explore_rules = []
@@ -89,6 +102,7 @@ for stage in shared["stages"]:
 		for check in region["checks"].copy():
 			if check["sanity"] == "explore":
 				explore_rules.append(f"({check['requires']})")
+				check["index"] = medal_names.index(check["name"])
 			if check["sanity"] in sanity_max and "index" in check and check["index"] > sanity_max[check["sanity"]]:
 				sanity_max[check["sanity"]] = check["index"]
 			if check["sanity"] in sanity_seen and "index" in check:

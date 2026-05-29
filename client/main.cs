@@ -47,6 +47,7 @@ namespace Sparkipelago {
 		public static GameObject eCapsule;
 		public static GameObject hCapsule;
 		public static GameObject sCapsule;
+		public static GameObject copter;
 		
 		public static Dictionary<ItemIds, int> itemState;
 		public static string[] shopItems;
@@ -196,6 +197,7 @@ namespace Sparkipelago {
 						fl.transform.position = pos;
 					}
 				}
+				Collectibles.updateTracker();
 			}
 			if (messageText != null) {
 				if (messages.Count > 10) {
@@ -234,6 +236,7 @@ namespace Sparkipelago {
 		private void setupPrefabs() {
 			GameObject prefabHolder = GameObject.Find("[PREFABS HOLDER]");
 			prefabHolder.transform.GetChild(0).gameObject.SetActive(true);
+			prefabHolder.transform.GetChild(9).gameObject.SetActive(true);
 			prefabHolder.transform.GetChild(12).gameObject.SetActive(true); // Should be AbyssPrefabs
 			Transform bossXfrm = prefabHolder.transform.GetChild(2);
 			
@@ -253,6 +256,7 @@ namespace Sparkipelago {
 			GameObject hCapPrefab = GameObject.Find("[Core prefabs]/Capsule");
 			GameObject sCapPrefab = GameObject.Find("[Core prefabs]/Capsule_Score");
 			GameObject eBubPrefab = GameObject.Find("[Core prefabs]/EnergyBubble");
+			GameObject copterPrefab = GameObject.Find("[PREFABS HOLDER]/[CityPrefabs]/PlayableCopter");
 			
 			GameObject ragingInstance = UnityEngine.Object.Instantiate(ragingPrefab, prefabObject.transform);
 			setupPrefabChildren(ragingInstance, true, null);
@@ -282,6 +286,8 @@ namespace Sparkipelago {
 			setupPrefabChildren(sCapsule, true, null);
 			flint = UnityEngine.Object.Instantiate(flintPrefab, prefabObject.transform);
 			setupPrefabChildren(flint, true, null);
+			copter = UnityEngine.Object.Instantiate(copterPrefab, prefabObject.transform);
+			setupPrefabChildren(copter, true, null);
 		}
 		
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName) {
