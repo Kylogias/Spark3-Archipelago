@@ -282,16 +282,15 @@ namespace Sparkipelago {
 				sendLocationCheck(idx, "DIAMOND SCORE MEDAL");
 			}
 			int numExplore = Save.GetAmmountOfExploreMedalsInSaveFile(savefile, idx);
-			long exploreHunt = (long)Sparkipelago.slotData["explore_hunt"];
-			if (exploreHunt == 1 && numExplore == 10) sendLocationCheck(idx, "EXPLORE HUNT");
+			if (SlotData.exploreHunt == ExploreHunt.VANILLA && numExplore == 10) sendLocationCheck(idx, "EXPLORE HUNT");
 			if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+idx))
-				if (exploreHunt == 2 && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+idx] >= 10) sendLocationCheck(idx, "EXPLORE HUNT");
+				if (SlotData.exploreHunt == ExploreHunt.SHUFFLED && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+idx] >= 10) sendLocationCheck(idx, "EXPLORE HUNT");
 		}
 
 		[HarmonyPatch(typeof(Arena), "Start")]
 		private static class DiveShufflePatch {
 			private static void Prefix(Arena __instance) {
-				System.Random rng = new System.Random(Sparkipelago.musicSeed);
+				System.Random rng = new System.Random(SlotData.musicSeed);
 				for (int i = 0; i < 1000; i++) rng.Next();
 				int[] idxShuffle = new int[__instance.FloorData.Length];
 				ArenaSpawner[] newArena = new ArenaSpawner[__instance.FloorData.Length];
@@ -316,8 +315,8 @@ namespace Sparkipelago {
 		private static class EndlessDivePatch {
 			private static void Postfix(Arena __instance) {
 				if (prevFloor != __instance.CurrentFloor) {
-					sendLocationByIndex(155, "base", __instance.CurrentFloor / (int)(long)Sparkipelago.slotData["endless_floors"]);
-					MelonLogger.Msg("Sending Check #{0}", __instance.CurrentFloor / (int)(long)Sparkipelago.slotData["endless_floors"]);
+					sendLocationByIndex(155, "base", __instance.CurrentFloor / APSave.file.client.diveFloors);
+					MelonLogger.Msg("Sending Check #{0}", __instance.CurrentFloor / APSave.file.client.diveFloors);
 				}
 				__instance.LivesMin = Sparkipelago.itemState[ItemIds.EXTRA_LIFE] + 2;
 				prevFloor = __instance.CurrentFloor;

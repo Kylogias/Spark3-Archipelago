@@ -5,15 +5,17 @@ using System.Collections.Generic;
 
 namespace Sparkipelago {
 	class LabMode {
-		private class MoveDebugPref {
+		public class MoveDebugPref {
 			KeyCode hotkey;
-			ItemIds itemID;
+			public ItemIds itemID;
 			string itemName;
+			public string eName;
 			MelonPreferences_Entry<bool> entry;
 			
 			public MoveDebugPref(string category, string entryName, ItemIds id, string name, KeyCode key) {
 				entry = MelonPreferences.CreateEntry<bool>(category, entryName, true);
 				entry.OnEntryValueChanged.Subscribe(onEvent, 100);
+				eName = entryName;
 				hotkey = key;
 				itemID = id;
 				itemName = name;
@@ -31,13 +33,17 @@ namespace Sparkipelago {
 					}
 				}
 			}
-			
+
+			public void onChange(bool newV) {
+				entry.Value = newV;
+			}
 			private void onEvent(bool oldV, bool newV) {
+				if (!SlotData.labMode) return;
 				Sparkipelago.itemState[itemID] = newV ? 1 : 0;
 			}
 		}
 		
-		private static List<MoveDebugPref> movedbg;
+		public static List<MoveDebugPref> movedbg;
 
 		
 		public static void initPrefs() {

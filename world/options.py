@@ -217,19 +217,6 @@ class TrapChance(Range):
 	
 	default = 0
 
-class MusicChoice(Choice):
-	"""
-	What music to use. If non-vanilla, music is chosen from "(game directory)/apmusic"
-	"""
-	display_name = "Music Randomization"
-	
-	option_vanilla = 0
-	option_per_stage = 1
-	option_per_load = 2
-	option_per_loop = 3
-	
-	default = option_vanilla
-
 class ExploreHunt(Choice):
 	"""
 	Add a location to each stage for collecting all explore medals
@@ -252,29 +239,6 @@ class EndlessDiveChecks(Range):
 	range_end = 110
 
 	default = 0
-
-class EndlessDiveFloors(Range):
-	"""
-	How many floors should you complete for a check in Endless Dive? Total floor count is the check amount times floor amount
-	"""
-	display_name = "Endless Dive Floors per Check"
-
-	range_start = 1
-	range_end = 10
-
-	default = 1
-
-class EnemyRando(Choice):
-	"""
-	How should enemies be randomized?
-	"""
-	display_name = "Enemy Rando"
-
-	option_vanilla = 0
-	option_only_enemies = 1
-	option_bosses_on_enemies = 2
-
-	default = option_vanilla
 
 @dataclass
 class Spark3Options(PerGameCommonOptions):
@@ -302,14 +266,11 @@ class Spark3Options(PerGameCommonOptions):
 	coinsanity: Coinsanity
 	batterysanity: Batterysanity
 	endless_dive_checks: EndlessDiveChecks
-	endless_dive_floors: EndlessDiveFloors
 
 	perfect_combo: PerfectCombo
 	score_multiplier: ScoreMultiplier
 	trap_chance: TrapChance
 	
-	music_rando: MusicChoice
-	enemy_rando: EnemyRando
 	labmode: LabMode
 
 option_groups = [
@@ -323,7 +284,7 @@ option_groups = [
 	),
 	OptionGroup(
 		"Extra Checks",
-		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, EndlessDiveChecks, EndlessDiveFloors]
+		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, EndlessDiveChecks]
 	),
 	OptionGroup(
 		"Item Options",
@@ -331,6 +292,6 @@ option_groups = [
 	),
 	OptionGroup(
 		"Miscellaneous",
-		[MusicChoice, EnemyRando, LabMode]
+		[LabMode]
 	)
 ]

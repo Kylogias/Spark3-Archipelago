@@ -203,7 +203,6 @@ class Spark3World(World):
 			"explore_requirement": self.rules_state.EXPLORE_REQUIREMENT,
 			"utopia_hunt_medals": self.location_state.UTOPIA_HUNT_MEDALS,
 			"endless_checks": self.location_state.ENDLESS_COUNT,
-			"endless_floors": self.options.endless_dive_floors.value,
 			"labmode": self.options.labmode.value,
 			"sanities": self.location_state.sanities,
 			"explore_hunt": self.explore_hunt,
@@ -212,8 +211,6 @@ class Spark3World(World):
 			"gates": self.location_state.gate_data,
 			"bosses": self.location_state.boss_data,
 			"musicseed": self.random.randint(0, 2**31),
-			"enemy_rando": self.options.enemy_rando.value,
-			"musicchoice": self.options.music_rando.value
 		}
 		return slot_data
 	

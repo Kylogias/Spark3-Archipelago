@@ -28,6 +28,7 @@ namespace Sparkipelago {
 				public GameObject go;
 				public ItemFlags flags;
 				public bool collected;
+				public bool enabled;
 			};
 			
 			public Dictionary<long, ScoutData> locids;
@@ -38,6 +39,11 @@ namespace Sparkipelago {
 
 			public void addLocation(GameObject go, string sanity, int index) {
 				if (sanity == "_FAKE") return;
+				if (sanity == "explore" && !APSave.file.client.exploreArrows) return;
+				if (sanity == "coin" && !APSave.file.client.coinArrows) return;
+				if (sanity == "capsule" && !APSave.file.client.capsuleArrows) return;
+				if (sanity == "bubble" && !APSave.file.client.bubbleArrows) return;
+				if (sanity == "battery" && !APSave.file.client.batteryArrows) return;
 				long key = Locations.getLocationByIndex(stage, sanity, index);
 				ScoutData sd = new ScoutData();
 				sd.go = go;
@@ -68,6 +74,7 @@ namespace Sparkipelago {
 						color = new Color(0.5f, 0.5f, 0.5f, 1);
 						locids[key].collected = true;
 					}
+					locids[key].enabled = true;
 					locids[key].flags = scouted[key].Flags;
 					LineRenderer lr = locids[key].go.GetComponent<LineRenderer>();
 					lr.material.SetColor("_EmissionColor", color);
@@ -146,15 +153,8 @@ namespace Sparkipelago {
 			
 			return rotring;
 		}
-
-		public enum TrackType : int {
-			NONE,
-			NEAREST_ANY,
-			NEAREST_USEFUL,
-			NEAREST_PROGRESSION,
-			FIXED
-		};
-		public static TrackType trackType = TrackType.NEAREST_ANY;
+		
+		public static TrackType trackType = TrackType.NearestAny;
 		public static Transform trackXfrm;
 		static GameObject playerArrow;
 
@@ -169,7 +169,7 @@ namespace Sparkipelago {
 		public static void updateTracker() {
 			if (playerArrow == null) return;
 			Vector3 playerPos = playerArrow.transform.position;
-			if (trackType == TrackType.NONE) {
+			if (trackType == TrackType.None) {
 				trackXfrm = null;
 			} else if (trackType != TrackType.FIXED) {
 				Transform nearestAny = null;
@@ -180,7 +180,7 @@ namespace Sparkipelago {
 				float progDist = 10000000;
 
 				foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
-					if (sd.collected) continue;
+					if (sd.collected || !sd.enabled || !sd.go) continue;
 					Vector3 xfrmPos = sd.go.transform.position;
 					float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
 					if ((sd.flags & ItemFlags.Advancement) != 0 && xfrmDist < progDist) {
@@ -198,13 +198,13 @@ namespace Sparkipelago {
 				}
 				
 				switch (trackType) {
-					case TrackType.NEAREST_ANY:
+					case TrackType.NearestAny:
 						trackXfrm = nearestAny;
 						break;
-					case TrackType.NEAREST_USEFUL:
+					case TrackType.NearestUseful:
 						trackXfrm = nearestUseful;
 						break;
-					case TrackType.NEAREST_PROGRESSION:
+					case TrackType.NearestProgress:
 						trackXfrm = nearestProg;
 						break;
 				}
@@ -222,17 +222,21 @@ namespace Sparkipelago {
 			Scene scn = SceneManager.GetSceneByName(name);
 			scout = new CollectibleScout();
 
-			GameObject arrowObject = new GameObject("Arrow", typeof(MeshFilter), typeof(MeshRenderer));
+			GameObject arrowObject = new GameObject("Point", typeof(MeshFilter), typeof(MeshRenderer));
 			List<Vector3> vertices = new List<Vector3>();
+			List<Vector2> uv = new List<Vector2>();
 			List<int> triangles = new List<int>();
 			vertices.Add(new Vector3(0, 0, 1.5f));
+			uv.Add(new Vector2(0.5f, 1.0f));
 			int VCOUNT = 32;
 			for (float i = 0; i < VCOUNT+1; i += 1) {
 				float rad = (i/VCOUNT)*(2*Mathf.PI);
 				float xpos = Mathf.Cos(rad)*0.5f;
 				float ypos = Mathf.Sin(rad)*0.5f;
 				vertices.Add(new Vector3(xpos, ypos, 0));
+				uv.Add(new Vector2(i/VCOUNT, 0.5f));
 				vertices.Add(new Vector3(xpos, ypos, 0.2f));
+				uv.Add(new Vector2(i/VCOUNT, 0.6f));
 			}
 			for (int i = 1; i < VCOUNT+1; i += 1) {
 				triangles.Add(0);
@@ -247,20 +251,36 @@ namespace Sparkipelago {
 			}
 			Mesh mesh = new Mesh();
 			mesh.vertices = vertices.ToArray();
+			mesh.uv = uv.ToArray();
 			mesh.triangles = triangles.ToArray();
 			mesh.RecalculateNormals();
 			arrowObject.GetComponent<MeshFilter>().mesh = mesh;
-			
-			playerArrow = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			Component.Destroy(playerArrow.GetComponent<SphereCollider>());
+
+			playerArrow = new GameObject("Arrow");
 			playerArrow.transform.SetParent(Sparkipelago.player.transform);
 			playerArrow.transform.localPosition = new Vector3(0, 4.5f, 0);
 			playerArrow.transform.localScale = Vector3.one;
+			GameObject playerSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+			Component.Destroy(playerSphere.GetComponent<SphereCollider>());
+			playerSphere.transform.SetParent(playerArrow.transform);
+			playerSphere.transform.localPosition = Vector3.zero;
+			playerSphere.transform.localScale = Vector3.one;
+			playerSphere.transform.localRotation = Quaternion.Euler(90, 0, 0);
 
 			arrowObject.transform.SetParent(playerArrow.transform);
-			arrowObject.GetComponent<MeshRenderer>().material = playerArrow.GetComponent<MeshRenderer>().material;
 			arrowObject.transform.localPosition = Vector3.zero;
 			arrowObject.transform.localScale = Vector3.one;
+
+			Material mat = playerSphere.GetComponent<MeshRenderer>().material;
+			arrowObject.GetComponent<MeshRenderer>().material = mat;
+			mat.color = new Color(0, 0, 1, 1);
+			mat.EnableKeyword("_EMISSION");
+			mat.SetColor("_EmissionColor", new Color(0, 0.5f, 1, 1));
+			if (Sparkipelago.eCapsule) {
+				Material ecapMat = Sparkipelago.eCapsule.transform.Find("CapsuleModel").gameObject.GetComponent<MeshRenderer>().material;
+				Texture tex = ecapMat.GetTexture("_Noise");
+				mat.SetTexture("_EmissionMap", tex);
+			}
 
 			layers = 0;
 			capsules = getAllComponents<RotateRing>(scn, true, "capsule");
@@ -283,9 +303,9 @@ namespace Sparkipelago {
 			if (coins.Count > 0) {
 				CollectablesController collect = GameObject.Find("[ Collectable UI ]").GetComponent<CollectablesController>();
 				if (collect.MedalAmm > coinLeft) collect.MedalAmm = coinLeft;
-				if ((Locations.isLocationComplete(stage, "COMPLETION") || (Sparkipelago.slotData != null && (long)Sparkipelago.slotData["coin_hunt"] > 0))) {
+				if ((Locations.isLocationComplete(stage, "COMPLETION") || (SlotData.coinHunt > 0))) {
 					collect.StageTime = 30000;
-					if ((long)Sparkipelago.slotData["coin_hunt"] > 0) coinLeft *= 1000;
+					if (SlotData.coinHunt > 0) coinLeft *= 1000;
 					collect.MedalAmm = coinLeft > 0 ? coinLeft : 1000000;
 				}
 			}

@@ -28,9 +28,9 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(EnemySpawner), "SpawnInNormal")]
 		private static class EnemyRandoPatch {
 			private static void Prefix(EnemySpawner __instance) {
-				if (Sparkipelago.enemyRando == 0) return;
+				if (APSave.file.client.enemyRando == EnemyType.Vanilla) return;
 				int numEnemy = enemies.transform.childCount;
-				if (Sparkipelago.enemyRando == 2) numEnemy += bosses.transform.childCount;
+				if (APSave.file.client.enemyRando == EnemyType.BossesOnEnemies) numEnemy += bosses.transform.childCount;
 				int idx = enemyRng.Next(numEnemy);
 				if (idx >= enemies.transform.childCount) {
 					idx -= enemies.transform.childCount;

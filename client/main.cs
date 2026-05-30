@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System;
 using System.Text;
 using System.Linq;
+using System.IO;
 using System.Collections.Generic;
 using MelonLoader;
 using Archipelago.MultiClient.Net;
@@ -24,7 +25,7 @@ namespace Sparkipelago {
 		public static string currentScene;
 		
 		public static ArchipelagoSession currentSession;
-		public static Dictionary<string, object> slotData;
+		static Dictionary<string, object> slotDataDict;
 		int currentSaveSlot = -1;
 		public static GameObject player;
 
@@ -41,8 +42,6 @@ namespace Sparkipelago {
 		public static GameObject playerRed;
 		public static GameObject playerGray;
 
-		public static int enemyRando;
-
 		public static GameObject eBubble;
 		public static GameObject eCapsule;
 		public static GameObject hCapsule;
@@ -51,8 +50,17 @@ namespace Sparkipelago {
 		
 		public static Dictionary<ItemIds, int> itemState;
 		public static string[] shopItems;
-		public static int musicRando = 0;
-		public static int musicSeed = 0;
+		
+		public static Texture2D apTexture;
+		public static Texture2D settingsTexture;
+		public static Texture2D labTexture;
+
+		void loadTexture(ref Texture2D tex, string path) {
+			tex = new Texture2D(1, 1);
+			tex.hideFlags = HideFlags.DontUnloadUnusedAsset;
+			byte[] bytes = File.ReadAllBytes(Path.Combine(Application.dataPath, "../apassets", path));
+			ImageConversion.LoadImage(tex, bytes);
+		}
 		
 		public override void OnInitializeMelon() {
 			instance = this;
@@ -66,12 +74,16 @@ namespace Sparkipelago {
 			itemQueue = new Queue<ItemIds>();
 			messages = new Queue<LogMessage>();
 			flintList = new List<GameObject>();
+			new SlotData();
+			
+			loadTexture(ref apTexture, "aplogo.png");
+			loadTexture(ref settingsTexture, "settings.png");
+			loadTexture(ref labTexture, "lab.png");
 			
 			MusicRandomization.registerMusic();
 		}
 		
 		public void ConnectToArchipelago(bool newServer) {
-			enemyRando = 0;
 			if (newServer) {
 				foreach (long id in APShared.itemIDs) {
 					itemState[(ItemIds)id] = 0;
@@ -81,6 +93,7 @@ namespace Sparkipelago {
 					currentSession.Items.ItemReceived -= HandleItem;
 					currentSession.MessageLog.OnMessageReceived -= OnMessageReceived;
 				}
+				new SlotData();
 			}
 			
 			APSavedata data = APSave.getAPSave();
@@ -91,7 +104,7 @@ namespace Sparkipelago {
 			else result = currentSession.TryConnectAndLogin("Spark the Electric Jester 3", connect.slot, ItemsHandlingFlags.AllItems);
 			
 			if (result.Successful) {
-				slotData = ((LoginSuccessful)result).SlotData;
+				slotDataDict = ((LoginSuccessful)result).SlotData;
 				currentSaveSlot = Save.CurrentSaveSlot;
 
 				string curRoom = currentSession.RoomState.Seed;
@@ -99,18 +112,17 @@ namespace Sparkipelago {
 					MelonLogger.Error("Client room does not match server room! Do you have the correct connection information?");
 					currentSession.Say("Client room does not match server room! Do you have the correct connection information?");
 					currentSession = null;
-					slotData = null;
 					return;
 				}
 				
-				if ((long)slotData["version"] != APShared.version) {
+				if ((long)slotDataDict["version"] != APShared.version) {
 					MelonLogger.Error("Client Version does not match APWorld! Refusing connection");
 					currentSession.Say("Client Version does not match APWorld! Refusing connection");
 					currentSession = null;
-					slotData = null;
 					return;
 				}
 
+				new SlotData(slotDataDict);
 				currentSession.Items.ItemReceived += HandleItem;
 				currentSession.MessageLog.OnMessageReceived += OnMessageReceived;
 				currentSession.Say("Successful Connection to Spark 3! You may now collect checks");
@@ -125,11 +137,6 @@ namespace Sparkipelago {
 				foreach (long location in data.checkedLocations) {
 					currentSession.Locations.CompleteLocationChecks(location);
 				}
-
-				enemyRando = (int)(long)slotData["enemy_rando"];
-				
-				musicRando = (int)(long)slotData["musicchoice"];
-				musicSeed = (int)(long)slotData["musicseed"];
 			} else {
 				MelonLogger.Error("Error while connecting to Archipelago");
 				foreach(string e in ((LoginFailure)result).Errors) {
@@ -149,7 +156,7 @@ namespace Sparkipelago {
 		
 		public static void debugLog(string fmt, params object[] args) {
 			MelonLogger.Msg(string.Format(fmt, args));
-			if ((long)Sparkipelago.slotData["labmode"] != 0 && currentSession != null) {
+			if (SlotData.labMode && currentSession != null) {
 				currentSession.Say(string.Format(fmt, args));
 			} 
 		}
@@ -218,8 +225,7 @@ namespace Sparkipelago {
 				}
 				text.text = sb.ToString();
 			}
-			if (slotData == null) return;
-			if ((long)slotData["labmode"] != 0 && currentSession != null) {
+			if (SlotData.labMode && currentSession != null) {
 				LabMode.checkForInput();
 			}
 		}
@@ -323,6 +329,7 @@ namespace Sparkipelago {
 			if (player != null) {
 				if (hasItem(ItemIds.SCORE_MULTIPLIER)) ScoreManager.Charge = 30;
 				Collectibles.onSceneLoad(sceneName);
+				Options.buildCategories();
 				
 				GameObject fogMesh = GameObject.Find("PlayerObjects/Camera_Objects/Main Camera/FogMeshPlayer");
 				if (fogMesh && redWorld && grayWorld) {

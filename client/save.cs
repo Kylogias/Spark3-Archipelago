@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System;
+using System.Linq;
 using MelonLoader;
 using Newtonsoft.Json;
 using Rewired;
@@ -50,8 +51,73 @@ namespace Sparkipelago {
 		}
 	}
 	
+	public enum MusicType {
+		Vanilla = 0,
+		PerStage = 1,
+		PerLoad = 2,
+		PerLoop = 3
+	}
+
+	public enum EnemyType {
+		Vanilla = 0,
+		EnemiesOnly = 1,
+		BossesOnEnemies = 2
+	}
+
+	public enum TrackType {
+		None,
+		NearestAny,
+		NearestUseful,
+		NearestProgress,
+		FIXED
+	};
+	
+	[Serializable]
+	public class APClientOptions {
+		public MusicType musicRando;
+		public EnemyType enemyRando;
+		public int diveFloors;
+
+		public bool capsuleArrows;
+		public bool bubbleArrows;
+		public bool exploreArrows;
+		public bool coinArrows;
+		public bool batteryArrows;
+
+		public TrackType trackerMode;
+
+		public APClientOptions() {
+			musicRando = MusicType.Vanilla;
+			enemyRando = EnemyType.Vanilla;
+			diveFloors = 1;
+			capsuleArrows = true;
+			bubbleArrows = true;
+			exploreArrows = true;
+			coinArrows = true;
+			batteryArrows = true;
+			trackerMode = TrackType.NearestAny;
+		}
+	}
+	
 	class APSave {
 		public static Font sparkFont;
+
+		[Serializable]
+		public class APSavefile {
+			public APSavedata[] slots;
+			public APConnectionInfo[] connect;
+			public APClientOptions client;
+
+			public APSavefile(int amm) {
+				slots = new APSavedata[amm];
+				connect = new APConnectionInfo[amm];
+				client = new APClientOptions();
+				for (int i = 0; i < amm; i++) {
+					connect[i] = new APConnectionInfo();
+					slots[i] = new APSavedata(true);
+				}
+			}
+		}
 		
 		[HarmonyPatch(typeof(GameProgressMenuController), "SetCompletionPercentage")]
 		private class CompletionPercentPatch {
@@ -61,6 +127,59 @@ namespace Sparkipelago {
 				Save.GetSaveFile(savefileIndex).CompletionPercentage = __result;
 				return false;
 			}
+		}
+
+		// +----------------+
+		// | CLIENT OPTIONS |
+		// +----------------+
+
+		public static void addOptions() {
+			Options.TutorialCategory settings = Options.addCategory("SETTINGS", Sparkipelago.settingsTexture);
+			Options.addIten(
+				settings, "Endless Dive Floors", "How many floors should be completed to send a check?", 1, 10,
+				(int newV) => {APSave.file.client.diveFloors = newV; return newV.ToString();},
+				() => {return APSave.file.client.diveFloors;}
+			);
+			Options.addIten(
+				settings, "Tracker Mode", "What is the default mode of the tracker arrow?", 0, 3,
+				(int newV) => {APSave.file.client.trackerMode = (TrackType)newV; return ((TrackType)newV).ToString();},
+				() => {return (int)APSave.file.client.trackerMode;}
+			);
+			Options.addIten(
+				settings, "Music Rando", "How should music be randomized? (Requires Stage Restart)", 0, 3,
+				(int newV) => {APSave.file.client.musicRando = (MusicType)newV; return ((MusicType)newV).ToString();},
+				() => {return (int)APSave.file.client.musicRando;}
+			);
+			Options.addIten(
+				settings, "Enemy Rando", "How should enemies be randomized", 0, 2,
+				(int newV) => {APSave.file.client.enemyRando = (EnemyType)newV; return ((EnemyType)newV).ToString();},
+				() => {return (int)APSave.file.client.enemyRando;}
+			);
+			Options.addIten(
+				settings, "Capsule Check Arrows", "Should there be arrows above capsules denoting progressiveness? (Requires Stage Restart)",
+				(bool newV) => {APSave.file.client.capsuleArrows = newV; return newV.ToString();},
+				() => {return APSave.file.client.capsuleArrows;}
+			);
+			Options.addIten(
+				settings, "Bubble Check Arrows", "Should there be arrows above bubbles denoting progressiveness? (Requires Stage Restart)",
+				(bool newV) => {APSave.file.client.bubbleArrows = newV; return newV.ToString();},
+				() => {return APSave.file.client.bubbleArrows;}
+			);
+			Options.addIten(
+				settings, "Explore Medal Check Arrows", "Should there be arrows above explore medals denoting progressiveness? (Requires Stage Restart)",
+				(bool newV) => {APSave.file.client.exploreArrows = newV; return newV.ToString();},
+				() => {return APSave.file.client.exploreArrows;}
+			);
+			Options.addIten(
+				settings, "Collectathon Coin Check Arrows", "Should there be arrows above collectathon coins denoting progressiveness? (Requires Stage Restart)",
+				(bool newV) => {APSave.file.client.coinArrows = newV; return newV.ToString();},
+				() => {return APSave.file.client.coinArrows;}
+			);
+			Options.addIten(
+				settings, "Battery Check Arrows", "Should there be arrows above batteries denoting progressiveness? (Requires Stage Restart)",
+				(bool newV) => {APSave.file.client.batteryArrows = newV; return newV.ToString();},
+				() => {return APSave.file.client.batteryArrows;}
+			);
 		}
 		
 		// +-------------------+
@@ -246,21 +365,6 @@ namespace Sparkipelago {
 		// +---------------+
 		// | SAVE REDIRECT |
 		// +---------------+
-
-		[Serializable]
-		public class APSavefile {
-			public APSavedata[] slots;
-			public APConnectionInfo[] connect;
-
-			public APSavefile(int amm) {
-				slots = new APSavedata[amm];
-				connect = new APConnectionInfo[amm];
-				for (int i = 0; i < amm; i++) {
-					connect[i] = new APConnectionInfo();
-					slots[i] = new APSavedata(true);
-				}
-			}
-		}
 		public static APSavefile file;
 		
 		[HarmonyPatch(typeof(Save), "SaveAll")]

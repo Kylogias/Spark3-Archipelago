@@ -99,20 +99,20 @@ namespace Sparkipelago {
 				case ItemIds.SFARX: save.Power_Sfarx = true; if (!catchup) addDpadPower(11); break;
 				case ItemIds.OOB_CLIP: if (!catchup) save.StageJustUnlocked[155] = true; break;
 				case ItemIds.AM_VILLAGE_COIN:
-					if ((long)Sparkipelago.slotData["coin_hunt"] == 1 && Sparkipelago.itemState[item] >= 10) Locations.sendLocationCheck(4, "COMPLETION");
-					if ((long)Sparkipelago.slotData["coin_hunt"] == 2 && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(4, "COMPLETION");
+					if (SlotData.coinHunt == CoinHunt.REQUIRE_VANILLA && Sparkipelago.itemState[item] >= 10) Locations.sendLocationCheck(4, "COMPLETION");
+					if (SlotData.coinHunt == CoinHunt.REQUIRE_ALL && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(4, "COMPLETION");
 					break;
 				case ItemIds.ARID_HOLE_COIN:
-					if ((long)Sparkipelago.slotData["coin_hunt"] == 1 && Sparkipelago.itemState[item] >= 10) Locations.sendLocationCheck(11, "COMPLETION");
-					if ((long)Sparkipelago.slotData["coin_hunt"] == 2 && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(11, "COMPLETION");
+					if (SlotData.coinHunt == CoinHunt.REQUIRE_VANILLA && Sparkipelago.itemState[item] >= 10) Locations.sendLocationCheck(11, "COMPLETION");
+					if (SlotData.coinHunt == CoinHunt.REQUIRE_ALL && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(11, "COMPLETION");
 					break;
 				case ItemIds.SQUABBLE_SPILLWAY_COIN:
-					if ((long)Sparkipelago.slotData["coin_hunt"] == 1 && Sparkipelago.itemState[item] >= 13) Locations.sendLocationCheck(21, "COMPLETION");
-					if ((long)Sparkipelago.slotData["coin_hunt"] == 2 && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(21, "COMPLETION");
+					if (SlotData.coinHunt == CoinHunt.REQUIRE_VANILLA && Sparkipelago.itemState[item] >= 13) Locations.sendLocationCheck(21, "COMPLETION");
+					if (SlotData.coinHunt == CoinHunt.REQUIRE_ALL && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(21, "COMPLETION");
 					break;
 				case ItemIds.DROPSHIP_DAYBREAK_COIN:
-					if ((long)Sparkipelago.slotData["coin_hunt"] == 1 && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(27, "COMPLETION");
-					if ((long)Sparkipelago.slotData["coin_hunt"] == 2 && Sparkipelago.itemState[item] >= 28) Locations.sendLocationCheck(27, "COMPLETION");
+					if (SlotData.coinHunt == CoinHunt.REQUIRE_VANILLA && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(27, "COMPLETION");
+					if (SlotData.coinHunt == CoinHunt.REQUIRE_ALL && Sparkipelago.itemState[item] >= 28) Locations.sendLocationCheck(27, "COMPLETION");
 					break;
 			}
 		}

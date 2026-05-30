@@ -9,32 +9,25 @@ using System.Threading.Tasks;
 using MelonLoader;
 
 namespace Sparkipelago {
-	public enum MusicType {
-		VANILLA = 0,
-		STAGE = 1,
-		LOAD = 2,
-		LOOP = 3
-	}
-	
 	class MusicRandomization {
 		[HarmonyPatch(typeof(StageMusicControl), "FixedUpdate")]
 		private class StageMusicPatch {
 			private static void Prefix(StageMusicControl __instance, int ___frame, ref bool ___Started) {
-				if (Sparkipelago.musicRando != (int)MusicType.VANILLA) {
+				if (APSave.file.client.musicRando != MusicType.Vanilla) {
 					if (___frame != __instance.FrameToStartMusicAt) return;
 					string musicPath = Path.Combine(Application.dataPath, "../apmusic");
 					DirectoryInfo dir = new DirectoryInfo(musicPath);
 					FileInfo[] info = dir.GetFiles("*.ogg");
 					
 					if (info.Length == 0) {
-						Sparkipelago.musicRando = (int)MusicType.VANILLA;
+						APSave.file.client.musicRando = MusicType.Vanilla;
 						return;
 					}
 					___Started = true;
 					
 					System.Random rnd;
-					if (Sparkipelago.musicRando == (int)MusicType.STAGE) {
-						rnd = new System.Random(Sparkipelago.musicSeed);
+					if (APSave.file.client.musicRando == MusicType.PerStage) {
+						rnd = new System.Random(SlotData.musicSeed);
 						for (int i = 0; i < Save.CurrentStageIndex; i++) {
 							rnd.Next();
 						}
@@ -47,9 +40,9 @@ namespace Sparkipelago {
 			}
 			
 			private static void Postfix(StageMusicControl __instance, bool ___Started) {
-				if (Sparkipelago.musicRando == (int)MusicType.LOOP) __instance.MainSource.loop = false;
+				if (APSave.file.client.musicRando == MusicType.PerLoop) __instance.MainSource.loop = false;
 				
-				if (!__instance.MainSource.isPlaying && ___Started && Sparkipelago.musicRando == (int)MusicType.LOOP && !loadingMusic) {
+				if (!__instance.MainSource.isPlaying && ___Started && APSave.file.client.musicRando == MusicType.PerLoop && !loadingMusic) {
 					string musicPath = Path.Combine(Application.dataPath, "../apmusic");
 					DirectoryInfo dir = new DirectoryInfo(musicPath);
 					FileInfo[] info = dir.GetFiles("*.ogg");

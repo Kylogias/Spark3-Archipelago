@@ -26,11 +26,7 @@ To check a shop item that you already have, press Y+A (Right Click + Space on KB
 2. Drop the latest client into the Spark 3 installation folder
 3. Start a new game, the client will connect automatically when the file is loaded
 
-Optionally, if you are helping lab checks (thank you, by the way :) ), the following steps can be used to configure available moves via GUI. The moves can also be configured via the 3 through minus hotkeys
-1. Drop [MelonPreferencesManager](https://github.com/Bluscream/MelonPreferencesManager) (Mono) into the `Mods` folder
-2. Drop [UniverseLib](https://github.com/sinai-dev/UniverseLib/releases/tag/1.5.1) (Mono, dependency of MelonPreferencesManager) into the `UserLibs` folder
-3. Generate an AP with lab mode enabled in the YAML
-4. Once launched, press F5 to open the preference manager, go into the "APDebug" tab, and modify to your heart's desire
+Optionally, if you are helping lab checks (thank you, by the way :) ), generate a game with lab mode enabled in the YAML
 
 # Building
 
