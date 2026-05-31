@@ -86,8 +86,8 @@
 	"rule_macros": [
 		{"rule": "1c", "expansion": "(dj|cd|da)"},
 		{"rule": "2c", "expansion": "((dj+cd)|(cd+da)|(da+dj)|(fa+da))"},
-		{"rule": "e1c", "expansion": "(dj|cd|da|cl|ed)"},
-		{"rule": "e2c", "expansion": "(2c|cl|ed)"}
+		{"rule": "e1c", "expansion": "(dj|cd|da|cl|hs|mb)"},
+		{"rule": "e2c", "expansion": "(2c|cl|mb)"}
 	],
 	"shop": [
 		{"name": "Spin Charge", "page": "Moves"},

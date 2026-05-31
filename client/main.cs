@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using System.Reflection;
 using System.Text;
 using System.Linq;
 using System.IO;
@@ -33,7 +34,7 @@ namespace Sparkipelago {
 		private static Queue<ItemIds> itemQueue;
 
 		private static Queue<LogMessage> messages;
-		private static GameObject messageText;
+		private static GameObject[] messageText;
 		
 		private GameObject redWorld;
 		private GameObject grayWorld;
@@ -73,6 +74,7 @@ namespace Sparkipelago {
 			LabMode.initPrefs();
 			itemQueue = new Queue<ItemIds>();
 			messages = new Queue<LogMessage>();
+			messageText = new GameObject[5];
 			flintList = new List<GameObject>();
 			new SlotData();
 			
@@ -167,6 +169,10 @@ namespace Sparkipelago {
 
 		public static void OnMessageReceived(LogMessage message) {
 			messages.Enqueue(message);
+			string playerName = APSave.getAPConnect().slot;
+			string msgStr = message.ToString();
+			if (msgStr.StartsWith(string.Format("{0}: .whereis", playerName))) Collectibles.trackCheckByName(msgStr.Substring(msgStr.IndexOf(' ')+1));
+			if (msgStr.StartsWith(string.Format("{0}: .whereindex", playerName))) Collectibles.trackCheckByIndex(msgStr.Substring(msgStr.IndexOf(' ')+1));
 		}
 		
 		public static void HandleItem(ReceivedItemsHelper itemHandler) {
@@ -206,24 +212,50 @@ namespace Sparkipelago {
 				}
 				Collectibles.updateTracker();
 			}
-			if (messageText != null) {
-				if (messages.Count > 10) {
-					messageText.GetComponent<DeactivateAfterAWhile>().TimeToStop = 2.0f;
+			if (messages.Count() > 0 && messageText[0] != null) {
+				int index = -1;
+				bool found = false;
+				for (index = 0; index < messageText.Count(); index++) {
+					if (!messageText[index].activeSelf) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					float minTime = 100000;
+					int minIdx = -1;
+					for (int i = 0; i < messageText.Count(); i++) {
+						DeactivateAfterAWhile daaw = messageText[i].GetComponent<DeactivateAfterAWhile>();
+						float timeLeft = daaw.TimeToStop - (float)typeof(DeactivateAfterAWhile).GetField("C", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(daaw);
+						if (timeLeft < minTime) {
+							minTime = timeLeft;
+							minIdx = i;
+						}
+					}
+					messageText[minIdx].SetActive(false);
+					index = minIdx;
 				} else {
-					messageText.GetComponent<DeactivateAfterAWhile>().TimeToStop = 5.0f;
+					RectTransform textRect = messageText[index].GetComponent<RectTransform>();
+					textRect.localPosition = new Vector3(0, -((Screen.height/2)-(Screen.height/16)), 0);
+					textRect.sizeDelta = new Vector2(Screen.width, Screen.height/8);
+					for (int i = 0; i < messageText.Count(); i++) {
+						if (!messageText[i].activeSelf) continue;
+						RectTransform moveup = messageText[i].GetComponent<RectTransform>();
+						moveup.localPosition = new Vector3(0, moveup.localPosition.y + moveup.sizeDelta.y/2, 0);
+					}
+					
+					messageText[index].SetActive(true);
+					Text text = messageText[index].GetComponent<Text>();
+					StringBuilder sb = new StringBuilder("", 65536);
+					LogMessage message = messages.Dequeue();
+					MelonLogger.Msg("Message Part Count: {0}", message.Parts.Count());
+					foreach (MessagePart part in message.Parts) {
+						if (!part.IsBackgroundColor) sb.AppendFormat("<color=#{0:X2}{1:X2}{2:X2}>", part.Color.R, part.Color.G, part.Color.B);
+						sb.Append(part.Text);
+						if (!part.IsBackgroundColor) sb.Append("</color>");
+					}
+					text.text = sb.ToString();
 				}
-			}
-			if (messages.Count > 0 && messageText != null && !messageText.activeSelf) {
-				messageText.SetActive(true);
-				Text text = messageText.GetComponent<Text>();
-				StringBuilder sb = new StringBuilder("", 65536);
-				LogMessage message = messages.Dequeue();
-				foreach (MessagePart part in message.Parts) {
-					if (!part.IsBackgroundColor) sb.AppendFormat("<color=#{0:X2}{1:X2}{2:X2}>", part.Color.R, part.Color.G, part.Color.B);
-					sb.Append(part.Text);
-					if (!part.IsBackgroundColor) sb.Append("</color>");
-				}
-				text.text = sb.ToString();
 			}
 			if (SlotData.labMode && currentSession != null) {
 				LabMode.checkForInput();
@@ -307,23 +339,25 @@ namespace Sparkipelago {
 				GameObject canvasGO = new GameObject("APCanvas", typeof(Canvas), typeof(CanvasScaler));
 				Canvas canvas = canvasGO.GetComponent<Canvas>();
 				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
-				GameObject textGO = new GameObject("APText", typeof(Text), typeof(DeactivateAfterAWhile));
-				messageText = textGO;
-				textGO.SetActive(false);
-				textGO.transform.parent = canvasGO.transform;
-				Text text = textGO.GetComponent<Text>();
-				text.font = APSave.sparkFont;
-				text.text = "chat looks a bit dead";
-				text.alignment = TextAnchor.MiddleCenter;
-				text.resizeTextForBestFit = true;
-				text.fontSize = 1000;
-				text.supportRichText = true;
-				RectTransform textRect = textGO.GetComponent<RectTransform>();
-				textRect.localPosition = new Vector3(0, -((Screen.height/2)-(Screen.height/16)), 0);
-				textRect.sizeDelta = new Vector2(Screen.width, Screen.height/8);
-				DeactivateAfterAWhile daaw = textGO.GetComponent<DeactivateAfterAWhile>();
-				daaw.TimeToStop = 5.0f;
+				
+				for (int i = 0; i < messageText.Count(); i++) {
+					GameObject textGO = new GameObject("APText", typeof(Text), typeof(DeactivateAfterAWhile));
+					messageText[i] = textGO;
+					textGO.SetActive(false);
+					textGO.transform.parent = canvasGO.transform;
+					Text text = textGO.GetComponent<Text>();
+					text.font = APSave.sparkFont;
+					text.text = "chat looks a bit dead";
+					text.alignment = TextAnchor.MiddleCenter;
+					text.resizeTextForBestFit = true;
+					text.fontSize = 1000;
+					text.supportRichText = true;
+					RectTransform textRect = textGO.GetComponent<RectTransform>();
+					textRect.localPosition = new Vector3(0, -((Screen.height/2)-(Screen.height/16)), 0);
+					textRect.sizeDelta = new Vector2(Screen.width, Screen.height/8);
+					DeactivateAfterAWhile daaw = textGO.GetComponent<DeactivateAfterAWhile>();
+					daaw.TimeToStop = 5.0f;
+				}
 			}
 
 			if (player != null) {

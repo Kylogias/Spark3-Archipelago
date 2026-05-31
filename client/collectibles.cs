@@ -27,6 +27,7 @@ namespace Sparkipelago {
 			public class ScoutData {
 				public GameObject go;
 				public ItemFlags flags;
+				public string sanity;
 				public bool collected;
 				public bool enabled;
 			};
@@ -39,14 +40,10 @@ namespace Sparkipelago {
 
 			public void addLocation(GameObject go, string sanity, int index) {
 				if (sanity == "_FAKE") return;
-				if (sanity == "explore" && !APSave.file.client.exploreArrows) return;
-				if (sanity == "coin" && !APSave.file.client.coinArrows) return;
-				if (sanity == "capsule" && !APSave.file.client.capsuleArrows) return;
-				if (sanity == "bubble" && !APSave.file.client.bubbleArrows) return;
-				if (sanity == "battery" && !APSave.file.client.batteryArrows) return;
 				long key = Locations.getLocationByIndex(stage, sanity, index);
 				ScoutData sd = new ScoutData();
 				sd.go = go;
+				sd.sanity = sanity;
 				if (key != -1) locids.Add(key, sd);
 			}
 			
@@ -154,24 +151,58 @@ namespace Sparkipelago {
 			return rotring;
 		}
 		
-		public static TrackType trackType = TrackType.NearestAny;
+		static bool trackFixed;
 		public static Transform trackXfrm;
 		static GameObject playerArrow;
 
-		public static void trackCheckByName(string name) {
-			trackType = TrackType.FIXED;
+		public static void trackCheckByName(string command) {
+			string search = command.Substring(command.IndexOf(' ')+1);
+			foreach (APStageData stagedata in APShared.stages) {
+				if (stagedata.id == stage) {
+					foreach (APStageCheck check in stagedata.checks) {
+						if (check.name == search && scout.locids.ContainsKey(check.id)) {
+							trackXfrm = scout.locids[check.id].go.transform;
+							trackFixed = true;
+							break;
+						}
+					}
+					break;
+				}
+			}
 		}
 
-		public static void trackCheckByIndex(string sanity, int index) {
-			trackType = TrackType.FIXED;
+		public static void trackCheckByIndex(string command) {
+			string[] args = command.Split(new Char[]{' '}, 3, StringSplitOptions.RemoveEmptyEntries);
+			int index = -1;
+			string sanity = args[2];
+			if (Int32.TryParse(args[1], out index)) {
+				switch (sanity) {
+					case "explore":
+						if (index < medals.Count() && medals[index] != null) {trackXfrm = medals[index].gameObject.transform; trackFixed = true;}
+						break;
+					case "capsule":
+						if (index < capsules.Count() && capsules[index] != null) {trackXfrm = capsules[index].gameObject.transform; trackFixed = true;}
+						break;
+					case "bubble":
+						if (index < bubbles.Count() && bubbles[index] != null) {trackXfrm = bubbles[index].gameObject.transform; trackFixed = true;}
+						break;
+					case "coin":
+						if (index < coins.Count() && coins[index] != null) {trackXfrm = coins[index].gameObject.transform; trackFixed = true;}
+						break;
+					case "battery":
+						if (index < batteries.Count() && batteries[index] != null) {trackXfrm = batteries[index].gameObject.transform; trackFixed = true;}
+						break;
+				}
+			}
 		}
 		
 		public static void updateTracker() {
 			if (playerArrow == null) return;
 			Vector3 playerPos = playerArrow.transform.position;
-			if (trackType == TrackType.None) {
+			TrackType trackType = APSave.file.client.trackerMode;
+			if (trackType == TrackType.None && !trackFixed) {
 				trackXfrm = null;
-			} else if (trackType != TrackType.FIXED) {
+			} else if (!trackFixed) {
 				Transform nearestAny = null;
 				float anyDist = 10000000;
 				Transform nearestUseful = null;
@@ -180,6 +211,27 @@ namespace Sparkipelago {
 				float progDist = 10000000;
 
 				foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
+					if (sd.sanity == "explore") {
+						if (!APSave.file.client.exploreArrows) sd.go.SetActive(false);
+						else sd.go.SetActive(true);
+					}
+					if (sd.sanity == "coin") {
+						if (!APSave.file.client.coinArrows) sd.go.SetActive(false);
+						else sd.go.SetActive(true);
+					}
+					if (sd.sanity == "capsule") {
+						if (!APSave.file.client.capsuleArrows) sd.go.SetActive(false);
+						else sd.go.SetActive(true);
+					}
+					if (sd.sanity == "bubble") {
+						if (!APSave.file.client.bubbleArrows) sd.go.SetActive(false);
+						else sd.go.SetActive(true);
+					}
+					if (sd.sanity == "battery") {
+						if (!APSave.file.client.batteryArrows) sd.go.SetActive(false);
+						else sd.go.SetActive(true);
+					}
+					
 					if (sd.collected || !sd.enabled || !sd.go) continue;
 					Vector3 xfrmPos = sd.go.transform.position;
 					float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
@@ -212,7 +264,10 @@ namespace Sparkipelago {
 			if (trackXfrm) {
 				playerArrow.SetActive(true);
 				playerArrow.transform.LookAt(trackXfrm);
-			} else playerArrow.SetActive(false);
+			} else {
+				playerArrow.SetActive(false);
+				trackFixed = false;
+			}
 		}
 		
 		public static void onSceneLoad(string name) {

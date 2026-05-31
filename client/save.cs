@@ -156,27 +156,27 @@ namespace Sparkipelago {
 				() => {return (int)APSave.file.client.enemyRando;}
 			);
 			Options.addIten(
-				settings, "Capsule Check Arrows", "Should there be arrows above capsules denoting progressiveness? (Requires Stage Restart)",
+				settings, "Capsule Check Arrows", "Should there be arrows above capsules denoting progressiveness?",
 				(bool newV) => {APSave.file.client.capsuleArrows = newV; return newV.ToString();},
 				() => {return APSave.file.client.capsuleArrows;}
 			);
 			Options.addIten(
-				settings, "Bubble Check Arrows", "Should there be arrows above bubbles denoting progressiveness? (Requires Stage Restart)",
+				settings, "Bubble Check Arrows", "Should there be arrows above bubbles denoting progressiveness?",
 				(bool newV) => {APSave.file.client.bubbleArrows = newV; return newV.ToString();},
 				() => {return APSave.file.client.bubbleArrows;}
 			);
 			Options.addIten(
-				settings, "Explore Medal Check Arrows", "Should there be arrows above explore medals denoting progressiveness? (Requires Stage Restart)",
+				settings, "Explore Medal Check Arrows", "Should there be arrows above explore medals denoting progressiveness?",
 				(bool newV) => {APSave.file.client.exploreArrows = newV; return newV.ToString();},
 				() => {return APSave.file.client.exploreArrows;}
 			);
 			Options.addIten(
-				settings, "Collectathon Coin Check Arrows", "Should there be arrows above collectathon coins denoting progressiveness? (Requires Stage Restart)",
+				settings, "Collectathon Coin Check Arrows", "Should there be arrows above collectathon coins denoting progressiveness?",
 				(bool newV) => {APSave.file.client.coinArrows = newV; return newV.ToString();},
 				() => {return APSave.file.client.coinArrows;}
 			);
 			Options.addIten(
-				settings, "Battery Check Arrows", "Should there be arrows above batteries denoting progressiveness? (Requires Stage Restart)",
+				settings, "Battery Check Arrows", "Should there be arrows above batteries denoting progressiveness?",
 				(bool newV) => {APSave.file.client.batteryArrows = newV; return newV.ToString();},
 				() => {return APSave.file.client.batteryArrows;}
 			);

@@ -145,11 +145,11 @@ namespace Sparkipelago {
 					if (i > 0 && i < SlotData.gates.Count()-1) {
 						if (!force && !save.StageCompleted[bossids[i-1]]) {i++; continue;}
 					} else if (i == SlotData.gates.Count()-1) {
-						if (!force && !(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[4]
-							&& numComplete >= SlotData.completionReq[i]
+						if (!force && !(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[i-1]
+							&& numComplete >= SlotData.completionReq[i-1]
 							&& numExplore >= SlotData.exploreReq
-							&& numSpeed >= SlotData.speedReq[i]
-							&& numScore >= SlotData.scoreReq[i]
+							&& numSpeed >= SlotData.speedReq[i-1]
+							&& numScore >= SlotData.scoreReq[i-1]
 							&& ((save.Power_Fark && save.Power_Sfarx) || !SlotData.requireCharacters)
 						)) {i++; continue;}
 					}
