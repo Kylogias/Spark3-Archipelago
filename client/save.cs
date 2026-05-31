@@ -69,7 +69,7 @@ namespace Sparkipelago {
 		NearestAny,
 		NearestUseful,
 		NearestProgress,
-		FIXED
+		IncludeAll
 	};
 	
 	[Serializable]
@@ -90,17 +90,18 @@ namespace Sparkipelago {
 			musicRando = MusicType.Vanilla;
 			enemyRando = EnemyType.Vanilla;
 			diveFloors = 1;
-			capsuleArrows = true;
-			bubbleArrows = true;
-			exploreArrows = true;
-			coinArrows = true;
-			batteryArrows = true;
+			capsuleArrows = false;
+			bubbleArrows = false;
+			exploreArrows = false;
+			coinArrows = false;
+			batteryArrows = false;
 			trackerMode = TrackType.NearestAny;
 		}
 	}
 	
 	class APSave {
 		public static Font sparkFont;
+		public static Texture cursorTex;
 
 		[Serializable]
 		public class APSavefile {
@@ -141,7 +142,7 @@ namespace Sparkipelago {
 				() => {return APSave.file.client.diveFloors;}
 			);
 			Options.addIten(
-				settings, "Tracker Mode", "What is the default mode of the tracker arrow?", 0, 3,
+				settings, "Tracker Mode", "What is the default mode of the tracker arrow?", 0, SlotData.labMode ? 4 : 3,
 				(int newV) => {APSave.file.client.trackerMode = (TrackType)newV; return ((TrackType)newV).ToString();},
 				() => {return (int)APSave.file.client.trackerMode;}
 			);
@@ -224,6 +225,10 @@ namespace Sparkipelago {
 			if (!sparkFont) {
 				sparkFont = font;
 				sparkFont.hideFlags = HideFlags.DontUnloadUnusedAsset;
+			}
+			if (!cursorTex) {
+				cursorTex = GameObject.Find("UI").transform.GetChild(6).GetChild(0).gameObject.GetComponent<Image>().mainTexture;
+				cursorTex.hideFlags = HideFlags.DontUnloadUnusedAsset;
 			}
 
 			float rowHeight = versionText.fontSize*2;

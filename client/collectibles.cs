@@ -22,6 +22,15 @@ namespace Sparkipelago {
 		static int layers;
 		static int stage;
 		static CollectibleScout scout;
+
+		static int eBubCount;
+		static int bBubCount;
+		static int eCapCount;
+		static int hCapCount;
+		static int sCapCount;
+		static int checkpointCount;
+		static int batteryCount;
+		static int coinCount;
 		
 		class CollectibleScout {
 			public class ScoutData {
@@ -33,13 +42,16 @@ namespace Sparkipelago {
 			};
 			
 			public Dictionary<long, ScoutData> locids;
+			public List<Transform> allLocations;
 			
 			public CollectibleScout() {
 				locids = new Dictionary<long, ScoutData>();
+				allLocations = new List<Transform>();
 			}
 
 			public void addLocation(GameObject go, string sanity, int index) {
 				if (sanity == "_FAKE") return;
+				allLocations.Add(go.transform);
 				long key = Locations.getLocationByIndex(stage, sanity, index);
 				ScoutData sd = new ScoutData();
 				sd.go = go;
@@ -210,7 +222,15 @@ namespace Sparkipelago {
 				Transform nearestProg = null;
 				float progDist = 10000000;
 
-				foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
+				if (trackType == TrackType.IncludeAll) foreach (Transform xfrm in scout.allLocations) {
+					if (!xfrm) continue;
+					Vector3 xfrmPos = xfrm.position;
+					float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
+					if (xfrmDist < anyDist) {
+						anyDist = xfrmDist;
+						nearestAny = xfrm;
+					}
+				} else foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
 					if (sd.sanity == "explore") {
 						if (!APSave.file.client.exploreArrows) sd.go.SetActive(false);
 						else sd.go.SetActive(true);
@@ -250,6 +270,7 @@ namespace Sparkipelago {
 				}
 				
 				switch (trackType) {
+					case TrackType.IncludeAll:
 					case TrackType.NearestAny:
 						trackXfrm = nearestAny;
 						break;
@@ -276,65 +297,49 @@ namespace Sparkipelago {
 
 			Scene scn = SceneManager.GetSceneByName(name);
 			scout = new CollectibleScout();
-
-			GameObject arrowObject = new GameObject("Point", typeof(MeshFilter), typeof(MeshRenderer));
-			List<Vector3> vertices = new List<Vector3>();
-			List<Vector2> uv = new List<Vector2>();
-			List<int> triangles = new List<int>();
-			vertices.Add(new Vector3(0, 0, 1.5f));
-			uv.Add(new Vector2(0.5f, 1.0f));
-			int VCOUNT = 32;
-			for (float i = 0; i < VCOUNT+1; i += 1) {
-				float rad = (i/VCOUNT)*(2*Mathf.PI);
-				float xpos = Mathf.Cos(rad)*0.5f;
-				float ypos = Mathf.Sin(rad)*0.5f;
-				vertices.Add(new Vector3(xpos, ypos, 0));
-				uv.Add(new Vector2(i/VCOUNT, 0.5f));
-				vertices.Add(new Vector3(xpos, ypos, 0.2f));
-				uv.Add(new Vector2(i/VCOUNT, 0.6f));
-			}
-			for (int i = 1; i < VCOUNT+1; i += 1) {
-				triangles.Add(0);
-				triangles.Add(i*2);
-				triangles.Add((i+1)*2);
-				triangles.Add(i*2);
-				triangles.Add(i*2+1);
-				triangles.Add((i+1)*2);
-				triangles.Add(i*2);
-				triangles.Add(i*2-1);
-				triangles.Add(i*2+1);
-			}
-			Mesh mesh = new Mesh();
-			mesh.vertices = vertices.ToArray();
-			mesh.uv = uv.ToArray();
-			mesh.triangles = triangles.ToArray();
-			mesh.RecalculateNormals();
-			arrowObject.GetComponent<MeshFilter>().mesh = mesh;
+			hCapCount = 1;
+			eCapCount = 1;
+			sCapCount = 1;
+			eBubCount = 1;
+			bBubCount = 1;
+			checkpointCount = 1;
+			batteryCount = 1;
+			coinCount = 1;
 
 			playerArrow = new GameObject("Arrow");
 			playerArrow.transform.SetParent(Sparkipelago.player.transform);
 			playerArrow.transform.localPosition = new Vector3(0, 4.5f, 0);
 			playerArrow.transform.localScale = Vector3.one;
-			GameObject playerSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			Component.Destroy(playerSphere.GetComponent<SphereCollider>());
-			playerSphere.transform.SetParent(playerArrow.transform);
-			playerSphere.transform.localPosition = Vector3.zero;
-			playerSphere.transform.localScale = Vector3.one;
-			playerSphere.transform.localRotation = Quaternion.Euler(90, 0, 0);
 
-			arrowObject.transform.SetParent(playerArrow.transform);
-			arrowObject.transform.localPosition = Vector3.zero;
-			arrowObject.transform.localScale = Vector3.one;
-
-			Material mat = playerSphere.GetComponent<MeshRenderer>().material;
-			arrowObject.GetComponent<MeshRenderer>().material = mat;
-			mat.color = new Color(0, 0, 1, 1);
-			mat.EnableKeyword("_EMISSION");
-			mat.SetColor("_EmissionColor", new Color(0, 0.5f, 1, 1));
-			if (Sparkipelago.eCapsule) {
-				Material ecapMat = Sparkipelago.eCapsule.transform.Find("CapsuleModel").gameObject.GetComponent<MeshRenderer>().material;
-				Texture tex = ecapMat.GetTexture("_Noise");
-				mat.SetTexture("_EmissionMap", tex);
+			Vector2[] uvs = {new Vector2(0, 0), new Vector2(1, 0), new Vector2(0.5f, 0.2f), new Vector2(0.5f, 1)};
+			Vector3[] vertices = new Vector3[uvs.Length];
+			int[] triangles = {
+				0, 2, 3, 2, 1, 3,
+				0, 3, 2, 1, 2, 3
+			};
+			Vector2 aspect = new Vector2(7.0f/9.0f, 1);
+			for (int i = 0; i < uvs.Length; i++) {
+				vertices[i] = new Vector3((uvs[i].x-0.5f)*aspect.x, 0, (uvs[i].y-0.5f)*aspect.y);
+			}
+			Mesh mesh = new Mesh();
+			mesh.vertices = vertices;
+			mesh.uv = uvs;
+			mesh.triangles = triangles;
+			mesh.RecalculateNormals();
+			
+			Vector3[] euler = {new Vector3(0, 0, 0), new Vector3(0, 0, 90)};
+			foreach (Vector3 rot in euler) {
+				GameObject arrowQuad = new GameObject("Quad", typeof(MeshRenderer), typeof(MeshFilter));
+				arrowQuad.transform.SetParent(playerArrow.transform);
+				arrowQuad.transform.localPosition = Vector3.zero;
+				arrowQuad.transform.localScale = Vector3.one*2;
+				arrowQuad.transform.localRotation = Quaternion.Euler(rot);
+				arrowQuad.GetComponent<MeshFilter>().mesh = mesh;
+				Material mat = arrowQuad.GetComponent<MeshRenderer>().material;
+				mat.color = new Color(0, 0, 0, 1);
+				mat.EnableKeyword("_EMISSION");
+				mat.SetColor("_EmissionColor", new Color(1, 0.8402f, 0, 0));
+				mat.SetTexture("_EmissionMap", APSave.cursorTex);
 			}
 
 			layers = 0;
@@ -425,14 +430,14 @@ namespace Sparkipelago {
 				
 				string type = "Unknown";
 				MonitorData mon = col.GetComponent<MonitorData>();
+				int count = -1;
 				if (!bubbles.Contains(mon)) return;
-				if (mon.Type == MonitorType.Ring) type = "Bit";
-				if (mon.Type == MonitorType.Energy) type = "Energy";
-				Sparkipelago.debugLog("Collected Bubble #{0} ({1})", bubbles.IndexOf(mon), type);
+				if (mon.Type == MonitorType.Ring) {type = "BIT"; count = bBubCount; bBubCount += 1;}
+				if (mon.Type == MonitorType.Energy) {type = "ENERGY"; count = eBubCount; eBubCount += 1;}
+				Sparkipelago.debugLog("{{\"name\": \"{0} BUBBLE #{1}\", \"index\": {2}, \"sanity\": \"capsule\", \"requires\": \"\"}}", type, count, bubbles.IndexOf(mon));
 				bubbles[bubbles.IndexOf(mon)] = null;
 			}
 		}
-		
 		[HarmonyPatch(typeof(Objects_Interaction), "BasicCollectables")]
 		private static class CollectiblePatch {
 			private static void Prefix(Objects_Interaction __instance, Collider col) {
@@ -440,7 +445,12 @@ namespace Sparkipelago {
 				
 				RotateRing rotring = col.GetComponent<RotateRing>();
 				if (!capsules.Contains(rotring)) return;
-				Sparkipelago.debugLog("Collected Capsule #{0} ({1})", capsules.IndexOf(rotring), col.tag);
+				string capType = "";
+				int count = -1;
+				if (col.tag == "Ring") {capType = "HEALTH"; count = hCapCount; hCapCount += 1;}
+				if (col.tag == "ScoreCapsule") {capType = "SCORE"; count = sCapCount; sCapCount += 1;}
+				if (col.tag == "EnergyCap") {capType = "ENERGY"; count = eCapCount; eCapCount += 1;}
+				Sparkipelago.debugLog("{{\"name\": \"{0} CAPSULE #{1}\", \"index\": {2}, \"sanity\": \"capsule\", \"requires\": \"\"}}", capType, count, capsules.IndexOf(rotring));
 				capsules[capsules.IndexOf(rotring)] = null;
 			}
 		}
@@ -449,7 +459,9 @@ namespace Sparkipelago {
 		private static class CheckpointPatch {
 			private static void Prefix(LevelProgressControl __instance, CheckPointData check) {
 				if (!checkpoints.Contains(check)) return;
-				Sparkipelago.debugLog("Collected Checkpoint #{0}", checkpoints.IndexOf(check));
+				int count = checkpointCount;
+				checkpointCount += 1;
+				Sparkipelago.debugLog("{{\"name\": \"CHECKPOINT #{0}\", \"index\": {1}, \"sanity\": \"checkpoint\", \"requires\": \"\"}}", count, checkpoints.IndexOf(check));
 				checkpoints[checkpoints.IndexOf(check)] = null;
 			}
 		}
@@ -459,7 +471,9 @@ namespace Sparkipelago {
 			private static void Prefix(CollectableCoin __instance, Collider col) {
 				if (col.tag == "Player" && coins.Contains(__instance)) {
 					int idx = coins.IndexOf(__instance);
-					Sparkipelago.debugLog("Collected Coin #{0}", idx);
+					int count = coinCount;
+					coinCount += 1;
+					Sparkipelago.debugLog("{{\"name\": \"BLUE COIN #{0}\", \"index\": {1}, \"sanity\": \"coin\", \"requires\": \"\"}}", count, idx);
 					Locations.sendLocationByIndex(Save.CurrentStageIndex, "coin", idx);
 					coins[idx] = null;
 				}
@@ -471,7 +485,9 @@ namespace Sparkipelago {
 			private static void Prefix(Collider col) {
 				if (col.tag == "Battery" && batteries.Contains(col.gameObject)) {
 					int idx = batteries.IndexOf(col.gameObject);
-					Sparkipelago.debugLog("Collected Battery #{0}", idx);
+					int count = batteryCount;
+					batteryCount += 1;
+					Sparkipelago.debugLog("{{\"name\": \"BATTERY #{0}\", \"index\": {1}, \"sanity\": \"battery\", \"requires\": \"\"}}", count, idx);
 					Locations.sendLocationByIndex(Save.CurrentStageIndex, "battery", idx);
 					batteries[idx] = null;
 				}

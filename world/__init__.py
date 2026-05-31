@@ -65,6 +65,7 @@ class Spark3World(World):
 			self.ability_rando = False
 
 		if self.options.gimmick_rando:
+			raise ValueError("Gimmick Rando isn't implemented in this release, try again later")
 			self.gimmick_rando = True
 		else:
 			self.gimmick_rando = False

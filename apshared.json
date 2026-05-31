@@ -143,7 +143,7 @@
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": []},
-			{"name": "ABOVE START", "entrances": {"START": "1c|sf", "ROAD #1 RIGHT NEIGHBORHOOD LOWER": ""}, "checks": [
+			{"name": "ABOVE START", "entrances": {"START": "dj|cd|sf", "ROAD #1 RIGHT NEIGHBORHOOD LOWER": ""}, "checks": [
 				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 			]},
@@ -155,8 +155,10 @@
 			{"name": "ROAD #1 RIGHT NEIGHBORHOOD UPPER RIGHT", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": [
 				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 			]},
-			{"name": "START TIPPY", "entrances": {"ABOVE START": "cd|ed", "ROAD #1 RIGHT NEIGHBORHOOD UPPER RIGHT": "da|rb"}, "checks": [
-				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+			{"name": "START TIPPY BOTTOM", "entrances": {"ABOVE START": "cd|ed", "START TIPPY TOWER": ""}, "checks": [
+				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "START TIPPY TOWER", "entrances": {"START TIPPY BOTTOM": "spe|ed", "ROAD #1 RIGHT NEIGHBORHOOD UPPER RIGHT": "da|rb"}, "checks": [
 				{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 			]},
 			{"name": "START PLAYGROUND", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": [
@@ -174,7 +176,7 @@
 			]},
 			{"name": "HIGHWAY NEIGHBORHOOD #2", "entrances": {"STEPPING STONES NEIGHBORHOOD": ""}, "checks": []},
 			{"name": "BIG HIGHWAY LOOP RIGHT", "entrances": {"HIGHWAY NEIGHBORHOOD #2": ""}, "checks": []},
-			{"name": "BIG HIGHWAY LOOP LEFT", "entrances": {"HIGHWAY NEIGHBORHOOD #2": "spr|(wj+dj)", "BIG HIGHWAY LOOP RIGHT": "1c|fl"}, "checks": []},
+			{"name": "BIG HIGHWAY LOOP LEFT", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": []},
 			{"name": "BIG HIGHWAY LOOP TIPPY", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": []},
 			{"name": "BIG HIGHWAY", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": []},
 			{"name": "NEIGHBORHOOD AFTER BIG HIGHWAY", "entrances": {"BIG HIGHWAY": ""}, "checks": []},
@@ -209,7 +211,7 @@
 				{"name": "BIT BUBBLE #1", "index": 2, "sanity": "bubble", "requires": ""},
 				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
 			]},
-			{"name": "TRAINS", "entrances": {"START": "ra|1c|fa|sf|fl"}, "checks": [
+			{"name": "TRAINS", "entrances": {"START": "ra|1c|fa|sf|fl|ed|sb|cl"}, "checks": [
 				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
 				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},

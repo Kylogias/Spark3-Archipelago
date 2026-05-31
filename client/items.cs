@@ -352,9 +352,5 @@ namespace Sparkipelago {
 				return true;
 			}
 		}
-
-	//	SPRINGS -- Jester Dash sends you flying
-	//	JESTER_DASH_RINGS -- Ditto to springs
-	//	RAMPS -- Crashes the game
 	}
 }
