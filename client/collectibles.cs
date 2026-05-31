@@ -115,14 +115,14 @@ namespace Sparkipelago {
 				T comp = parent.GetComponent<T>();
 				if (comp != null) {
 					if (getLayer) layers |= 1 << parent.layer;
-				//	if (Locations.hasLocationByIndex(stage, sanity, comps.Count)) {
+					if (Locations.hasLocationByIndex(stage, sanity, comps.Count) || SlotData.labMode) {
 						Vector3 start = Vector3.zero, end = Vector3.zero;
 						if (sanity == "bubble" || sanity == "explore") {start = new Vector3(0, 2, 0); end = new Vector3(0, 1.25f, 0);}
 						if (sanity == "capsule") {start = new Vector3(0, 6, 0); end = new Vector3(0, 4, 0);}
 						if (sanity == "checkpoint") {start = new Vector3(0, 10, -20); end = new Vector3(0, 8, -20);}
 						if (sanity == "coin") {start = new Vector3(0, 1.875f, 0); end = new Vector3(0, 1.25f, 0);}
 						createCheckArrow(parent, sanity, comps.Count, start, end);
-				//	}
+					}
 					comps.Add(comp);
 				}
 				for (int i = 0; i < parent.transform.childCount; i++) {
