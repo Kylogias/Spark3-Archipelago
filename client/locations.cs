@@ -119,10 +119,13 @@ namespace Sparkipelago {
 
 		private static void sendLocationToServer(long location) {
 			APSavedata data = APSave.getAPSave();
+			if (Collectibles.scout.locids.ContainsKey(location)) {
+				Collectibles.scout.locids[location].collected = true;
+			}
 			if (Sparkipelago.currentSession == null || Sparkipelago.currentSession.Locations.AllMissingLocations.Contains(location)) {
 				data.checkedLocations.Add(location);
 				if (Sparkipelago.currentSession != null) {
-					Sparkipelago.currentSession.Locations.CompleteLocationChecks(location);
+					Sparkipelago.currentSession.Locations.CompleteLocationChecksAsync(null, location);
 					data.numLocations = Sparkipelago.currentSession.Locations.AllLocations.Count;
 					data.numChecked = Sparkipelago.currentSession.Locations.AllLocationsChecked.Count;
 				}

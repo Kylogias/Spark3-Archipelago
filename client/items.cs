@@ -50,7 +50,7 @@ namespace Sparkipelago {
 		public static void handleItem(ItemIds item, bool catchup) {
 			Save.SaveFile save = Save.Saves[Save.CurrentSaveSlot];
 			
-			GameObject player = GameObject.Find("Player_Fark");
+			GameObject player = Sparkipelago.player;
 			switch (item) {
 				case ItemIds.FREEDOM_MEDAL:
 					if (Sparkipelago.currentScene == "[WORLD MAP]") WorldMap.onMapLoad();

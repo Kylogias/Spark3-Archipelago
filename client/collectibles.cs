@@ -21,7 +21,7 @@ namespace Sparkipelago {
 
 		static int layers;
 		static int stage;
-		static CollectibleScout scout;
+		public static CollectibleScout scout;
 
 		static int eBubCount;
 		static int bBubCount;
@@ -32,7 +32,7 @@ namespace Sparkipelago {
 		static int batteryCount;
 		static int coinCount;
 		
-		class CollectibleScout {
+		public class CollectibleScout {
 			public class ScoutData {
 				public GameObject go;
 				public ItemFlags flags;
@@ -121,7 +121,7 @@ namespace Sparkipelago {
 						if (sanity == "capsule") {start = new Vector3(0, 6, 0); end = new Vector3(0, 4, 0);}
 						if (sanity == "checkpoint") {start = new Vector3(0, 10, -20); end = new Vector3(0, 8, -20);}
 						if (sanity == "coin") {start = new Vector3(0, 1.875f, 0); end = new Vector3(0, 1.25f, 0);}
-						createCheckArrow(parent, sanity, comps.Count, start, end);
+						createCheckArrow(parent, sanity, comps.Count(), start, end);
 					}
 					comps.Add(comp);
 				}
@@ -135,9 +135,11 @@ namespace Sparkipelago {
 			ActivateOnDistance aod = parent.GetComponent<ActivateOnDistance>();
 			if (parent.activeSelf || aod != null || parent.name == "Area_2 (Day)") {
 				if (parent.tag == tag) {
-			//		if (Locations.hasLocationByIndex(stage, sanity, objects.Count)) {
-						
-			//		}
+					if (Locations.hasLocationByIndex(stage, sanity, objects.Count) || SlotData.labMode) {
+						Vector3 start = Vector3.zero, end = Vector3.zero;
+						if (sanity == "battery") {start = new Vector3(0, 6, 0); end = new Vector3(0, 4, 0);}
+						createCheckArrow(parent, sanity, objects.Count(), start, end);
+					}
 					objects.Add(parent);
 				}
 				for (int i = 0; i < parent.transform.childCount; i++) {
@@ -212,6 +214,29 @@ namespace Sparkipelago {
 			if (playerArrow == null) return;
 			Vector3 playerPos = playerArrow.transform.position;
 			TrackType trackType = APSave.file.client.trackerMode;
+			foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
+				if (!sd.go) continue;
+				if (sd.sanity == "explore") {
+					if (!APSave.file.client.exploreArrows) sd.go.SetActive(false);
+					else sd.go.SetActive(true);
+				}
+				if (sd.sanity == "coin") {
+					if (!APSave.file.client.coinArrows) sd.go.SetActive(false);
+					else sd.go.SetActive(true);
+				}
+				if (sd.sanity == "capsule") {
+					if (!APSave.file.client.capsuleArrows) sd.go.SetActive(false);
+					else sd.go.SetActive(true);
+				}
+				if (sd.sanity == "bubble") {
+					if (!APSave.file.client.bubbleArrows) sd.go.SetActive(false);
+					else sd.go.SetActive(true);
+				}
+				if (sd.sanity == "battery") {
+					if (!APSave.file.client.batteryArrows) sd.go.SetActive(false);
+					else sd.go.SetActive(true);
+				}
+			}
 			if (trackType == TrackType.None && !trackFixed) {
 				trackXfrm = null;
 			} else if (!trackFixed) {
@@ -231,26 +256,6 @@ namespace Sparkipelago {
 						nearestAny = xfrm;
 					}
 				} else foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
-					if (sd.sanity == "explore") {
-						if (!APSave.file.client.exploreArrows) sd.go.SetActive(false);
-						else sd.go.SetActive(true);
-					}
-					if (sd.sanity == "coin") {
-						if (!APSave.file.client.coinArrows) sd.go.SetActive(false);
-						else sd.go.SetActive(true);
-					}
-					if (sd.sanity == "capsule") {
-						if (!APSave.file.client.capsuleArrows) sd.go.SetActive(false);
-						else sd.go.SetActive(true);
-					}
-					if (sd.sanity == "bubble") {
-						if (!APSave.file.client.bubbleArrows) sd.go.SetActive(false);
-						else sd.go.SetActive(true);
-					}
-					if (sd.sanity == "battery") {
-						if (!APSave.file.client.batteryArrows) sd.go.SetActive(false);
-						else sd.go.SetActive(true);
-					}
 					
 					if (sd.collected || !sd.enabled || !sd.go) continue;
 					Vector3 xfrmPos = sd.go.transform.position;
@@ -311,15 +316,20 @@ namespace Sparkipelago {
 			playerArrow.transform.localPosition = new Vector3(0, 4.5f, 0);
 			playerArrow.transform.localScale = Vector3.one;
 
-			Vector2[] uvs = {new Vector2(0, 0), new Vector2(1, 0), new Vector2(0.5f, 0.2f), new Vector2(0.5f, 1)};
+			Vector2[] uvs = {new Vector2(0, 0), new Vector2(1, 0), new Vector2(0.5f, 0.2f), new Vector2(0.5f, 1), new Vector2(0, 0), new Vector2(1, 0), new Vector2(0.5f, 0.2f), new Vector2(0.5f, 1)};
 			Vector3[] vertices = new Vector3[uvs.Length];
 			int[] triangles = {
 				0, 2, 3, 2, 1, 3,
-				0, 3, 2, 1, 2, 3
+				0, 3, 2, 1, 2, 3,
+				4, 6, 7, 6, 5, 7,
+				4, 7, 6, 5, 6, 7,
+				2, 1, 5, 2, 4, 1,
+				2, 5, 0, 2, 0, 4
 			};
 			Vector2 aspect = new Vector2(7.0f/9.0f, 1);
-			for (int i = 0; i < uvs.Length; i++) {
+			for (int i = 0; i < uvs.Length/2; i++) {
 				vertices[i] = new Vector3((uvs[i].x-0.5f)*aspect.x, 0, (uvs[i].y-0.5f)*aspect.y);
+				vertices[i+uvs.Length/2] = new Vector3(0, (uvs[i].x-0.5f)*aspect.x, (uvs[i].y-0.5f)*aspect.y);
 			}
 			Mesh mesh = new Mesh();
 			mesh.vertices = vertices;
@@ -327,20 +337,17 @@ namespace Sparkipelago {
 			mesh.triangles = triangles;
 			mesh.RecalculateNormals();
 			
-			Vector3[] euler = {new Vector3(0, 0, 0), new Vector3(0, 0, 90)};
-			foreach (Vector3 rot in euler) {
-				GameObject arrowQuad = new GameObject("Quad", typeof(MeshRenderer), typeof(MeshFilter));
-				arrowQuad.transform.SetParent(playerArrow.transform);
-				arrowQuad.transform.localPosition = Vector3.zero;
-				arrowQuad.transform.localScale = Vector3.one*2;
-				arrowQuad.transform.localRotation = Quaternion.Euler(rot);
-				arrowQuad.GetComponent<MeshFilter>().mesh = mesh;
-				Material mat = arrowQuad.GetComponent<MeshRenderer>().material;
-				mat.color = new Color(0, 0, 0, 1);
-				mat.EnableKeyword("_EMISSION");
-				mat.SetColor("_EmissionColor", new Color(1, 0.8402f, 0, 0));
-				mat.SetTexture("_EmissionMap", APSave.cursorTex);
-			}
+			GameObject arrowQuad = new GameObject("Quad", typeof(MeshRenderer), typeof(MeshFilter));
+			arrowQuad.transform.SetParent(playerArrow.transform);
+			arrowQuad.transform.localPosition = Vector3.zero;
+			arrowQuad.transform.localScale = Vector3.one*2;
+			arrowQuad.transform.localRotation = Quaternion.identity;
+			arrowQuad.GetComponent<MeshFilter>().mesh = mesh;
+			Material mat = arrowQuad.GetComponent<MeshRenderer>().material;
+			mat.color = new Color(0, 0, 0, 1);
+			mat.EnableKeyword("_EMISSION");
+			mat.SetColor("_EmissionColor", new Color(1, 0.8402f, 0, 0));
+			mat.SetTexture("_EmissionMap", APSave.cursorTex);
 
 			layers = 0;
 			capsules = getAllComponents<RotateRing>(scn, true, "capsule");

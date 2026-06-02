@@ -14,7 +14,9 @@ using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.MessageLog.Parts;
+using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Newtonsoft.Json.Linq;
+using HarmonyLib;
 
 [assembly: MelonInfo(typeof(Sparkipelago.Sparkipelago), "Sparkipelago", "0.1.0", "Kylogias")]
 [assembly: MelonGame("Feperd Games", "Spark the Electric Jester 3")]
@@ -26,6 +28,7 @@ namespace Sparkipelago {
 		public static string currentScene;
 		
 		public static ArchipelagoSession currentSession;
+		public static DeathLinkService deathLink;
 		static Dictionary<string, object> slotDataDict;
 		int currentSaveSlot = -1;
 		public static GameObject player;
@@ -33,8 +36,12 @@ namespace Sparkipelago {
 		private float itemTimer;
 		private static Queue<ItemIds> itemQueue;
 
-		private static Queue<LogMessage> messages;
-		private static GameObject[] messageText;
+		private static Queue<string> messages;
+		class DisplayedMessage {
+			public GameObject go;
+			public float timeLeft;
+		}
+		private static DisplayedMessage[] messageText;
 		
 		private GameObject redWorld;
 		private GameObject grayWorld;
@@ -73,8 +80,11 @@ namespace Sparkipelago {
 			
 			LabMode.initPrefs();
 			itemQueue = new Queue<ItemIds>();
-			messages = new Queue<LogMessage>();
-			messageText = new GameObject[5];
+			messages = new Queue<string>();
+			messageText = new DisplayedMessage[5];
+			for (int i = 0; i < messageText.Length; i++) {
+				messageText[i] = new DisplayedMessage();
+			}
 			flintList = new List<GameObject>();
 			new SlotData();
 			
@@ -94,6 +104,9 @@ namespace Sparkipelago {
 				if (currentSession != null) {
 					currentSession.Items.ItemReceived -= HandleItem;
 					currentSession.MessageLog.OnMessageReceived -= OnMessageReceived;
+					deathLink.DisableDeathLink();
+					currentSession = null;
+					deathLink = null;
 				}
 				new SlotData();
 			}
@@ -111,15 +124,17 @@ namespace Sparkipelago {
 
 				string curRoom = currentSession.RoomState.Seed;
 				if (data.room != "" && data.room != curRoom) {
-					MelonLogger.Error("Client room does not match server room! Do you have the correct connection information?");
-					currentSession.Say("Client room does not match server room! Do you have the correct connection information?");
+					string msg = "Client room does not match server room! Do you have the correct connection information?";
+					MelonLogger.Error(msg);
+					messages.Enqueue(msg);
 					currentSession = null;
 					return;
 				}
 				
 				if ((long)slotDataDict["version"] != APShared.version) {
-					MelonLogger.Error("Client Version does not match APWorld! Refusing connection");
-					currentSession.Say("Client Version does not match APWorld! Refusing connection");
+					string msg = string.Format("Client Version does not match APWorld (expected {0}, got {1})! Refusing connection", APShared.version, slotDataDict["version"]);
+					MelonLogger.Error(msg);
+					messages.Enqueue(msg);
 					currentSession = null;
 					return;
 				}
@@ -127,7 +142,10 @@ namespace Sparkipelago {
 				new SlotData(slotDataDict);
 				currentSession.Items.ItemReceived += HandleItem;
 				currentSession.MessageLog.OnMessageReceived += OnMessageReceived;
-				currentSession.Say("Successful Connection to Spark 3! You may now collect checks");
+				deathLink = DeathLinkProvider.CreateDeathLinkService(currentSession);
+				deathLink.OnDeathLinkReceived += HandleDeathLink;
+				if (APSave.file.client.deathLink) deathLink.EnableDeathLink();
+				messages.Enqueue("Successful Connection to Spark 3! You may now collect checks");
 				data.room = curRoom;
 				int i = 0;
 				foreach (ItemInfo item in currentSession.Items.AllItemsReceived) {
@@ -137,12 +155,14 @@ namespace Sparkipelago {
 				data.lastItem = i;
 				while (currentSession.Items.Any()) currentSession.Items.DequeueItem();
 				foreach (long location in data.checkedLocations) {
-					currentSession.Locations.CompleteLocationChecks(location);
+					currentSession.Locations.CompleteLocationChecksAsync(null, location);
 				}
 			} else {
 				MelonLogger.Error("Error while connecting to Archipelago");
+				messages.Enqueue("Error while connecting to Archipelago");
 				foreach(string e in ((LoginFailure)result).Errors) {
 					MelonLogger.Error(e);
+					messages.Enqueue(e);
 				}
 			}
 		}
@@ -168,7 +188,15 @@ namespace Sparkipelago {
 		}
 
 		public static void OnMessageReceived(LogMessage message) {
-			messages.Enqueue(message);
+			StringBuilder sb = new StringBuilder("", 65536);
+			MelonLogger.Msg("Message Part Count: {0}", message.Parts.Count());
+			foreach (MessagePart part in message.Parts) {
+				if (!part.IsBackgroundColor) sb.AppendFormat("<color=#{0:X2}{1:X2}{2:X2}>", part.Color.R, part.Color.G, part.Color.B);
+				sb.Append(part.Text);
+				if (!part.IsBackgroundColor) sb.Append("</color>");
+			}
+			messages.Enqueue(sb.ToString());
+			
 			string playerName = APSave.getAPConnect().slot;
 			string msgStr = message.ToString();
 			if (msgStr.StartsWith(string.Format("{0}: .whereis", playerName))) Collectibles.trackCheckByName(msgStr.Substring(msgStr.IndexOf(' ')+1));
@@ -183,6 +211,32 @@ namespace Sparkipelago {
 				ItemInfo item = itemHandler.DequeueItem();
 				data.lastItem = oldIndex;
 				onItem(item, false);
+			}
+		}
+
+		static bool isDeathLink;
+		public static void HandleDeathLink(DeathLink deathLink) {
+			if (player) {
+				StringBuilder sb = new StringBuilder("", 65536);
+				sb.Append("<color=#E02010>Death Link: ");
+				if (deathLink.Cause != null) sb.Append(deathLink.Cause);
+				else sb.Append(deathLink.Source);
+				sb.Append("</color>");
+				messages.Enqueue(sb.ToString());
+				
+				PlayerHealthAndStats.PlayerHP = -1;
+				isDeathLink = true;
+				player.GetComponent<HurtControl>().CheckForDeathAndKill();
+			}
+		}
+
+		[HarmonyPatch(typeof(HurtControl), "PlayedDied")]
+		private static class OnDeathPatch {
+			private static void Prefix() {
+				if (APSave.file.client.deathLink && !isDeathLink) {
+					deathLink.SendDeathLink(new DeathLink(APSave.getAPConnect().slot));
+				}
+				isDeathLink = false;
 			}
 		}
 		
@@ -212,49 +266,46 @@ namespace Sparkipelago {
 				}
 				Collectibles.updateTracker();
 			}
-			if (messages.Count() > 0 && messageText[0] != null) {
+			foreach (DisplayedMessage dm in messageText) {
+				dm.timeLeft -= Time.unscaledDeltaTime;
+				if (dm.go) {
+					if (dm.timeLeft < 0) dm.go.SetActive(false);
+					else dm.go.SetActive(true);
+				}
+			}
+			if (messages.Count() > 0 && messageText[0].go != null) {
 				int index = -1;
 				bool found = false;
 				for (index = 0; index < messageText.Count(); index++) {
-					if (!messageText[index].activeSelf) {
+					if (!messageText[index].go.activeSelf) {
 						found = true;
 						break;
 					}
 				}
 				if (!found) {
-					float minTime = 100000;
-					int minIdx = -1;
+					float maxY = -100000;
+					index = -1;
 					for (int i = 0; i < messageText.Count(); i++) {
-						DeactivateAfterAWhile daaw = messageText[i].GetComponent<DeactivateAfterAWhile>();
-						float timeLeft = daaw.TimeToStop - (float)typeof(DeactivateAfterAWhile).GetField("C", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(daaw);
-						if (timeLeft < minTime) {
-							minTime = timeLeft;
-							minIdx = i;
+						RectTransform xfrm = messageText[i].go.GetComponent<RectTransform>();
+						if (xfrm.localPosition.y > maxY) {
+							maxY = xfrm.localPosition.y;
+							index = i;
 						}
 					}
-					messageText[minIdx].SetActive(false);
-					index = minIdx;
+					messageText[index].timeLeft = -1;
 				} else {
-					RectTransform textRect = messageText[index].GetComponent<RectTransform>();
+					RectTransform textRect = messageText[index].go.GetComponent<RectTransform>();
 					textRect.localPosition = new Vector3(0, -((Screen.height/2)-(Screen.height/16)), 0);
 					textRect.sizeDelta = new Vector2(Screen.width, Screen.height/8);
 					for (int i = 0; i < messageText.Count(); i++) {
-						if (!messageText[i].activeSelf) continue;
-						RectTransform moveup = messageText[i].GetComponent<RectTransform>();
+						if (!messageText[i].go.activeSelf) continue;
+						RectTransform moveup = messageText[i].go.GetComponent<RectTransform>();
 						moveup.localPosition = new Vector3(0, moveup.localPosition.y + moveup.sizeDelta.y/2, 0);
 					}
-					
-					messageText[index].SetActive(true);
-					Text text = messageText[index].GetComponent<Text>();
-					StringBuilder sb = new StringBuilder("", 65536);
-					LogMessage message = messages.Dequeue();
-					MelonLogger.Msg("Message Part Count: {0}", message.Parts.Count());
-					foreach (MessagePart part in message.Parts) {
-						if (!part.IsBackgroundColor) sb.AppendFormat("<color=#{0:X2}{1:X2}{2:X2}>", part.Color.R, part.Color.G, part.Color.B);
-						sb.Append(part.Text);
-						if (!part.IsBackgroundColor) sb.Append("</color>");
-					}
-					text.text = sb.ToString();
+
+					messageText[index].timeLeft = 5;
+					Text text = messageText[index].go.GetComponent<Text>();
+					text.text = messages.Dequeue();
 				}
 			}
 			if (SlotData.labMode && currentSession != null) {
@@ -331,7 +382,7 @@ namespace Sparkipelago {
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName) {
 			itemTimer = -1;
 			flintList.Clear();
-			MelonLogger.Msg("Scene Loaded: " + sceneName);
+			debugLog("Scene Loaded: {0}", sceneName);
 			currentScene = sceneName;
 			player = GameObject.Find("Player_Fark");
 
@@ -342,7 +393,8 @@ namespace Sparkipelago {
 				
 				for (int i = 0; i < messageText.Count(); i++) {
 					GameObject textGO = new GameObject("APText", typeof(Text), typeof(DeactivateAfterAWhile));
-					messageText[i] = textGO;
+					messageText[i].go = textGO;
+					messageText[i].timeLeft = 0;
 					textGO.SetActive(false);
 					textGO.transform.parent = canvasGO.transform;
 					Text text = textGO.GetComponent<Text>();

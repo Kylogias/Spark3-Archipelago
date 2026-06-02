@@ -78,6 +78,7 @@ namespace Sparkipelago {
 		public EnemyType enemyRando;
 		public int diveFloors;
 
+		public bool deathLink;
 		public bool capsuleArrows;
 		public bool bubbleArrows;
 		public bool exploreArrows;
@@ -90,6 +91,7 @@ namespace Sparkipelago {
 			musicRando = MusicType.Vanilla;
 			enemyRando = EnemyType.Vanilla;
 			diveFloors = 1;
+			deathLink = false;
 			capsuleArrows = false;
 			bubbleArrows = false;
 			exploreArrows = false;
@@ -155,6 +157,18 @@ namespace Sparkipelago {
 				settings, "Enemy Rando", "How should enemies be randomized", 0, 2,
 				(int newV) => {APSave.file.client.enemyRando = (EnemyType)newV; return ((EnemyType)newV).ToString();},
 				() => {return (int)APSave.file.client.enemyRando;}
+			);
+			Options.addIten(
+				settings, "Death Link", "Should Death Link be enabled?",
+				(bool newV) => {
+					APSave.file.client.deathLink = newV;
+					if (Sparkipelago.deathLink != null) {
+						if (newV) Sparkipelago.deathLink.EnableDeathLink();
+						else Sparkipelago.deathLink.DisableDeathLink();
+					}
+					return newV.ToString();
+				},
+				() => {return APSave.file.client.deathLink;}
 			);
 			Options.addIten(
 				settings, "Capsule Check Arrows", "Should there be arrows above capsules denoting progressiveness?",

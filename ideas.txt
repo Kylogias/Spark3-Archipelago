@@ -70,6 +70,20 @@ C=Checkpoint
 O=Capsule
 B=Bubble
 
+Beta Checklist:
+Gimmick Rando
+Score Sanity
+Checkpoint Sanity
+Bubble Sanity
+Capsule Sanity
+Spring Trap
+Progressive Combo/Score
+
+Stable Checklist:
+Speed Sanity
+Hard Logic
+General Stability
+
 TODO:
 	ALPINE CARRERA: PCOB
 	DOUBLEMOON VILLA: PCOB
