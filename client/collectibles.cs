@@ -212,6 +212,18 @@ namespace Sparkipelago {
 		
 		public static void updateTracker() {
 			if (playerArrow == null) return;
+			if (playerArrow.transform.parent == Sparkipelago.player.transform && !Sparkipelago.player.activeSelf) {
+				playerArrow.transform.SetParent(null);
+				playerArrow.transform.localScale = Vector3.one;
+			}
+			if (playerArrow.transform.parent != Sparkipelago.player.transform) {
+				playerArrow.transform.position = (Vector3.up*4.5f) + Sparkipelago.player.transform.position;
+				if (Sparkipelago.player.activeSelf) {
+					playerArrow.transform.SetParent(Sparkipelago.player.transform);
+					playerArrow.transform.localPosition = Vector3.up*4.5f;
+					playerArrow.transform.localScale = Vector3.one;
+				}
+			}
 			Vector3 playerPos = playerArrow.transform.position;
 			TrackType trackType = APSave.file.client.trackerMode;
 			foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
