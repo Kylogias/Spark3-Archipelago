@@ -164,6 +164,7 @@ namespace Sparkipelago {
 					MelonLogger.Error(e);
 					messages.Enqueue(e);
 				}
+				currentSession = null;
 			}
 		}
 		
@@ -179,7 +180,11 @@ namespace Sparkipelago {
 		public static void debugLog(string fmt, params object[] args) {
 			MelonLogger.Msg(string.Format(fmt, args));
 			if (SlotData.labMode && currentSession != null) {
-				currentSession.Say(string.Format(fmt, args));
+				try {
+					currentSession.Say(string.Format(fmt, args));
+				} catch (Exception) {
+					currentSession = null;
+				}
 			} 
 		}
 

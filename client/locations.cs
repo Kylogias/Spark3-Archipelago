@@ -133,6 +133,7 @@ namespace Sparkipelago {
 		}
 
 		public static bool hasLocationByIndex(int level, string sanity, int index) {
+			if (Sparkipelago.currentSession == null) return false;
 			foreach (APStageData stage in APShared.stages) {
 				if (stage.id == level) {
 					foreach (APStageCheck ch in stage.checks) {
@@ -146,6 +147,7 @@ namespace Sparkipelago {
 		}
 
 		public static bool hasLocation(int level, string check) {
+			if (Sparkipelago.currentSession == null) return false;
 			foreach (APStageData stage in APShared.stages) {
 				if (stage.id == level) {
 					foreach (APStageCheck ch in stage.checks) {
@@ -181,6 +183,7 @@ namespace Sparkipelago {
 		}
 		
 		public static bool isLocationCompleteByIndex(int level, string sanity, int index) {
+			if (Sparkipelago.currentSession == null) return false;
 			foreach (APStageData stage in APShared.stages) {
 				if (stage.id == level) {
 					foreach (APStageCheck ch in stage.checks) {
@@ -197,6 +200,7 @@ namespace Sparkipelago {
 		}
 
 		public static bool isLocationComplete(int level, string check) {
+			if (Sparkipelago.currentSession == null) return false;
 			if (check == "__shop") {
 				return Sparkipelago.currentSession.Locations.AllLocationsChecked.Contains(APShared.shop[level].id);
 			} else {

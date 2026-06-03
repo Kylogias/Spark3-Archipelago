@@ -87,7 +87,8 @@
 		{"rule": "1c", "expansion": "(dj|cd|da)"},
 		{"rule": "2c", "expansion": "((dj+cd)|(cd+da)|(da+dj)|(fa+da))"},
 		{"rule": "e1c", "expansion": "(dj|cd|da|cl|hs|mb)"},
-		{"rule": "e2c", "expansion": "(2c|cl|mb)"}
+		{"rule": "e2c", "expansion": "(2c|cl|mb)"},
+		{"rule": "vtn", "expansion": "cl|(wj+ed)|(wj+dj+(sf|cd|da|sb))|(wj+fl+1c)|(wj+fa+(dj|da))"}
 	],
 	"shop": [
 		{"name": "Spin Charge", "page": "Moves"},
@@ -129,9 +130,13 @@
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": [
-				{"name": "BATTERY #1", "index": 0, "sanity": "battery", "requires": "ca"},
-				{"name": "BATTERY #2", "index": 1, "sanity": "battery", "requires": "ca"},
-				{"name": "BATTERY #3", "index": 2, "sanity": "battery", "requires": "ca"}
+				{"name": "CHECKPOINT #1", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #2", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "BATTERY #1", "index": 1, "sanity": "battery", "requires": "ca"},
+				{"name": "BATTERY #2", "index": 2, "sanity": "battery", "requires": "ca"},
+				{"name": "BATTERY #3", "index": 0, "sanity": "battery", "requires": "ca"},
+				{"name": "CHECKPOINT #3", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #4", "index": 0, "sanity": "checkpoint", "requires": ""}
 			]}
 		]},
 		{"name": "DOUBLEMOON VILLA", "id": 1, "type": "stage", "regions": [
@@ -142,55 +147,367 @@
 				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": []},
-			{"name": "ABOVE START", "entrances": {"START": "dj|cd|sf", "ROAD #1 RIGHT NEIGHBORHOOD LOWER": ""}, "checks": [
-				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+			{"name": "START", "entrances": {}, "checks": [
+				{"name": "BIT BUBBLE #1", "index": 10, "sanity": "bubble", "requires": ""}
 			]},
-			{"name": "ROAD #1", "entrances": {"START": "spr|ww|wj", "ABOVE START": ""}, "checks": []},
-			{"name": "ROAD #1 LEFT NEIGHBORHOOD", "entrances": {"ROAD #1": ""}, "checks": []},
-			{"name": "ROAD #1 RIGHT NEIGHBORHOOD LOWER", "entrances": {"ROAD #1": ""}, "checks": []},
-			{"name": "ROAD #1 RIGHT NEIGHBORHOOD MIDDLE", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD LOWER": ""}, "checks": []},
-			{"name": "ROAD #1 RIGHT NEIGHBORHOOD UPPER LEFT", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": []},
+			{"name": "ABOVE START", "entrances": {"START": "dj|cd|sf", "ROAD #1 RIGHT NEIGHBORHOOD LOWER": ""}, "checks": [
+				{"name": "BIT BUBBLE #2", "index": 18, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #3", "index": 19, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #4", "index": 20, "sanity": "bubble", "requires": ""},
+				{"name": "YELLOW EXPLORATION MEDAL", "index": 2, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #5", "index": 21, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #1", "index": 25, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #1", "index": 14, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #1", "index": 29, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #2", "index": 28, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #3", "index": 21, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #4", "index": 22, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #5", "index": 30, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #6", "index": 23, "sanity": "capsule", "requires": ""},
+				{"name": "CYAN EXPLORATION MEDAL", "index": 0, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #6", "index": 25, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #1", "index": 32, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #7", "index": 31, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #2", "index": 24, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #8", "index": 27, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #9", "index": 24, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #7", "index": 22, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #10", "index": 33, "sanity": "capsule", "requires": "cl|(wj+ed)|(wj+1c)|(wj+dj+sb)|((fa|sf)+dj)|(wj+fa+da)"},
+				{"name": "BIT BUBBLE #8", "index": 23, "sanity": "bubble", "requires": "vtn"},
+				{"name": "SCORE CAPSULE #11", "index": 34, "sanity": "capsule", "requires": "vtn"},
+				{"name": "SCORE CAPSULE #12", "index": 26, "sanity": "capsule", "requires": "vtn"},
+				{"name": "BIT BUBBLE #9", "index": 17, "sanity": "bubble", "requires": "sn|jd|cl|(wj+(1c|ed|fl|fa|sf))"}
+			]},
+			{"name": "ROAD #1", "entrances": {"START": "spr|ww|wj", "ABOVE START": ""}, "checks": [
+				{"name": "BIT BUBBLE #10", "index": 98, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #11", "index": 9, "sanity": "bubble", "requires": ""},
+				{"name": "CHECKPOINT #1", "index": 9, "sanity": "checkpoint", "requires": ""}
+
+			]},
+			{"name": "ROAD #1 LEFT NEIGHBORHOOD", "entrances": {"ROAD #1": ""}, "checks": [
+				{"name": "SCORE CAPSULE #13", "index": 14, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #2", "index": 10, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #14", "index": 13, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #15", "index": 12, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #12", "index": 13, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #16", "index": 11, "sanity": "capsule", "requires": ""}
+			]},
+			{"name": "ROAD #1 RIGHT NEIGHBORHOOD MIDDLE", "entrances": {"ROAD #1": ""}, "checks": [
+				{"name": "BIT BUBBLE #13", "index": 12, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #2", "index": 8, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #17", "index": 9, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #18", "index": 58, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #19", "index": 6, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #14", "index": 11, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #20", "index": 59, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #3", "index": 7, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #21", "index": 50, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #22", "index": 55, "sanity": "capsule", "requires": ""}
+
+			]},
+			{"name": "ROAD #1 RIGHT NEIGHBORHOOD UPPER LEFT", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": [
+				{"name": "SCORE CAPSULE #23", "index": 54, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #4", "index": 57, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #24", "index": 56, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #25", "index": 47, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #3", "index": 29, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #26", "index": 48, "sanity": "capsule", "requires": ""},
+				{"name": "MAGENTA EXPLORATION MEDAL", "index": 4, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #15", "index": 30, "sanity": "bubble", "requires": "vtn"},
+				{"name": "SCORE CAPSULE #27", "index": 49, "sanity": "capsule", "requires": "vtn"}
+			]},
 			{"name": "ROAD #1 RIGHT NEIGHBORHOOD UPPER RIGHT", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": [
-				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "SCORE CAPSULE #28", "index": 39, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #29", "index": 38, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #30", "index": 41, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #3", "index": 40, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #16", "index": 26, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #17", "index": 27, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #31", "index": 42, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #32", "index": 43, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #4", "index": 44, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #33", "index": 45, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #34", "index": 46, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #18", "index": 28, "sanity": "bubble", "requires": ""}
 			]},
 			{"name": "START TIPPY BOTTOM", "entrances": {"ABOVE START": "cd|ed", "START TIPPY TOWER": ""}, "checks": [
-				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "SCORE CAPSULE #35", "index": 35, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #36", "index": 20, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #37", "index": 36, "sanity": "capsule", "requires": ""},
+				{"name": "GREEN EXPLORATION MEDAL", "index": 1, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #19", "index": 15, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #5", "index": 17, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #38", "index": 18, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #39", "index": 16, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #5", "index": 15, "sanity": "capsule", "requires": ""}
 			]},
 			{"name": "START TIPPY TOWER", "entrances": {"START TIPPY BOTTOM": "spe|ed", "ROAD #1 RIGHT NEIGHBORHOOD UPPER RIGHT": "da|rb"}, "checks": [
-				{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "SCORE CAPSULE #40", "index": 19, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #20", "index": 16, "sanity": "bubble", "requires": ""},
+				{"name": "BROWN EXPLORATION MEDAL", "index": 9, "sanity": "explore", "requires": ""},
+				{"name": "SCORE CAPSULE #41", "index": 37, "sanity": "capsule", "requires": ""}
 			]},
 			{"name": "START PLAYGROUND", "entrances": {"ROAD #1 RIGHT NEIGHBORHOOD MIDDLE": ""}, "checks": [
-				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "BIT BUBBLE #21", "index": 3, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #22", "index": 4, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #23", "index": 7, "sanity": "bubble", "requires": ""},
+				{"name": "RED EXPLORATION MEDAL", "index": 3, "sanity": "explore", "requires": ""},
+				{"name": "ENERGY BUBBLE #4", "index": 5, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #24", "index": 6, "sanity": "bubble", "requires": ""},
+				{"name": "CHECKPOINT #2", "index": 8, "sanity": "checkpoint", "requires": ""}
 			]},
-			{"name": "HIGHWAY NEIGHBORHOOD #1", "entrances": {"ROAD #1": ""}, "checks": []},
+			{"name": "HIGHWAY NEIGHBORHOOD #1", "entrances": {"ROAD #1": ""}, "checks": [
+				{"name": "HEALTH CAPSULE #6", "index": 4, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #7", "index": 5, "sanity": "capsule", "requires": ""}
+
+			]},
 			{"name": "STEPPING STONES NEIGHBORHOOD", "entrances": {"HIGHWAY NEIGHBORHOOD #1": ""}, "checks": [
-				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "PURPLE EXPLORATION MEDAL", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #29", "index": 8, "sanity": "bubble", "requires": ""},
+				{"name": "CHECKPOINT #3", "index": 7, "sanity": "checkpoint", "requires": ""},
+				{"name": "HEALTH CAPSULE #10", "index": 95, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #6", "index": 0, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #11", "index": 1, "sanity": "capsule", "requires": ""}
 			]},
-			{"name": "SPIRAL NEIGHBORHOOD", "entrances": {"STEPPING STONES NEIGHBORHOOD": ""}, "checks": []},
-			{"name": "STEPPING STONES NEIGHBORHOOD UPPER", "entrances": {"SPIRAL NEIGHBORHOOD UPPER": ""}, "checks": []},
-			{"name": "SPIRAL NEIGHBORHOOD UPPER", "entrances": {"SPIRAL NEIGHBORHOOD": ""}, "checks": []},
+			{"name": "SPIRAL NEIGHBORHOOD", "entrances": {"STEPPING STONES NEIGHBORHOOD": ""}, "checks": [
+				{"name": "BIT BUBBLE #25", "index": 38, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #42", "index": 52, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #43", "index": 53, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #26", "index": 37, "sanity": "bubble", "requires": ""},
+				{"name": "CHECKPOINT #4", "index": 6, "sanity": "checkpoint", "requires": ""},
+				{"name": "HEALTH CAPSULE #14", "index": 94, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #38", "index": 39, "sanity": "bubble", "requires": "jd|sn"},
+				{"name": "BIT BUBBLE #39", "index": 34, "sanity": "bubble", "requires": "jd|sn"}
+			]},
+			{"name": "STEPPING STONES NEIGHBORHOOD UPPER", "entrances": {"SPIRAL NEIGHBORHOOD UPPER": ""}, "checks": [
+				{"name": "HEALTH CAPSULE #8", "index": 99, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #44", "index": 98, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #27", "index": 71, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #28", "index": 70, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #9", "index": 93, "sanity": "capsule", "requires": "vtn"},
+				{"name": "ENERGY BUBBLE #5", "index": 68, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #30", "index": 69, "sanity": "bubble", "requires": ""}
+			]},
+			{"name": "SPIRAL NEIGHBORHOOD UPPER", "entrances": {"SPIRAL NEIGHBORHOOD": ""}, "checks": [
+				{"name": "BIT BUBBLE #35", "index": 99, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #52", "index": 142, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #53", "index": 141, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #54", "index": 140, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #55", "index": 165, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #56", "index": 51, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #36", "index": 33, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #37", "index": 36, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #7", "index": 35, "sanity": "bubble", "requires": ""}
+			]},
 			{"name": "STEPPING STONES TIPPY", "entrances": {"STEPPING STONES NEIGHBORHOOD UPPER": "cd|ed|cl|(wj+(dj|fl|(fa+da)))"}, "checks": [
-				{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "HEALTH CAPSULE #12", "index": 100, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #45", "index": 146, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #46", "index": 145, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #47", "index": 144, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #48", "index": 143, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #49", "index": 164, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #7", "index": 104, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #13", "index": 103, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #31", "index": 100, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #32", "index": 72, "sanity": "bubble", "requires": ""},
+				{"name": "BLUE EXPLORATION MEDAL", "index": 6, "sanity": "explore", "requires": ""},
+				{"name": "SCORE CAPSULE #50", "index": 102, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #51", "index": 101, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #6", "index": 73, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #33", "index": 74, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #34", "index": 75, "sanity": "bubble", "requires": "vtn"}
 			]},
-			{"name": "HIGHWAY NEIGHBORHOOD #2", "entrances": {"STEPPING STONES NEIGHBORHOOD": ""}, "checks": []},
-			{"name": "BIG HIGHWAY LOOP RIGHT", "entrances": {"HIGHWAY NEIGHBORHOOD #2": ""}, "checks": []},
-			{"name": "BIG HIGHWAY LOOP LEFT", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": []},
-			{"name": "BIG HIGHWAY LOOP TIPPY", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": []},
-			{"name": "BIG HIGHWAY", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": []},
-			{"name": "NEIGHBORHOOD AFTER BIG HIGHWAY", "entrances": {"BIG HIGHWAY": ""}, "checks": []},
-			{"name": "END NEIGHBORHOOD RIGHT UPPER", "entrances": {"END NEIGHBORHOOD LEFT": ""}, "checks": []},
+			{"name": "HIGHWAY NEIGHBORHOOD #2", "entrances": {"STEPPING STONES NEIGHBORHOOD": ""}, "checks": [
+				{"name": "HEALTH CAPSULE #15", "index": 91, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #57", "index": 97, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #58", "index": 92, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #59", "index": 96, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #16", "index": 90, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #17", "index": 89, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #18", "index": 86, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #40", "index": 31, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #41", "index": 40, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #8", "index": 87, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #19", "index": 88, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #42", "index": 32, "sanity": "bubble", "requires": ""}
+			]},
+			{"name": "BIG HIGHWAY LOOP RIGHT", "entrances": {"HIGHWAY NEIGHBORHOOD #2": ""}, "checks": [
+				{"name": "HEALTH CAPSULE #21", "index": 2, "sanity": "capsule", "requires": ""},
+				{"name": "CHECKPOINT #5", "index": 4, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "BIG HIGHWAY LOOP LEFT", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": [
+				{"name": "HEALTH CAPSULE #22", "index": 3, "sanity": "capsule", "requires": ""},
+				{"name": "CHECKPOINT #6", "index": 5, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "BIG HIGHWAY LOOP TIPPY", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": [
+				{"name": "SCORE CAPSULE #60", "index": 62, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #61", "index": 60, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #62", "index": 163, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #63", "index": 147, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #64", "index": 148, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #20", "index": 61, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #65", "index": 64, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #9", "index": 63, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #43", "index": 96, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #66", "index": 65, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #8", "index": 41, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #44", "index": 42, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #45", "index": 95, "sanity": "bubble", "requires": ""}
+			]},
+			{"name": "BIG HIGHWAY", "entrances": {"BIG HIGHWAY LOOP RIGHT": ""}, "checks": [
+				{"name": "SCORE CAPSULE #67", "index": 83, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #46", "index": 2, "sanity": "bubble", "requires": "jd|sn|cl"},
+				{"name": "SCORE CAPSULE #68", "index": 82, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #10", "index": 81, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #47", "index": 1, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #9", "index": 0, "sanity": "bubble", "requires": "1c|cl|ed|sb|sf|fa|fl"}
+			]},
+			{"name": "NEIGHBORHOOD AFTER BIG HIGHWAY", "entrances": {"BIG HIGHWAY": ""}, "checks": [
+				{"name": "HEALTH CAPSULE #23", "index": 84, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #48", "index": 63, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #69", "index": 78, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #49", "index": 62, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #11", "index": 77, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #50", "index": 59, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #70", "index": 129, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #51", "index": 60, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #52", "index": 64, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #24", "index": 79, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #71", "index": 80, "sanity": "capsule", "requires": "vtn"},
+				{"name": "BIT BUBBLE #53", "index": 61, "sanity": "bubble", "requires": "vtn"},
+				{"name": "CHECKPOINT #7", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "HEALTH CAPSULE #25", "index": 133, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #54", "index": 93, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #72", "index": 162, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #73", "index": 130, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #12", "index": 131, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #26", "index": 132, "sanity": "capsule", "requires": ""},
+				{"name": "CHECKPOINT #8", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "BIT BUBBLE #55", "index": 88, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #13", "index": 121, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #74", "index": 120, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #27", "index": 122, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #75", "index": 123, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #10", "index": 87, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #56", "index": 94, "sanity": "bubble", "requires": ""}
+			]},
+			{"name": "END NEIGHBORHOOD RIGHT UPPER", "entrances": {"END NEIGHBORHOOD LEFT": ""}, "checks": [
+				{"name": "SCORE CAPSULE #76", "index": 125, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #11", "index": 43, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #57", "index": 44, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #58", "index": 103, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #12", "index": 104, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #77", "index": 152, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #78", "index": 153, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #79", "index": 160, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #80", "index": 151, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #59", "index": 105, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #60", "index": 50, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #61", "index": 45, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #81", "index": 67, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #28", "index": 66, "sanity": "capsule", "requires": ""}
+			]},
+			{"name": "END BIG CLOCKTOWER LOWER", "entrances": {"END NEIGHBORHOOD RIGHT UPPER": "cl|ed|((dj|wj)+(cd|da))|(fa+dj)|(sb+(fa|fl|dj))|(cd+da)|(fl+1c)"}, "checks": [
+				{"name": "BIT BUBBLE #65", "index": 49, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #66", "index": 48, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #88", "index": 69, "sanity": "capsule", "requires": ""}
+			]},
+			{"name": "END BIG CLOCKTOWER TOP", "entrances": {"END BIG CLOCKTOWER LOWER": "da"}, "checks": [
+				{"name": "BIT BUBBLE #67", "index": 67, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #89", "index": 137, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #90", "index": 139, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #91", "index": 85, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #13", "index": 46, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #68", "index": 97, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #92", "index": 136, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #93", "index": 138, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #94", "index": 68, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #69", "index": 47, "sanity": "bubble", "requires": ""}
+			]},
 			{"name": "END NEIGHBORHOOD RIGHT LOWER", "entrances": {"END NEIGHBORHOOD RIGHT UPPER": ""}, "checks": [
-				{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "SCORE CAPSULE #95", "index": 126, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #70", "index": 90, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #14", "index": 107, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #15", "index": 106, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #71", "index": 91, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #72", "index": 52, "sanity": "bubble", "requires": ""},
+				{"name": "GREY EXPLORATION MEDAL", "index": 7, "sanity": "explore", "requires": ""},
+				{"name": "SCORE CAPSULE #96", "index": 72, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #30", "index": 71, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #73", "index": 51, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #97", "index": 70, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #98", "index": 127, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #74", "index": 92, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #75", "index": 58, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #14", "index": 128, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #15", "index": 75, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #99", "index": 76, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #76", "index": 57, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #77", "index": 53, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #78", "index": 55, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #31", "index": 73, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #79", "index": 65, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #16", "index": 54, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #100", "index": 74, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #17", "index": 66, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #101", "index": 150, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #102", "index": 161, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #103", "index": 149, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #80", "index": 56, "sanity": "bubble", "requires": "cl|ed|1c"}
+
 			]},
-			{"name": "END NEIGHBORHOOD LEFT", "entrances": {"NEIGHBORHOOD AFTER BIG HIGHWAY": ""}, "checks": []},
-			{"name": "END NEIGHBORHOOD BACK LEFT", "entrances": {"END NEIGHBORHOOD LEFT": ""}, "checks": []},
+			{"name": "END NEIGHBORHOOD LEFT", "entrances": {"NEIGHBORHOOD AFTER BIG HIGHWAY": ""}, "checks": [
+				{"name": "SCORE CAPSULE #82", "index": 159, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #62", "index": 89, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #83", "index": 154, "sanity": "capsule", "requires": ""},
+				{"name": "CHECKPOINT #9", "index": 0, "sanity": "checkpoint", "requires": ""},
+				{"name": "HEALTH CAPSULE #29", "index": 119, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #63", "index": 86, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #84", "index": 157, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #85", "index": 156, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #86", "index": 155, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #87", "index": 158, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #64", "index": 85, "sanity": "bubble", "requires": ""}
+			]},
+			{"name": "END NEIGHBORHOOD BACK LEFT", "entrances": {"END NEIGHBORHOOD LEFT": ""}, "checks": [
+				{"name": "BIT BUBBLE #81", "index": 81, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #104", "index": 118, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #105", "index": 117, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #82", "index": 84, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #18", "index": 82, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #106", "index": 116, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #32", "index": 115, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #107", "index": 114, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #33", "index": 113, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #83", "index": 83, "sanity": "bubble", "requires": "cl|ed|1c"}
+			]},
 			{"name": "END NEIGHBORHOOD BACK MIDDLE", "entrances": {"END NEIGHBORHOOD BACK LEFT": ""}, "checks": [
-				{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "SCORE CAPSULE #108", "index": 107, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #84", "index": 77, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #34", "index": 108, "sanity": "capsule", "requires": ""},
+				{"name": "WHITE EXPLORATION MEDAL", "index": 8, "sanity": "explore", "requires": ""},
+				{"name": "HEALTH CAPSULE #35", "index": 109, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #109", "index": 110, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #19", "index": 78, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #16", "index": 105, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #85", "index": 79, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #20", "index": 76, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #21", "index": 101, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #86", "index": 102, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #17", "index": 166, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #36", "index": 106, "sanity": "capsule", "requires": ""}
 			]},
-			{"name": "END NEIGHBORHOOD BACK RIGHT", "entrances": {"END NEIGHBORHOOD BACK MIDDLE": ""}, "checks": []},
-			{"name": "END CANALS", "entrances": {"NEIGHBORHOOD AFTER BIG HIGHWAY": ""}, "checks": []}
+			{"name": "END NEIGHBORHOOD BACK RIGHT", "entrances": {"END NEIGHBORHOOD BACK MIDDLE": ""}, "checks": [
+				{"name": "SCORE CAPSULE #110", "index": 112, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #37", "index": 111, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #87", "index": 80, "sanity": "bubble", "requires": ""},
+				{"name": "SCORE CAPSULE #111", "index": 124, "sanity": "capsule", "requires": ""}
+			]},
+			{"name": "END CANALS", "entrances": {"NEIGHBORHOOD AFTER BIG HIGHWAY": ""}, "checks": [
+				{"name": "CHECKPOINT #10", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "ENERGY CAPSULE #18", "index": 135, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #112", "index": 134, "sanity": "capsule", "requires": ""}
+			]}
 		]},
 		{"name": "HIGH-RISE TRACKS", "id": 2, "type": "stage", "regions": [
 			{"name": "GOAL", "entrances": {"TRAINS": ""}, "checks": [
@@ -201,23 +518,36 @@
 				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": "co"}
 			]},
 			{"name": "START", "entrances": {}, "checks": [
-				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+				{"name": "CYAN EXPLORATION MEDAL", "index": 0, "sanity": "explore", "requires": ""},
+				{"name": "GREEN EXPLORATION MEDAL", "index": 1, "sanity": "explore", "requires": ""},
 				{"name": "ENERGY CAPSULE #1", "index": 9, "sanity": "capsule", "requires": ""},
 				{"name": "HEALTH CAPSULE #1", "index": 8, "sanity": "capsule", "requires": ""},
 				{"name": "SCORE CAPSULE #1", "index": 7, "sanity": "capsule", "requires": ""},
-				{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
+				{"name": "GREY EXPLORATION MEDAL", "index": 7, "sanity": "explore", "requires": ""},
 				{"name": "HEALTH CAPSULE #2", "index": 6, "sanity": "capsule", "requires": ""},
 				{"name": "BIT BUBBLE #1", "index": 2, "sanity": "bubble", "requires": ""},
-				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "YELLOW EXPLORATION MEDAL", "index": 2, "sanity": "explore", "requires": ""}
 			]},
 			{"name": "TRAINS", "entrances": {"START": "ra|1c|fa|sf|fl|ed|sb|cl"}, "checks": [
-				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "RED EXPLORATION MEDAL", "index": 3, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #2", "index": 1, "sanity": "bubble", "requires": ""},
+				{"name": "CHECKPOINT #1", "index": 0, "sanity": "checkpoint", "requires": ""},
+				{"name": "ENERGY CAPSULE #2", "index": 5, "sanity": "capsule", "requires": ""},
+				{"name": "MAGENTA EXPLORATION MEDAL", "index": 4, "sanity": "explore", "requires": ""},
+				{"name": "WHITE EXPLORATION MEDAL", "index": 8, "sanity": "explore", "requires": ""},
+				{"name": "HEALTH CAPSULE #3", "index": 4, "sanity": "capsule", "requires": ""},
+				{"name": "SCORE CAPSULE #2", "index": 3, "sanity": "capsule", "requires": ""},
+				{"name": "CHECKPOINT #2", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "SCORE CAPSULE #3", "index": 10, "sanity": "capsule", "requires": ""},
+				{"name": "PURPLE EXPLORATION MEDAL", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "SCORE CAPSULE #4", "index": 2, "sanity": "capsule", "requires": ""},
+				{"name": "BROWN EXPLORATION MEDAL", "index": 9, "sanity": "explore", "requires": ""},
+				{"name": "HEALTH CAPSULE #4", "index": 1, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #3", "index": 0, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #3", "index": 0, "sanity": "capsule", "requires": ""},
+				{"name": "CHECKPOINT #3", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "BLUE EXPLORATION MEDAL", "index": 6, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #4", "index": 3, "sanity": "bubble", "requires": ""}
 			]}
 		]},
 		{"name": "COLD-DRY DESERT", "id": 3, "type": "stage", "regions": [
@@ -253,8 +583,8 @@
 				{"name": "LAKEBED BLUE COIN", "index": 1, "sanity": "coin", "requires": ""},
 				{"name": "START CLOCKTOWER BLUE COIN", "index": 2, "sanity": "coin", "requires": ""},
 				{"name": "LEFT NEIGHBORHOOD NEAR START BLUE COIN", "index": 3, "sanity": "coin", "requires": ""},
-				{"name": "BLUE COIN #5", "index": 4, "sanity": "coin", "requires": "spr|(wj+(cl|ed|(dj+(cd|da)))"},
-				{"name": "RADIO TOWER BLUE COIN", "index": 5, "sanity": "coin", "requires": "spr+cd"},
+				{"name": "BLUE COIN #5", "index": 4, "sanity": "coin", "requires": "spr|vtn"},
+				{"name": "RADIO TOWER BLUE COIN", "index": 5, "sanity": "coin", "requires": "spr+(cd|cl|ed)"},
 				{"name": "BACK LEFT NEIGHBORHOOD BLUE COIN", "index": 6, "sanity": "coin", "requires": ""},
 				{"name": "BACK BLUE COIN", "index": 7, "sanity": "coin", "requires": ""},
 				{"name": "UPPER BACK BLUE COIN", "index": 8, "sanity": "coin", "requires": ""},
@@ -263,7 +593,37 @@
 				{"name": "MANHOLE BLUE COIN", "index": 11, "sanity": "coin", "requires": ""},
 				{"name": "SEWER BLUE COIN", "index": 12, "sanity": "coin", "requires": ""},
 				{"name": "BACK RIGHT NEIGHBORHOOD BLUE COIN", "index": 13, "sanity": "coin", "requires": ""},
-				{"name": "RIGHT ALLEYWAY BLUE COIN", "index": 14, "sanity": "coin", "requires": ""}
+				{"name": "RIGHT ALLEYWAY BLUE COIN", "index": 14, "sanity": "coin", "requires": ""},
+
+				{"name": "BIT BUBBLE #1", "index": 0, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #1", "index": 7, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #2", "index": 1, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #3", "index": 19, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #1", "index": 18, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #2", "index": 10, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #4", "index": 9, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #1", "index": 0, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #3", "index": 8, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #2", "index": 4, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #5", "index": 17, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #2", "index": 5, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #3", "index": 6, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #4", "index": 7, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #6", "index": 5, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #7", "index": 4, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #8", "index": 14, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #9", "index": 15, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #4", "index": 2, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #3", "index": 1, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #10", "index": 13, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY CAPSULE #4", "index": 3, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #11", "index": 2, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #12", "index": 12, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #13", "index": 6, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #14", "index": 16, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #15", "index": 3, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #16", "index": 20, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #17", "index": 11, "sanity": "bubble", "requires": "vtn|(spr+(cd|ed))"}
 			]}
 		]},
 		{"name": "LOST RIVIERA", "id": 5, "type": "stage", "regions": [

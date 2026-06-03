@@ -81,6 +81,7 @@ namespace Sparkipelago {
 		public bool deathLink;
 		public bool capsuleArrows;
 		public bool bubbleArrows;
+		public bool checkpointArrows;
 		public bool exploreArrows;
 		public bool coinArrows;
 		public bool batteryArrows;
@@ -94,6 +95,7 @@ namespace Sparkipelago {
 			deathLink = false;
 			capsuleArrows = false;
 			bubbleArrows = false;
+			checkpointArrows = false;
 			exploreArrows = false;
 			coinArrows = false;
 			batteryArrows = false;
@@ -179,6 +181,11 @@ namespace Sparkipelago {
 				settings, "Bubble Check Arrows", "Should there be arrows above bubbles denoting progressiveness?",
 				(bool newV) => {APSave.file.client.bubbleArrows = newV; return newV.ToString();},
 				() => {return APSave.file.client.bubbleArrows;}
+			);
+			Options.addIten(
+				settings, "Checkpoint Check Arrows", "Should there be arrows above checkpoints denoting progressiveness?",
+				(bool newV) => {APSave.file.client.checkpointArrows = newV; return newV.ToString();},
+				() => {return APSave.file.client.checkpointArrows;}
 			);
 			Options.addIten(
 				settings, "Explore Medal Check Arrows", "Should there be arrows above explore medals denoting progressiveness?",

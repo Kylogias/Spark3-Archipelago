@@ -119,9 +119,13 @@ namespace Sparkipelago {
 						Vector3 start = Vector3.zero, end = Vector3.zero;
 						if (sanity == "bubble" || sanity == "explore") {start = new Vector3(0, 2, 0); end = new Vector3(0, 1.25f, 0);}
 						if (sanity == "capsule") {start = new Vector3(0, 6, 0); end = new Vector3(0, 4, 0);}
-						if (sanity == "checkpoint") {start = new Vector3(0, 10, -20); end = new Vector3(0, 8, -20);}
+						if (sanity == "checkpoint") {start = Vector3.up*1.25f; end = Vector3.zero;}
 						if (sanity == "coin") {start = new Vector3(0, 1.875f, 0); end = new Vector3(0, 1.25f, 0);}
-						createCheckArrow(parent, sanity, comps.Count(), start, end);
+						GameObject arrow = createCheckArrow(parent, sanity, comps.Count(), start, end);
+						if (sanity == "checkpoint") {
+							arrow.transform.rotation = Quaternion.identity;
+							arrow.transform.localPosition = new Vector3(0, 8, -20);
+						}
 					}
 					comps.Add(comp);
 				}
@@ -246,6 +250,10 @@ namespace Sparkipelago {
 				}
 				if (sd.sanity == "battery") {
 					if (!APSave.file.client.batteryArrows) sd.go.SetActive(false);
+					else sd.go.SetActive(true);
+				}
+				if (sd.sanity == "checkpoint") {
+					if (!APSave.file.client.checkpointArrows) sd.go.SetActive(false);
 					else sd.go.SetActive(true);
 				}
 			}
@@ -436,9 +444,12 @@ namespace Sparkipelago {
 
 		[HarmonyPatch(typeof(WorldMedal), "SetExploreMedal")]
 		private static class WorldMedalPatch {
-			private static void Postfix(int medal) {
-				MelonLogger.Msg("Sending " + Save.CurrentStageIndex.ToString() + " Medal " + medal.ToString());
+			private static void Postfix(WorldMedal __instance, int medal) {
+				Sparkipelago.debugLog("{{\"name\": \"{0} EXPLORATION MEDAL\", \"index\": {1}, \"sanity\": \"explore\", \"requires\": \"\"}},", MEDALNAMES[medal], medal);
 				Locations.sendLocationCheck(Save.CurrentStageIndex, string.Format("{0} EXPLORATION MEDAL", MEDALNAMES[medal]));
+				Transform arrow = __instance.gameObject.transform.Find("Arrow");
+				arrow.gameObject.SetActive(false);
+				scout.allLocations[scout.allLocations.IndexOf(arrow)] = null;
 			}
 		}
 		
@@ -453,7 +464,7 @@ namespace Sparkipelago {
 				if (!bubbles.Contains(mon)) return;
 				if (mon.Type == MonitorType.Ring) {type = "BIT"; count = bBubCount; bBubCount += 1;}
 				if (mon.Type == MonitorType.Energy) {type = "ENERGY"; count = eBubCount; eBubCount += 1;}
-				Sparkipelago.debugLog("{{\"name\": \"{0} BUBBLE #{1}\", \"index\": {2}, \"sanity\": \"capsule\", \"requires\": \"\"}}", type, count, bubbles.IndexOf(mon));
+				Sparkipelago.debugLog("{{\"name\": \"{0} BUBBLE #{1}\", \"index\": {2}, \"sanity\": \"bubble\", \"requires\": \"\"}},", type, count, bubbles.IndexOf(mon));
 				bubbles[bubbles.IndexOf(mon)] = null;
 			}
 		}
@@ -469,7 +480,7 @@ namespace Sparkipelago {
 				if (col.tag == "Ring") {capType = "HEALTH"; count = hCapCount; hCapCount += 1;}
 				if (col.tag == "ScoreCapsule") {capType = "SCORE"; count = sCapCount; sCapCount += 1;}
 				if (col.tag == "EnergyCap") {capType = "ENERGY"; count = eCapCount; eCapCount += 1;}
-				Sparkipelago.debugLog("{{\"name\": \"{0} CAPSULE #{1}\", \"index\": {2}, \"sanity\": \"capsule\", \"requires\": \"\"}}", capType, count, capsules.IndexOf(rotring));
+				Sparkipelago.debugLog("{{\"name\": \"{0} CAPSULE #{1}\", \"index\": {2}, \"sanity\": \"capsule\", \"requires\": \"\"}},", capType, count, capsules.IndexOf(rotring));
 				capsules[capsules.IndexOf(rotring)] = null;
 			}
 		}
@@ -480,7 +491,10 @@ namespace Sparkipelago {
 				if (!checkpoints.Contains(check)) return;
 				int count = checkpointCount;
 				checkpointCount += 1;
-				Sparkipelago.debugLog("{{\"name\": \"CHECKPOINT #{0}\", \"index\": {1}, \"sanity\": \"checkpoint\", \"requires\": \"\"}}", count, checkpoints.IndexOf(check));
+				Sparkipelago.debugLog("{{\"name\": \"CHECKPOINT #{0}\", \"index\": {1}, \"sanity\": \"checkpoint\", \"requires\": \"\"}},", count, checkpoints.IndexOf(check));
+				Transform arrow = check.gameObject.transform.Find("Arrow");
+				arrow.gameObject.SetActive(false);
+				scout.allLocations[scout.allLocations.IndexOf(arrow)] = null;
 				checkpoints[checkpoints.IndexOf(check)] = null;
 			}
 		}
@@ -492,7 +506,7 @@ namespace Sparkipelago {
 					int idx = coins.IndexOf(__instance);
 					int count = coinCount;
 					coinCount += 1;
-					Sparkipelago.debugLog("{{\"name\": \"BLUE COIN #{0}\", \"index\": {1}, \"sanity\": \"coin\", \"requires\": \"\"}}", count, idx);
+					Sparkipelago.debugLog("{{\"name\": \"BLUE COIN #{0}\", \"index\": {1}, \"sanity\": \"coin\", \"requires\": \"\"}},", count, idx);
 					Locations.sendLocationByIndex(Save.CurrentStageIndex, "coin", idx);
 					coins[idx] = null;
 				}
@@ -506,7 +520,7 @@ namespace Sparkipelago {
 					int idx = batteries.IndexOf(col.gameObject);
 					int count = batteryCount;
 					batteryCount += 1;
-					Sparkipelago.debugLog("{{\"name\": \"BATTERY #{0}\", \"index\": {1}, \"sanity\": \"battery\", \"requires\": \"\"}}", count, idx);
+					Sparkipelago.debugLog("{{\"name\": \"BATTERY #{0}\", \"index\": {1}, \"sanity\": \"battery\", \"requires\": \"ca\"}},", count, idx);
 					Locations.sendLocationByIndex(Save.CurrentStageIndex, "battery", idx);
 					batteries[idx] = null;
 				}
