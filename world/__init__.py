@@ -71,10 +71,12 @@ class Spark3World(World):
 			self.gimmick_rando = False
 		
 		self.multipliers = []
-		if self.options.perfect_combo:
-			self.multipliers.append("Perfect Combo")
-		if self.options.score_multiplier:
-			self.multipliers.append("Score Multiplier")
+		for i in range(self.options.progressive_combo.value):
+			self.multipliers.append("Progressive Combo")
+		for i in range(self.options.progressive_score.value):
+			self.multipliers.append("Progressive Score")
+		for i in range(self.options.progressive_timestop.value):
+			self.multipliers.append("Progressive Time Stop")
 		
 		if self.options.spark2_stages:
 			self.spark2 = True
@@ -103,6 +105,8 @@ class Spark3World(World):
 		req_freedom = int(self.item_state.FREEDOM_COUNT * (self.options.freedom_required.value * 0.01))
 		self.rules_state.FREEDOM_REQUIREMENTS = [int(req_freedom/5), int(2*req_freedom/5), int(3*req_freedom/5), int(4*req_freedom/5), int(req_freedom)]
 		self.rules_state.REQUIRE_CHARACTERS = self.options.require_characters.value
+		self.rules_state.ENERGY_LOGIC = self.options.energy_logic.value
+		self.rules_state.CHARACTER_LOGIC = self.options.character_logic.value
 
 		self.location_state.UTOPIA_HUNT_MEDALS = self.options.utopia_hunt_medals.value
 		self.rules_state.EXPLORE_REQUIREMENT = int(math.ceil((self.options.required_explore.value*0.01) * (30 if self.spark2 else 18)))
@@ -130,6 +134,8 @@ class Spark3World(World):
 			self.rules_state.SPEED_REQUIREMENTS = slot_data["speed_requirements"]
 			self.rules_state.SCORE_REQUIREMENTS = slot_data["score_requirements"]
 			self.rules_state.REQUIRE_CHARACTERS = slot_data["require_characters"]
+			self.rules_state.ENERGY_LOGIC = slot_data["energy_logic"]
+			self.rules_state.CHARACTER_LOGIC = slot_data["character_logic"]
 			self.speed_type = slot_data["speed_type"]
 			self.score_type = slot_data["score_type"]
 			self.location_state.UTOPIA_HUNT_MEDALS = slot_data["utopia_hunt_medals"]
@@ -199,6 +205,8 @@ class Spark3World(World):
 			"speed_requirements": self.rules_state.SPEED_REQUIREMENTS,
 			"score_requirements": self.rules_state.SCORE_REQUIREMENTS,
 			"require_characters": self.rules_state.REQUIRE_CHARACTERS,
+			"energy_logic": self.rules_state.ENERGY_LOGIC,
+			"character_logic": self.rules_state.CHARACTER_LOGIC,
 			"speed_type": self.speed_type,
 			"score_type": self.score_type,
 			"explore_requirement": self.rules_state.EXPLORE_REQUIREMENT,

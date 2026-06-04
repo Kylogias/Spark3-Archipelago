@@ -275,6 +275,27 @@ namespace Sparkipelago {
 						anyDist = xfrmDist;
 						nearestAny = xfrm;
 					}
+				} else if (trackType == TrackType.Energy) {
+					foreach (MonitorData mon in bubbles) {
+						if (!mon) continue;
+						if (mon.Type != MonitorType.Energy) continue;
+						Vector3 xfrmPos = mon.gameObject.transform.position;
+						float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
+						if (xfrmDist < anyDist) {
+							anyDist = xfrmDist;
+							nearestAny = mon.gameObject.transform;
+						}
+					}
+					foreach (RotateRing cap in capsules) {
+						if (!cap) continue;
+						if (cap.tag != "EnergyCap") continue;
+						Vector3 xfrmPos = cap.gameObject.transform.position;
+						float xfrmDist = Vector3.Distance(xfrmPos, playerPos) * 10;
+						if (xfrmDist < anyDist) {
+							anyDist = xfrmDist;
+							nearestAny = cap.gameObject.transform;
+						}
+					}
 				} else foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
 					
 					if (sd.collected || !sd.enabled || !sd.go) continue;
@@ -295,6 +316,7 @@ namespace Sparkipelago {
 				}
 				
 				switch (trackType) {
+					case TrackType.Energy:
 					case TrackType.IncludeAll:
 					case TrackType.NearestAny:
 						trackXfrm = nearestAny;

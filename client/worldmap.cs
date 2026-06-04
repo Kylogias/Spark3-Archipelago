@@ -118,7 +118,7 @@ namespace Sparkipelago {
 			foreach(LevelData level in levels) {
 				bool unlocked = false;
 				bool force = false;
-				if (Sparkipelago.hasItem(ItemIds.OOB_CLIP) && level.ID == 155) unlocked = true;
+				if (Sparkipelago.hasItem(ItemIds.OUT_OF_BOUNDS) && level.ID == 155) unlocked = true;
 				if (SlotData.labMode) {unlocked = true; force = true;}
 				if (level.ID == -99) {
 					Vector3 newpos;

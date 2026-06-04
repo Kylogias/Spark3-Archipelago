@@ -35,17 +35,54 @@ class GimmickRando(Toggle):
 	"""
 	display_name = "Randomize Gimmicks"
 
-class PerfectCombo(DefaultOnToggle):
+class EnergyLogic(Toggle):
 	"""
-	When enabled, puts permanent max combo into the item pool
+	Should energy-requiring moves be relevant in logic? You may be required to restart the stage multiple times
 	"""
-	display_name = "Perfect Combo"
+	display_name = "Energy Logic"
 
-class ScoreMultiplier(Toggle):
+class CharacterLogic(Toggle):
 	"""
-	When enabled, randomizes an item that gives 30x score multiplier on stage load
+	Should characters be relevant in logic? Does not affect Utopia Shelter
 	"""
-	display_name = "Score Multiplier"
+	display_name = "Character Logic"
+
+class ProgressiveCombo(Range):
+	"""
+	How many combo items should be in the pool?
+	These items are progressive and can be adjusted in client settings
+	"""
+	display_name = "Progressive Combo"
+
+	range_start = 0
+	range_end = 10
+
+	default = 0
+
+class ProgressiveScore(Range):
+	"""
+	How many score multiplier options should be in the pool?
+	These items are progressive and can be adjusted in client settings
+	"""
+	display_name = "Progressive Score"
+
+	range_start = 0
+	range_end = 10
+
+	default = 0
+
+class ProgressiveTimestop(Range):
+	"""
+	How many timestop items should be in the pool?
+	These items slow down the in-game timer, making the speed medals easier to obtain
+	These items are progressive and can be adjusted in client settings
+	"""
+	display_name = "Progressive Time Stop"
+
+	range_start = 0
+	range_end = 10
+
+	default = 0
 
 class LabMode(Toggle):
 	"""
@@ -244,6 +281,8 @@ class EndlessDiveChecks(Range):
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
 	gimmick_rando: GimmickRando
+	character_logic: CharacterLogic
+	energy_logic: EnergyLogic
 	difficulty: Difficulty
 	spark2_stages: Spark2Stages
 
@@ -267,8 +306,9 @@ class Spark3Options(PerGameCommonOptions):
 	batterysanity: Batterysanity
 	endless_dive_checks: EndlessDiveChecks
 
-	perfect_combo: PerfectCombo
-	score_multiplier: ScoreMultiplier
+	progressive_combo: ProgressiveCombo
+	progressive_score: ProgressiveScore
+	progressive_timestop: ProgressiveTimestop
 	trap_chance: TrapChance
 	
 	labmode: LabMode
@@ -276,7 +316,7 @@ class Spark3Options(PerGameCommonOptions):
 option_groups = [
 	OptionGroup(
 		"Basic Options",
-		[AbilityRando, GimmickRando, Difficulty, Spark2Stages]
+		[AbilityRando, GimmickRando, Difficulty, EnergyLogic, CharacterLogic, Spark2Stages]
 	),
 	OptionGroup(
 		"Gate Options",
@@ -288,7 +328,7 @@ option_groups = [
 	),
 	OptionGroup(
 		"Item Options",
-		[PerfectCombo, ScoreMultiplier, TrapChance]
+		[ProgressiveCombo, ProgressiveScore, ProgressiveTimestop, TrapChance]
 	),
 	OptionGroup(
 		"Miscellaneous",

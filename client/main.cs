@@ -418,7 +418,9 @@ namespace Sparkipelago {
 			}
 
 			if (player != null) {
-				if (hasItem(ItemIds.SCORE_MULTIPLIER)) ScoreManager.Charge = 30;
+				float score = APSave.file.client.scoreAmt * itemState[ItemIds.PROGRESSIVE_SCORE];
+				if (score > APSave.file.client.scoreMax) score = APSave.file.client.scoreMax;
+				ScoreManager.Charge = score;
 				Collectibles.onSceneLoad(sceneName);
 				Options.buildCategories();
 				

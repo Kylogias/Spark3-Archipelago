@@ -1,5 +1,5 @@
 {
-	"version": 12,
+	"version": 13,
 	"difficulties": ["base"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
@@ -24,8 +24,9 @@
 		{"name": "Laser Trap", "itemtype": "TRAP"},
 		{"name": "Flint Trap", "itemtype": "TRAP"},
 		
-		{"name": "Perfect Combo", "itemtype": "MULTIPLIER"},
-		{"name": "Score Multiplier", "itemtype": "MULTIPLIER"},
+		{"name": "Progressive Combo", "itemtype": "MULTIPLIER"},
+		{"name": "Progressive Score", "itemtype": "MULTIPLIER"},
+		{"name": "Progressive Time Stop", "itemtype": "MULTIPLIER"},
 		
 		{"name": "Spin Charge", "itemtype": "MOVE"},
 		{"name": "Dual Air Kick", "itemtype": "MOVE"},
@@ -36,19 +37,19 @@
 		{"name": "Abrupt Finisher", "itemtype": "MOVE"},
 		{"name": "Duplex Slash", "itemtype": "MOVE"},
 		
-		{"name": "Speed Buff", "rule": "sb", "itemtype": "POWER"},
-		{"name": "Hyper Surge", "rule": "hs", "itemtype": "POWER"},
-		{"name": "Energy Dash", "rule": "ed", "itemtype": "POWER"},
-		{"name": "Overcharge", "rule": "oc", "itemtype": "POWER"},
-		{"name": "Snap Portal", "rule": "sn", "itemtype": "POWER"},
+		{"name": "Speed Buff", "rule": "sb", "itemtype": "ENERGY"},
+		{"name": "Hyper Surge", "rule": "hs", "itemtype": "ENERGY"},
+		{"name": "Energy Dash", "rule": "ed", "itemtype": "ENERGY"},
+		{"name": "Overcharge", "rule": "oc", "itemtype": "ENERGY"},
+		{"name": "Snap Portal", "rule": "sn", "itemtype": "ENERGY"},
 		{"name": "Radar Scout", "itemtype": "MOVE"},
-		{"name": "Multishot Blast", "rule": "mb", "itemtype": "POWER"},
+		{"name": "Multishot Blast", "rule": "mb", "itemtype": "ENERGY"},
 		{"name": "Heal", "itemtype": "MOVE"},
-		{"name": "Cloud Shot", "rule": "cl", "itemtype": "POWER"},
+		{"name": "Cloud Shot", "rule": "cl", "itemtype": "ENERGY"},
 		{"name": "Temp Shield", "itemtype": "MOVE"},
 		
 		{"name": "Charged Shot", "rule": "cs", "itemtype": "POWER"},
-		{"name": "Rail Boost", "rule": "rb", "itemtype": "POWER"},
+		{"name": "Rail Boost", "rule": "rb", "itemtype": "ENERGY"},
 		{"name": "Regen Breaking", "rule": "br", "itemtype": "POWER"},
 		{"name": "Jester Swipe", "rule": "js", "itemtype": "POWER"},
 		
@@ -59,7 +60,7 @@
 		
 		{"name": "Car", "rule": "ca", "itemtype": "VEHICLE"},
 		{"name": "Copter", "rule": "pc", "itemtype": "VEHICLE"},
-		{"name": "OoB Clip", "itemtype": "VEHICLE"},
+		{"name": "Out Of Bounds", "itemtype": "VEHICLE"},
 		
 		{"name": "Shop Moves", "itemtype": "SHOP"},
 		{"name": "Shop Powers", "itemtype": "SHOP"},

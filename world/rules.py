@@ -1,6 +1,6 @@
-from rule_builder.rules import Has, HasAny, HasFromList, And, Or, True_
+from rule_builder.rules import Has, HasAny, HasFromList, And, Or, True_, False_
 
-from .items import Spark3Item
+from .items import Spark3Item, ItemType
 from .constants import *
 from .apshared import apshared
 
@@ -14,6 +14,7 @@ class RuleToken(Enum):
 	RPAREN  = 2
 	AND     = 3
 	OR      = 4
+	FALSE   = 5
 
 
 STRING_TO_TOKEN = [
@@ -28,6 +29,8 @@ class RulesState:
 		self.SCORE_REQUIREMENTS = [0, 0, 0, 0, 0]
 		self.SPEED_REQUIREMENTS = [0, 0, 0, 0, 0]
 		self.REQUIRE_CHARACTERS = True
+		self.CHARACTER_LOGIC = True
+		self.ENERGY_LOGIC = True
 	
 	def add_to_rule(self, op, rule, add):
 		print(f"{rule} {op} {add}")
@@ -49,6 +52,7 @@ class RulesState:
 					case RuleToken.RPAREN: return rule
 					case RuleToken.AND: op = RuleToken.AND
 					case RuleToken.OR: op = RuleToken.OR
+					case RuleToken.FALSE: rule = self.add_to_rule(op, rule, False_())
 			else:
 				rule = self.add_to_rule(op, rule, Has(token))
 				
@@ -71,6 +75,14 @@ class RulesState:
 			if not tok_added:
 				for item in apshared["items"]:
 					if "rule" in item and rule[i:].startswith(item["rule"]):
+						if item["type"] == ItemType.ENERGY and not self.ENERGY_LOGIC:
+							tokens.append(RuleToken.FALSE)
+							tok_added = True
+							break
+						if item["type"] == ItemType.CHARACTER and not self.CHARACTER_LOGIC:
+							tokens.append(RuleToken.FALSE)
+							tok_added = True
+							break
 						tokens.append(item["name"])
 						i += len(item["rule"])
 						tok_added = True

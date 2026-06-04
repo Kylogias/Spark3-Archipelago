@@ -97,7 +97,7 @@ namespace Sparkipelago {
 				case ItemIds.FLOAT: save.Power_Float = true; if (!catchup) addDpadPower(9); break;
 				case ItemIds.FARK: save.Power_Fark = true; if (!catchup) addDpadPower(10); break;
 				case ItemIds.SFARX: save.Power_Sfarx = true; if (!catchup) addDpadPower(11); break;
-				case ItemIds.OOB_CLIP: if (!catchup) save.StageJustUnlocked[155] = true; break;
+				case ItemIds.OUT_OF_BOUNDS: if (!catchup) save.StageJustUnlocked[155] = true; break;
 				case ItemIds.AM_VILLAGE_COIN:
 					if (SlotData.coinHunt == CoinHunt.REQUIRE_VANILLA && Sparkipelago.itemState[item] >= 10) Locations.sendLocationCheck(4, "COMPLETION");
 					if (SlotData.coinHunt == CoinHunt.REQUIRE_ALL && Sparkipelago.itemState[item] >= 15) Locations.sendLocationCheck(4, "COMPLETION");
@@ -233,8 +233,24 @@ namespace Sparkipelago {
 
 		[HarmonyPatch(typeof(PlayerHealthAndStats), "ComboManager")]
 		private static class CombatComboPatch {
-			private static void Prefix() {
-				if (Sparkipelago.hasItem(ItemIds.PERFECT_COMBO)) PlayerHealthAndStats.Combo = 1f;
+			private static void Postfix() {
+				float combo = APSave.file.client.comboAmt * Sparkipelago.itemState[ItemIds.PROGRESSIVE_COMBO];
+				if (combo > APSave.file.client.comboMax) combo = APSave.file.client.comboMax;
+				PlayerHealthAndStats.Combo = combo;
+			}
+		}
+
+		[HarmonyPatch(typeof(StageTimer), "Update")]
+		private static class TimestopPatch {
+			private static void Prefix(StageTimer __instance) {
+				if (Time.timeScale != 0f && !LevelProgressControl.LevelOver && __instance.deltaTime >= __instance.TimeToStartGame) {
+					float time = 1;
+					for (int i = 0; i < Sparkipelago.itemState[ItemIds.PROGRESSIVE_TIME_STOP]; i++) {
+						time *= APSave.file.client.timeAmt;
+					}
+					if (time < APSave.file.client.timeMax) time = APSave.file.client.timeMax;
+					StageTimer.time -= time * Time.unscaledDeltaTime;
+				}
 			}
 		}
 

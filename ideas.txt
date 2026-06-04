@@ -77,7 +77,7 @@ Checkpoint Sanity
 Bubble Sanity
 Capsule Sanity
 Spring Trap
-Progressive Combo/Score
+Progressive Energy(?)
 
 Stable Checklist:
 Speed Sanity

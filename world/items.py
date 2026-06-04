@@ -23,7 +23,8 @@ class ItemType(Enum):
 	POWER = 12
 	MULTIPLIER = 13
 	GIMMICK = 14
-	UNIMPLEMENTED = 15
+	ENERGY = 15
+	UNIMPLEMENTED = 16
 from .apshared import item_name_to_id, apshared
 
 class ItemState:
@@ -44,7 +45,7 @@ class ItemState:
 			if i["type"] == ItemType.FREEDOM:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 				self.FREEDOM_ITEMS.append(i["name"])
-			if i["type"] in [ItemType.ABILITY, ItemType.SHOP, ItemType.GIMMICK, ItemType.CHARACTER, ItemType.VEHICLE, ItemType.POWER]:
+			if i["type"] in [ItemType.ABILITY, ItemType.SHOP, ItemType.GIMMICK, ItemType.CHARACTER, ItemType.VEHICLE, ItemType.POWER, ItemType.ENERGY]:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 				self.PROGRESSION_ITEMS.append([i["name"], i["type"]])
 			if i["type"] in [ItemType.EXPLORE2, ItemType.EXPLORE3]:

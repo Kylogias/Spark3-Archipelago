@@ -69,6 +69,7 @@ namespace Sparkipelago {
 		NearestAny,
 		NearestUseful,
 		NearestProgress,
+		Energy,
 		IncludeAll
 	};
 	
@@ -77,7 +78,14 @@ namespace Sparkipelago {
 		public MusicType musicRando;
 		public EnemyType enemyRando;
 		public int diveFloors;
-
+		
+		public int scoreAmt;
+		public int scoreMax;
+		public float comboAmt;
+		public float comboMax;
+		public float timeAmt;
+		public float timeMax;
+		
 		public bool deathLink;
 		public bool capsuleArrows;
 		public bool bubbleArrows;
@@ -92,6 +100,12 @@ namespace Sparkipelago {
 			musicRando = MusicType.Vanilla;
 			enemyRando = EnemyType.Vanilla;
 			diveFloors = 1;
+			scoreAmt = 10;
+			scoreMax = 30;
+			comboAmt = 1;
+			comboMax = 1;
+			timeAmt = 0.9f;
+			timeMax = 0.5f;
 			deathLink = false;
 			capsuleArrows = false;
 			bubbleArrows = false;
@@ -146,7 +160,7 @@ namespace Sparkipelago {
 				() => {return APSave.file.client.diveFloors;}
 			);
 			Options.addIten(
-				settings, "Tracker Mode", "What is the default mode of the tracker arrow?", 0, SlotData.labMode ? 4 : 3,
+				settings, "Tracker Mode", "What is the default mode of the tracker arrow?", 0, SlotData.labMode ? 5 : 4,
 				(int newV) => {APSave.file.client.trackerMode = (TrackType)newV; return ((TrackType)newV).ToString();},
 				() => {return (int)APSave.file.client.trackerMode;}
 			);
@@ -160,6 +174,38 @@ namespace Sparkipelago {
 				(int newV) => {APSave.file.client.enemyRando = (EnemyType)newV; return ((EnemyType)newV).ToString();},
 				() => {return (int)APSave.file.client.enemyRando;}
 			);
+			
+			Options.addIten(
+				settings, "Score Amount", "How much should each score multiplier item add?", 0, 100,
+				(int newV) => {APSave.file.client.scoreAmt = newV; return newV.ToString();},
+				() => {return (int)APSave.file.client.scoreAmt;}
+			);
+			Options.addIten(
+				settings, "Score Max", "What is the maximum the score multiplier items can give?", 0, 100,
+				(int newV) => {APSave.file.client.scoreMax = newV; return newV.ToString();},
+				() => {return (int)APSave.file.client.scoreMax;}
+			);
+			Options.addIten(
+				settings, "Combo Amount", "How much should each combo multiplier item add?", 0, 100,
+				(int newV) => {APSave.file.client.comboAmt = newV/10.0f; return (newV/10.0f).ToString();},
+				() => {return (int)(APSave.file.client.comboAmt*10);}
+			);
+			Options.addIten(
+				settings, "Combo Max", "What is the maximum the combo multiplier items can give?", 0, 100,
+				(int newV) => {APSave.file.client.comboMax = newV/10.0f; return (newV/10.0f).ToString();},
+				() => {return (int)(APSave.file.client.comboMax*10);}
+			);
+			Options.addIten(
+				settings, "Time Stop Amount", "How much should each time stop item multiply the timer speed? A value of 1 means no effect, 0.5 slows by half, etc", 0, 10,
+				(int newV) => {APSave.file.client.timeAmt = newV/10.0f; return (newV/10.0f).ToString();},
+				() => {return (int)(APSave.file.client.timeAmt*10);}
+			);
+			Options.addIten(
+				settings, "Time Stop Max", "What is the maximum the time stop items can slow down time? A value of 1 means no effect, 0.5 is half, etc", 0, 10,
+				(int newV) => {APSave.file.client.timeMax = newV/10.0f; return (newV/10.0f).ToString();},
+				() => {return (int)(APSave.file.client.timeMax*10);}
+			);
+			
 			Options.addIten(
 				settings, "Death Link", "Should Death Link be enabled?",
 				(bool newV) => {
