@@ -75,17 +75,15 @@ class RulesState:
 			if not tok_added:
 				for item in apshared["items"]:
 					if "rule" in item and rule[i:].startswith(item["rule"]):
+						tok_added = True
+						i += len(item["rule"])
 						if item["type"] == ItemType.ENERGY and not self.ENERGY_LOGIC:
 							tokens.append(RuleToken.FALSE)
-							tok_added = True
 							break
 						if item["type"] == ItemType.CHARACTER and not self.CHARACTER_LOGIC:
 							tokens.append(RuleToken.FALSE)
-							tok_added = True
 							break
 						tokens.append(item["name"])
-						i += len(item["rule"])
-						tok_added = True
 						break
 			if not tok_added:
 				for macro in apshared["rule_macros"]:

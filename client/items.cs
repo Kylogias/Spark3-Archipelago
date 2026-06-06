@@ -236,7 +236,7 @@ namespace Sparkipelago {
 			private static void Postfix() {
 				float combo = APSave.file.client.comboAmt * Sparkipelago.itemState[ItemIds.PROGRESSIVE_COMBO];
 				if (combo > APSave.file.client.comboMax) combo = APSave.file.client.comboMax;
-				PlayerHealthAndStats.Combo = combo;
+				if (PlayerHealthAndStats.Combo < combo) PlayerHealthAndStats.Combo = combo;
 			}
 		}
 
@@ -249,7 +249,7 @@ namespace Sparkipelago {
 						time *= APSave.file.client.timeAmt;
 					}
 					if (time < APSave.file.client.timeMax) time = APSave.file.client.timeMax;
-					StageTimer.time -= time * Time.unscaledDeltaTime;
+					StageTimer.time -= (1-time) * Time.unscaledDeltaTime;
 				}
 			}
 		}

@@ -10,36 +10,126 @@ namespace Sparkipelago {
 			public Transform icon;
 			public Transform parent;
 			public string name;
-			public List<TutorialIten> itens;
+			public List<ListIten> itens;
 		}
 		
-		public enum ItenType {
-			DEFAULT,
-			OPTION_BOOL,
-			OPTION_INT,
-			INVENTORY
-		}
-		
-		public delegate string OnSetInt(int newV);
-		public delegate string OnSetBool(bool newV);
-		public delegate int OnGetInt();
-		public delegate bool OnGetBool();
-		
-		public class TutorialIten {
-			public OnSetInt optionSetInt;
-			public OnGetInt optionGetInt;
-			public int minInt;
-			public int maxInt;
-			
-			public OnSetBool optionSetBool;
-			public OnGetBool optionGetBool;
-			public ItemIds invItem;
+		public delegate string OnOptSet<T>(T newV);
+		public delegate T OnOptGet<T>();
 
+		public class ListIten {
 			public string name;
 			public string desc;
-			public ItenType type;
 			public TutorialMenuIten component;
 			public Text nameText;
+
+			public void setup(string name, string desc, TutorialCategory cat, GameObject template) {
+				GameObject go = GameObject.Instantiate(template, cat.parent);
+				go.transform.localPosition = Vector3.zero;
+				go.transform.localRotation = Quaternion.identity;
+				go.transform.localScale = Vector3.one;
+				this.name = name;
+				nameText = go.transform.GetChild(1).gameObject.GetComponent<Text>();
+				nameText.text = name;
+				TutorialMenuIten component = go.GetComponent<TutorialMenuIten>();
+				this.desc = desc;
+				component.Description = desc;
+				this.component = component;
+				cat.itens.Add(this);
+			}
+
+			virtual public void onDirection(int dir) {}
+			virtual public void onToggle() {}
+			virtual public void onEnable() {}
+		}
+		
+		public class InfoIten : ListIten {
+			public InfoIten(TutorialCategory cat, string name, string desc) {
+				setup(name, desc, cat, templateInfo);
+			}
+		}
+		
+		public class BoolIten : ListIten {
+			public OnOptSet<bool> optionSet;
+			public OnOptGet<bool> optionGet;
+
+			public BoolIten(TutorialCategory cat, string name, string desc, OnOptSet<bool> onSet, OnOptGet<bool> onGet) {
+				setup(name, desc, cat, templateInput1);
+				optionSet = onSet;
+				optionGet = onGet;
+
+				InputIcon icon1 = component.gameObject.transform.GetChild(0).gameObject.GetComponent<InputIcon>();
+				icon1.Button = InputDevice.ControllerButton.FaceBotton;
+				icon1.ChangeIcon();
+			}
+			
+			public override void onToggle() {
+				bool oldV = optionGet();
+				Color newColor = inactiveColor;
+				if (!oldV) newColor = activeColor;
+				component.gameObject.GetComponent<Image>().color = newColor;
+				nameText.text = string.Format("{0}: {1}", name, optionSet(!oldV));
+			}
+			public override void onEnable() {
+				bool oldV = optionGet();
+				Color newColor = activeColor;
+				if (!oldV) newColor = inactiveColor;
+				component.gameObject.GetComponent<Image>().color = newColor;
+				nameText.text = string.Format("{0}: {1}", name, optionSet(oldV));
+			}
+		}
+		
+		public class RangeIten : ListIten {
+			public OnOptSet<float> optionSet;
+			public OnOptGet<float> optionGet;
+			public float min;
+			public float max;
+			public float step;
+
+			public RangeIten(TutorialCategory cat, string name, string desc, float minV, float maxV, float stepV, OnOptSet<float> onSet, OnOptGet<float> onGet) {
+				setup(name, desc, cat, templateInput2);
+				optionSet = onSet;
+				optionGet = onGet;
+				min = minV;
+				max = maxV;
+				step = stepV;
+				
+				InputIcon icon1 = component.gameObject.transform.GetChild(0).gameObject.GetComponent<InputIcon>();
+				InputIcon icon2 = component.gameObject.transform.GetChild(0).GetChild(1).gameObject.GetComponent<InputIcon>();
+				icon1.Button = InputDevice.ControllerButton.BumperL;
+				icon1.ChangeIcon();
+				icon2.Button = InputDevice.ControllerButton.BumperR;
+				icon2.ChangeIcon();
+			}
+
+			public override void onDirection(int direction) {
+				float oldV = optionGet();
+				optionSet(oldV+(direction*step));
+				onEnable();
+			}
+			public override void onEnable() {
+				float oldV = optionGet();
+				oldV = Mathf.Round(oldV/step)*step;
+				if (oldV < min) oldV = min;
+				if (oldV > max) oldV = max;
+				nameText.text = string.Format("{0}: {1}", name, optionSet(oldV));
+			}
+		}
+		
+		public class InventoryIten : ListIten {
+			public ItemIds invItem;
+
+			public InventoryIten(TutorialCategory cat, ItemIds item) {
+				setup("", "", cat, templateInfo);
+				invItem = item;
+			}
+
+			public override void onEnable() {
+				if (Sparkipelago.currentSession != null) {
+					if (Sparkipelago.hasItem(invItem)) component.gameObject.SetActive(true);
+					else component.gameObject.SetActive(false);
+					nameText.text = string.Format("{1}x {0}", Sparkipelago.currentSession.Items.GetItemName((long)invItem), Sparkipelago.itemState[invItem]);
+				}
+			}
 		}
 		
 		static List<TutorialCategory> optCategories;
@@ -53,7 +143,7 @@ namespace Sparkipelago {
 		public static TutorialCategory addCategory(string name, Texture2D tex) {
 			TutorialCategory newCat = new TutorialCategory();
 			newCat.name = name;
-			newCat.itens = new List<TutorialIten>();
+			newCat.itens = new List<ListIten>();
 
 			Transform categories = tutorial.transform.Find("PauseBg/CategoryList/CategoryIcons");
 			Transform gameIcon = categories.Find("Icon_Common");
@@ -82,59 +172,6 @@ namespace Sparkipelago {
 			optCategories.Add(newCat);
 
 			return newCat;
-		}
-
-		public static TutorialIten setupIten(TutorialCategory cat, GameObject template, string name, string desc) {
-			TutorialIten iten = new TutorialIten();
-			GameObject go = GameObject.Instantiate(template, cat.parent);
-			go.transform.localPosition = Vector3.zero;
-			go.transform.localRotation = Quaternion.identity;
-			go.transform.localScale = Vector3.one;
-			iten.name = name;
-			iten.nameText = go.transform.GetChild(1).gameObject.GetComponent<Text>();
-			iten.nameText.text = name;
-			TutorialMenuIten component = go.GetComponent<TutorialMenuIten>();
-			iten.desc = desc;
-			component.Description = desc;
-			iten.component = component;
-			cat.itens.Add(iten);
-			return iten;
-		}
-		
-		public static void addIten(TutorialCategory cat, string name, string desc) {
-			TutorialIten iten = setupIten(cat, templateInfo, name, desc);
-			iten.type = ItenType.DEFAULT;
-		}
-
-		public static void addIten(TutorialCategory cat, string name, string desc, int min, int max, OnSetInt optionSetInt, OnGetInt optionGetInt) {
-			TutorialIten iten = setupIten(cat, templateInput2, name, desc);
-			iten.type = ItenType.OPTION_INT;
-			InputIcon icon1 = iten.component.gameObject.transform.GetChild(0).gameObject.GetComponent<InputIcon>();
-			InputIcon icon2 = iten.component.gameObject.transform.GetChild(0).GetChild(1).gameObject.GetComponent<InputIcon>();
-			icon1.Button = InputDevice.ControllerButton.BumperL;
-			icon1.ChangeIcon();
-			icon2.Button = InputDevice.ControllerButton.BumperR;
-			icon2.ChangeIcon();
-			iten.optionSetInt = optionSetInt;
-			iten.optionGetInt = optionGetInt;
-			iten.minInt = min;
-			iten.maxInt = max;
-		}
-
-		public static void addIten(TutorialCategory cat, string name, string desc, OnSetBool optionSetBool, OnGetBool optionGetBool) {
-			TutorialIten iten = setupIten(cat, templateInput1, name, desc);
-			iten.type = ItenType.OPTION_BOOL;
-			InputIcon icon1 = iten.component.gameObject.transform.GetChild(0).gameObject.GetComponent<InputIcon>();
-			icon1.Button = InputDevice.ControllerButton.FaceBotton;
-			icon1.ChangeIcon();
-			iten.optionSetBool = optionSetBool;
-			iten.optionGetBool = optionGetBool;
-		}
-
-		public static void addIten(TutorialCategory cat, ItemIds item) {
-			TutorialIten iten = setupIten(cat, templateInfo, "", "");
-			iten.type = ItenType.INVENTORY;
-			iten.invItem = item;
 		}
 		
 		public static void buildCategories() {
@@ -167,9 +204,9 @@ namespace Sparkipelago {
 				category.icon = tutorial.CategoryIcons[i];
 				category.parent = tutorial.CategoryParents[i];
 				category.name = tutorial.CategoryName[i];
-				category.itens = new List<TutorialIten>();
+				category.itens = new List<ListIten>();
 				foreach (TutorialMenuIten menuIten in catItens[i]) {
-					TutorialIten iten = new TutorialIten();
+					ListIten iten = new ListIten();
 					iten.component = menuIten;
 					category.itens.Add(iten);
 				}
@@ -179,12 +216,12 @@ namespace Sparkipelago {
 			APSave.addOptions();
 			TutorialCategory inventory = addCategory("INVENTORY", Sparkipelago.apTexture);
 			foreach (long id in APShared.itemIDs) {
-				addIten(inventory, (ItemIds)id);
+				new InventoryIten(inventory, (ItemIds)id);
 			}
 			if (SlotData.labMode) {
 				TutorialCategory lab = addCategory("LAB MODE", Sparkipelago.labTexture);
 				foreach (LabMode.MoveDebugPref move in LabMode.movedbg) {
-					addIten(lab, move.eName, "", (bool newV) => {move.onChange(newV); return newV.ToString();}, () => {return Sparkipelago.hasItem(move.itemID);});
+					new BoolIten(lab, move.eName, "", (bool newV) => {move.onChange(newV); return newV.ToString();}, () => {return Sparkipelago.hasItem(move.itemID);});
 				}
 			}
 
@@ -204,30 +241,13 @@ namespace Sparkipelago {
 				bool A = __instance.Inp.Rewinp.GetButtonDown("Jump");
 				bool LB = __instance.Inp.Rewinp.GetButtonDown("Parry");
 				bool RB = __instance.Inp.Rewinp.GetButtonDown("LockOn");
-				TutorialIten iten = optCategories[___Category].itens[___Index];
-				switch (iten.type) {
-					case ItenType.DEFAULT: break;
-					case ItenType.OPTION_INT:
-						if (LB || RB) {
-							int direction = 0;
-							if (LB) direction -= 1;
-							if (RB) direction += 1;
-							int oldV = iten.optionGetInt();
-							if (oldV+direction <= iten.maxInt && oldV+direction >= iten.minInt) {
-								iten.nameText.text = string.Format("{0}: {1}", iten.name, iten.optionSetInt(oldV+direction));
-							}
-						}
-						break;
-					case ItenType.INVENTORY: break;
-					case ItenType.OPTION_BOOL:
-						if (A) {
-							bool oldV = iten.optionGetBool();
-							Color newColor = inactiveColor;
-							if (!oldV) newColor = activeColor;
-							iten.component.gameObject.GetComponent<Image>().color = newColor;
-							iten.nameText.text = string.Format("{0}: {1}", iten.name, iten.optionSetBool(!oldV));
-						}
-						break;
+				ListIten iten = optCategories[___Category].itens[___Index];
+				if (A) iten.onToggle();
+				if (LB || RB) {
+					int direction = 0;
+					if (LB) direction -= 1;
+					if (RB) direction += 1;
+					iten.onDirection(direction);
 				}
 			}
 		}
@@ -266,32 +286,8 @@ namespace Sparkipelago {
 				___CurrentItens.Clear();
 				cat.parent.gameObject.SetActive(true);
 				for (int k = 0; k < cat.itens.Count(); k++) {
-					TutorialIten iten = cat.itens[k];
-					switch (iten.type) {
-						case ItenType.DEFAULT: break;
-						case ItenType.OPTION_INT: {
-							int oldV = iten.optionGetInt();
-							if (oldV < iten.minInt) oldV = iten.minInt;
-							if (oldV > iten.maxInt) oldV = iten.maxInt;
-							iten.nameText.text = string.Format("{0}: {1}", iten.name, iten.optionSetInt(oldV));
-							break;
-						}
-						case ItenType.OPTION_BOOL: {
-							bool oldV = iten.optionGetBool();
-							Color newColor = activeColor;
-							if (!oldV) newColor = inactiveColor;
-							iten.component.gameObject.GetComponent<Image>().color = newColor;
-							iten.nameText.text = string.Format("{0}: {1}", iten.name, iten.optionSetBool(oldV));
-							break;
-						}
-						case ItenType.INVENTORY:
-							if (Sparkipelago.currentSession != null) {
-								if (Sparkipelago.hasItem(iten.invItem)) iten.component.gameObject.SetActive(true);
-								else iten.component.gameObject.SetActive(false);
-								iten.nameText.text = string.Format("{1}x {0}", Sparkipelago.currentSession.Items.GetItemName((long)iten.invItem), Sparkipelago.itemState[iten.invItem]);
-							}
-							break;
-					}
+					ListIten iten = cat.itens[k];
+					iten.onEnable();
 					if (iten.component.gameObject.activeSelf) {
 						___CurrentItens.Add(iten.component);
 					}
