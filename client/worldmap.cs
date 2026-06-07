@@ -75,6 +75,39 @@ namespace Sparkipelago {
 			return false;
 		}
 		
+		public static void findLevelGate(string command) {
+			string search = command.Substring(command.IndexOf(' ')+1);
+			int stageID = -1;
+			foreach (APStageData stage in APShared.stages) {
+				if (stage.name == search) {
+					stageID = stage.id;
+					break;
+				}
+			}
+			if (stageID == -1) {
+				Sparkipelago.currentSession.Say(string.Format("Unable to find stage {0}", search));
+				return;
+			}
+			int i = 0;
+			foreach (SlotData.Level[] gate in SlotData.gates) {
+				foreach (SlotData.Level level in gate) {
+					if (level.id == stageID) {
+						Sparkipelago.currentSession.Say(string.Format("Stage {0} is in Gate {1}", search, i));
+						return;
+					}
+				}
+				i += 1;
+			}
+			i = 1;
+			foreach (SlotData.Level boss in SlotData.bosses) {
+				if (boss.id == stageID) {
+					Sparkipelago.currentSession.Say(string.Format("Boss {0} guards Gate {1}", search, i));
+					return;
+				}
+				i += 1;
+			}
+		}
+		
 		public static void onMapLoad() {
 			// Randomize Entrances
 			LevelData[] levels = GameObject.Find("Map/Stages").GetComponentsInChildren<LevelData>(true);

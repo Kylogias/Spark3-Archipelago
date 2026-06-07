@@ -206,6 +206,7 @@ namespace Sparkipelago {
 			string msgStr = message.ToString();
 			if (msgStr.StartsWith(string.Format("{0}: .whereis", playerName))) Collectibles.trackCheckByName(msgStr.Substring(msgStr.IndexOf(' ')+1));
 			if (msgStr.StartsWith(string.Format("{0}: .whereindex", playerName))) Collectibles.trackCheckByIndex(msgStr.Substring(msgStr.IndexOf(' ')+1));
+			if (msgStr.StartsWith(string.Format("{0}: .whatgate", playerName))) WorldMap.findLevelGate(msgStr.Substring(msgStr.IndexOf(' ')+1));
 		}
 		
 		public static void HandleItem(ReceivedItemsHelper itemHandler) {
