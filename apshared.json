@@ -1967,43 +1967,89 @@
 			]}
 		]},
 		{"name": "SLOPE JUMPING", "id": 100, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "spe|cd|(dj+da)"}, "checks": [
+			{"name": "GOAL", "entrances": {"2": "spe|cd|da"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": []}
+			{"name": "START", "entrances": {}, "checks": [
+				{"name": "CHECKPOINT #1", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #2", "index": 1, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "1", "entrances": {"START": "spe|cd|dj|(sf+wj+da)|(fl+wj)"}, "checks": [
+				{"name": "CHECKPOINT #3", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #4", "index": 4, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "2", "entrances": {"1": "spe|cd|dj|(fl+da)"}, "checks": [
+				{"name": "CHECKPOINT #5", "index": 0, "sanity": "checkpoint", "requires": ""}
+			]}
 		]},
 		{"name": "JESTER DASH", "id": 101, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "jd+(cd|ed|sb|cl|fa|(dj+(da|sf))|(spe+1c)|(fl+1c)|(spe+fl))"}, "checks": [
+			{"name": "GOAL", "entrances": {"2": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": []}
+			{"name": "START", "entrances": {}, "checks": []},
+			{"name": "1", "entrances": {"START": "jd"}, "checks": [
+				{"name": "CHECKPOINT #1", "index": 4, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #2", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #3", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #4", "index": 1, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "2", "entrances": {"1": "jd+(cd|ed|sb|cl|fa|(dj+(da|sf))|(spe+1c)|(fl+1c)|(spe+fl))"}, "checks": [
+				{"name": "CHECKPOINT #5", "index": 0, "sanity": "checkpoint", "requires": ""}
+			]}
 		]},
 		{"name": "CHARGED JESTER DASH", "id": 102, "type": "stage", "regions": [
 			{"name": "GOAL", "entrances": {"START": "cd+spr+(dj|(wj+da))"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": []}
+			{"name": "START", "entrances": {}, "checks": []},
+			{"name": "1", "entrances": {"START": "cd+(dj|(wj+(fl|da)))"}, "checks": [
+				{"name": "CHECKPOINT #1", "index": 4, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #2", "index": 3, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "2", "entrances": {"1": "spr"}, "checks": [
+				{"name": "CHECKPOINT #3", "index": 5, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "3", "entrances": {"2": "cd+(dj|(wj+da))"}, "checks": [
+				{"name": "CHECKPOINT #4", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #5", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #6", "index": 0, "sanity": "checkpoint", "requires": ""}
+			]}
 		]},
 		{"name": "HIGH SPEEDS", "id": 103, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "dj|sf|((wj|ww|da)+(cd|da|fl))"}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "dj|sf|((wj|ww)+(cd|da|fl))"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": []}
+			{"name": "START", "entrances": {}, "checks": [
+				{"name": "CHECKPOINT #1", "index": 0, "sanity": "checkpoint", "requires": ""}
+			]}
 		]},
 		{"name": "WALL JUMPING", "id": 104, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "wj"}, "checks": [
+			{"name": "GOAL", "entrances": {"1": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": []}
+			{"name": "START", "entrances": {}, "checks": []},
+			{"name": "1", "entrances": {"START": "wj"}, "checks": [
+				{"name": "CHECKPOINT #1", "index": 0, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #2", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #3", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #4", "index": 3, "sanity": "checkpoint", "requires": ""}
+			]}
 		]},
 		{"name": "WALL WALKING", "id": 105, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "(ww|wj)+(1c|wj|sf|fl)"}, "checks": [
+			{"name": "GOAL", "entrances": {"1": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
-			{"name": "START", "entrances": {}, "checks": []}
+			{"name": "START", "entrances": {}, "checks": []},
+			{"name": "1", "entrances": {"START": "ww+(1c|wj|sf|fl)"}, "checks": [
+				{"name": "CHECKPOINT #1", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #2", "index": 4, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #3", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #4", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "CHECKPOINT #5", "index": 0, "sanity": "checkpoint", "requires": ""}
+			]}
 		]},
 		{"name": "FALL DAMAGE", "id": 106, "type": "stage", "regions": [
-			{"name": "GOAL", "entrances": {"START": "2c"}, "checks": [
+			{"name": "GOAL", "entrances": {"START": "2c|(fa+da)"}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""}
 			]},
 			{"name": "START", "entrances": {}, "checks": []}
