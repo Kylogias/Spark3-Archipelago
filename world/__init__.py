@@ -148,6 +148,7 @@ class Spark3World(World):
 			self.spark2 = True
 			self.shop_enabled = True
 			self.explore_hunt = slot_data["explore_hunt"]
+			self.coin_hunt = slot_data["coin_hunt"]
 			return
 
 	#	if self.ability_rando and (self.options.scoresanity.value or self.options.speedsanity.value):

@@ -269,6 +269,16 @@ namespace Sparkipelago {
 
 				if (trackType == TrackType.IncludeAll) foreach (Transform xfrm in scout.allLocations) {
 					if (!xfrm) continue;
+					Transform goParent = xfrm.parent.parent; // Parent is the check
+					bool isInactive = false;
+					while (goParent != null) {
+						if (!goParent.gameObject.activeSelf) {
+							isInactive = true;
+							break;
+						}
+						goParent = goParent.parent;
+					}
+					if (isInactive) continue;
 					Vector3 xfrmPos = xfrm.position;
 					float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
 					if (xfrmDist < anyDist) {
@@ -297,8 +307,17 @@ namespace Sparkipelago {
 						}
 					}
 				} else foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
-					
 					if (sd.collected || !sd.enabled || !sd.go) continue;
+					Transform goParent = sd.go.transform.parent.parent; // Parent is the check
+					bool isInactive = false;
+					while (goParent != null) {
+						if (!goParent.gameObject.activeSelf) {
+							isInactive = true;
+							break;
+						}
+						goParent = goParent.parent;
+					}
+					if (isInactive) continue;
 					Vector3 xfrmPos = sd.go.transform.position;
 					float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
 					if ((sd.flags & ItemFlags.Advancement) != 0 && xfrmDist < progDist) {

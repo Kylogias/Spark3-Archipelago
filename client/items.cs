@@ -122,6 +122,9 @@ namespace Sparkipelago {
 			private static void Prefix(Action00_Regular __instance) {
 				if (!Sparkipelago.hasItem(ItemIds.DASH)) __instance.dashc = false;
 			}
+			private static void Postfix(Action00_Regular __instance) {
+				if (!Sparkipelago.hasItem(ItemIds.DASH)) __instance.DashAvailable = false;
+			}
 		}
 		
 		[HarmonyPatch(typeof(Action05_Rail), "RailMovement")]
@@ -135,15 +138,6 @@ namespace Sparkipelago {
 		private static class HomingPatch {
 			private static void Prefix(ActionManager ___Actions) {
 				if (!Sparkipelago.hasItem(ItemIds.JESTER_DASH)) ___Actions.Action02Control.HomingAvailable = false;
-			}
-		}
-		
-	//	[HarmonyPatch(typeof(Action02_Homing), "FixedUpdate")]
-		private static class ExhaustedMagdashPatch {
-			private static void Prefix(Action02_Homing __instance) {
-				// There's no easily accessible variable so this'll have to do
-				if (!Sparkipelago.hasItem(ItemIds.DASH)) __instance.MagnetDashMultiplier = 0.2f;
-				else __instance.MagnetDashMultiplier = 0.65f;
 			}
 		}
 		
@@ -169,7 +163,7 @@ namespace Sparkipelago {
 			}
 		}
 		
-		[HarmonyPatch(typeof(Action01_Jump), "DoDoubleJump")]
+		[HarmonyPatch(typeof(Action01_Jump), "FixedUpdate")]
 		private static class DoubleJumpPatch {
 			private static void Prefix(Action01_Jump __instance) {
 				if (!Sparkipelago.hasItem(ItemIds.DOUBLE_JUMP)) __instance.DoubleJumpAvailable = false;
