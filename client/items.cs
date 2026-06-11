@@ -12,24 +12,70 @@ namespace Sparkipelago {
 			PlayerPrefs.SetInt("Bits" + SaveSlot.Slot, ScoreManager.Bits);
 		}
 
-		private static void addDpadPower(int pow) {
+		public enum DpadDir {
+			None,
+			Up,
+			Left,
+			Down,
+			Right
+		}
+		public enum DpadPowers {
+			None,
+			SpeedBuff,
+			HyperSurge,
+			EnergyDash,
+			Overcharge,
+			SnapPortal,
+			RadarScout,
+			MultishotBlast,
+			ReaperJester,
+			Float,
+			Fark,
+			Sfarx,
+			Heal,
+			CloudShot,
+			TempShield,
+			End
+		}
+		public static void addDpadPower(DpadPowers pow) {
+			addDpadPower(pow, DpadDir.None);
+		}
+		
+		public static void addDpadPower(DpadPowers pow, DpadDir dir) {
 			Save.SaveFile currentSave = Save.GetCurrentSave();
-			if (currentSave.DpadUP == 0) {
-				currentSave.DpadUP = pow;
-				return;
+			int powint = (int)pow;
+			if (dir == DpadDir.None) {
+				if (currentSave.DpadRight == 0) dir = DpadDir.Right;
+				if (currentSave.DpadDown == 0) dir = DpadDir.Down;
+				if (currentSave.DpadLeft == 0) dir = DpadDir.Left;
+				if (currentSave.DpadUP == 0) dir = DpadDir.Up;
 			}
-			if (currentSave.DpadLeft == 0) {
-				currentSave.DpadLeft = pow;
-				return;
+			if (dir == DpadDir.Up) {
+				currentSave.DpadUP = powint;
+				Action_13_NewSuperMoves.UpPower = powint;
 			}
-			if (currentSave.DpadDown == 0) {
-				currentSave.DpadDown = pow;
-				return;
+			if (dir == DpadDir.Left) {
+				currentSave.DpadLeft = powint;
+				Action_13_NewSuperMoves.LeftPower = powint;
 			}
-			if (currentSave.DpadRight == 0) {
-				currentSave.DpadRight = pow;
-				return;
+			if (dir == DpadDir.Down) {
+				currentSave.DpadDown = powint;
+				Action_13_NewSuperMoves.DownPower = powint;
 			}
+			if (dir == DpadDir.Right) {
+				currentSave.DpadRight = powint;
+				Action_13_NewSuperMoves.RightPower = powint;
+			}
+			if (Sparkipelago.player) Sparkipelago.player.GetComponent<Action_13_NewSuperMoves>().SetIcons();
+		}
+
+		public static DpadPowers getDpadPower(DpadDir dir) {
+			Save.SaveFile currentSave = Save.GetCurrentSave();
+			if (dir == DpadDir.Up) return (DpadPowers)currentSave.DpadUP;
+			if (dir == DpadDir.Left) return (DpadPowers)currentSave.DpadLeft;
+			if (dir == DpadDir.Down) return (DpadPowers)currentSave.DpadDown;
+			if (dir == DpadDir.Right) return (DpadPowers)currentSave.DpadRight;
+			return DpadPowers.None;
 		}
 
 		public static bool isStageItem(ItemIds item) {
@@ -79,24 +125,24 @@ namespace Sparkipelago {
 				case ItemIds.DOUBLE_DOWN_SPIN: save.Move05_DownSlashSpin = true; save.Move05_DownSlashSpin_Enabled = true; break;
 				case ItemIds.ABRUPT_FINISHER: save.Move07_AbruptFinisher = true; save.Move07_AbruptFinisher_Enabled = true; break;
 				case ItemIds.DUPLEX_SLASH: save.Move08_DuplexSlash = true; save.Move08_DuplexSlash_Enabled = true; break;
-				case ItemIds.SPEED_BUFF: save.Special01_SpeedBuff = true; if (!catchup) addDpadPower(1); break;
-				case ItemIds.HYPER_SURGE: save.Special02_Explosion = true; if (!catchup) addDpadPower(2); break;
-				case ItemIds.ENERGY_DASH: save.Special03_SpeedBlastBoost = true; if (!catchup) addDpadPower(3); break;
-				case ItemIds.OVERCHARGE: save.Special04_PowerBuff = true; if (!catchup) addDpadPower(4); break;
-				case ItemIds.SNAP_PORTAL: save.Special05_Teleport = true; if (!catchup) addDpadPower(5); break;
-				case ItemIds.RADAR_SCOUT: save.Special06_Scouter = true; if (!catchup) addDpadPower(6); break;
-				case ItemIds.MULTISHOT_BLAST: save.Special07_BlastMachineGun = true; if (!catchup) addDpadPower(7); break;
-				case ItemIds.HEAL: save.Special12_Heal = true; if (!catchup) addDpadPower(12); break;
-				case ItemIds.CLOUD_SHOT: save.Special13_Flutter = true; if (!catchup) addDpadPower(13); break;
-				case ItemIds.TEMP_SHIELD: save.Special14_Shield = true; if (!catchup) addDpadPower(14); break;
+				case ItemIds.SPEED_BUFF: save.Special01_SpeedBuff = true; if (!catchup) addDpadPower(DpadPowers.SpeedBuff); break;
+				case ItemIds.HYPER_SURGE: save.Special02_Explosion = true; if (!catchup) addDpadPower(DpadPowers.HyperSurge); break;
+				case ItemIds.ENERGY_DASH: save.Special03_SpeedBlastBoost = true; if (!catchup) addDpadPower(DpadPowers.EnergyDash); break;
+				case ItemIds.OVERCHARGE: save.Special04_PowerBuff = true; if (!catchup) addDpadPower(DpadPowers.Overcharge); break;
+				case ItemIds.SNAP_PORTAL: save.Special05_Teleport = true; if (!catchup) addDpadPower(DpadPowers.SnapPortal); break;
+				case ItemIds.RADAR_SCOUT: save.Special06_Scouter = true; if (!catchup) addDpadPower(DpadPowers.RadarScout); break;
+				case ItemIds.MULTISHOT_BLAST: save.Special07_BlastMachineGun = true; if (!catchup) addDpadPower(DpadPowers.MultishotBlast); break;
+				case ItemIds.HEAL: save.Special12_Heal = true; if (!catchup) addDpadPower(DpadPowers.Heal); break;
+				case ItemIds.CLOUD_SHOT: save.Special13_Flutter = true; if (!catchup) addDpadPower(DpadPowers.CloudShot); break;
+				case ItemIds.TEMP_SHIELD: save.Special14_Shield = true; if (!catchup) addDpadPower(DpadPowers.TempShield); break;
 				case ItemIds.CHARGED_SHOT: save.ChargedBlast = true; break;
 				case ItemIds.RAIL_BOOST: save.RailBoost = true; break;
 				case ItemIds.REGEN_BREAKING: save.RegenBreak = true; break;
 				case ItemIds.JESTER_SWIPE: save.JesterSwipe = true; save.JesterSwipeEnabled = true; break;
-				case ItemIds.REAPER_JESTER: save.Power_Reaper = true; if (!catchup) addDpadPower(8); break;
-				case ItemIds.FLOAT: save.Power_Float = true; if (!catchup) addDpadPower(9); break;
-				case ItemIds.FARK: save.Power_Fark = true; if (!catchup) addDpadPower(10); break;
-				case ItemIds.SFARX: save.Power_Sfarx = true; if (!catchup) addDpadPower(11); break;
+				case ItemIds.REAPER_JESTER: save.Power_Reaper = true; if (!catchup) addDpadPower(DpadPowers.ReaperJester); break;
+				case ItemIds.FLOAT: save.Power_Float = true; if (!catchup) addDpadPower(DpadPowers.Float); break;
+				case ItemIds.FARK: save.Power_Fark = true; if (!catchup) addDpadPower(DpadPowers.Fark); break;
+				case ItemIds.SFARX: save.Power_Sfarx = true; if (!catchup) addDpadPower(DpadPowers.Sfarx); break;
 				case ItemIds.OUT_OF_BOUNDS: if (!catchup) save.StageJustUnlocked[155] = true; break;
 				case ItemIds.AM_VILLAGE_COIN:
 					if (SlotData.coinHunt == CoinHunt.REQUIRE_VANILLA && Sparkipelago.itemState[item] >= 10) Locations.sendLocationCheck(4, "COMPLETION");
@@ -228,9 +274,9 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(PlayerHealthAndStats), "ComboManager")]
 		private static class CombatComboPatch {
 			private static void Postfix() {
-				float combo = APSave.file.client.comboAmt * Sparkipelago.itemState[ItemIds.PROGRESSIVE_COMBO];
+				double combo = APSave.file.client.comboAmt * Sparkipelago.itemState[ItemIds.PROGRESSIVE_COMBO];
 				if (combo > APSave.file.client.comboMax) combo = APSave.file.client.comboMax;
-				if (PlayerHealthAndStats.Combo < combo) PlayerHealthAndStats.Combo = combo;
+				if (PlayerHealthAndStats.Combo < (float)combo) PlayerHealthAndStats.Combo = (float)combo;
 			}
 		}
 
@@ -238,12 +284,12 @@ namespace Sparkipelago {
 		private static class TimestopPatch {
 			private static void Prefix(StageTimer __instance) {
 				if (Time.timeScale != 0f && !LevelProgressControl.LevelOver && __instance.deltaTime >= __instance.TimeToStartGame) {
-					float time = 1;
+					double time = 1;
 					for (int i = 0; i < Sparkipelago.itemState[ItemIds.PROGRESSIVE_TIME_STOP]; i++) {
 						time *= APSave.file.client.timeAmt;
 					}
 					if (time < APSave.file.client.timeMax) time = APSave.file.client.timeMax;
-					StageTimer.time -= (1-time) * Time.unscaledDeltaTime;
+					StageTimer.time -= (1-(float)time) * Time.unscaledDeltaTime;
 				}
 			}
 		}

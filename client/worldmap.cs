@@ -234,7 +234,7 @@ namespace Sparkipelago {
 				const long id = 16295300000;
 				for (int i = 0; i < 26; i++) {
 					ShopItenDetails iten = itenlist[i];
-					if (Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i)) {
+					if (Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i) && Sparkipelago.hasItem(Locations.getPageFromIdx(i))) {
 						iten.Description = Sparkipelago.shopItems[i];
 					}
 				}

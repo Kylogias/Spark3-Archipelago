@@ -81,10 +81,10 @@ namespace Sparkipelago {
 		
 		public int scoreAmt;
 		public int scoreMax;
-		public float comboAmt;
-		public float comboMax;
-		public float timeAmt;
-		public float timeMax;
+		public double comboAmt;
+		public double comboMax;
+		public double timeAmt;
+		public double timeMax;
 		
 		public bool deathLink;
 		public bool capsuleArrows;
@@ -156,53 +156,53 @@ namespace Sparkipelago {
 			Options.TutorialCategory settings = Options.addCategory("SETTINGS", Sparkipelago.settingsTexture);
 			new Options.RangeIten(
 				settings, "Endless Dive Floors", "How many floors should be completed to send a check?", 1, 10, 1,
-				(float newV) => {APSave.file.client.diveFloors = (int)newV; return ((int)newV).ToString();},
-				() => {return (float)APSave.file.client.diveFloors;}
+				(double newV) => {APSave.file.client.diveFloors = (int)newV; return ((int)newV).ToString();},
+				() => {return (double)APSave.file.client.diveFloors;}
 			);
 			new Options.RangeIten(
 				settings, "Tracker Mode", "What is the default mode of the tracker arrow?", 0, SlotData.labMode ? 5 : 4, 1,
-				(float newV) => {APSave.file.client.trackerMode = (TrackType)newV; return ((TrackType)newV).ToString();},
-				() => {return (float)APSave.file.client.trackerMode;}
+				(double newV) => {APSave.file.client.trackerMode = (TrackType)newV; return ((TrackType)newV).ToString();},
+				() => {return (double)APSave.file.client.trackerMode;}
 			);
 			new Options.RangeIten(
 				settings, "Music Rando", "How should music be randomized? (Requires Stage Restart)", 0, 3, 1,
-				(float newV) => {APSave.file.client.musicRando = (MusicType)newV; return ((MusicType)newV).ToString();},
-				() => {return (float)APSave.file.client.musicRando;}
+				(double newV) => {APSave.file.client.musicRando = (MusicType)newV; return ((MusicType)newV).ToString();},
+				() => {return (double)APSave.file.client.musicRando;}
 			);
 			new Options.RangeIten(
 				settings, "Enemy Rando", "How should enemies be randomized", 0, 2, 1,
-				(float newV) => {APSave.file.client.enemyRando = (EnemyType)newV; return ((EnemyType)newV).ToString();},
-				() => {return (float)APSave.file.client.enemyRando;}
+				(double newV) => {APSave.file.client.enemyRando = (EnemyType)newV; return ((EnemyType)newV).ToString();},
+				() => {return (double)APSave.file.client.enemyRando;}
 			);
 			
 			new Options.RangeIten(
 				settings, "Score Amount", "How much should each score multiplier item add?", 0, 100, 1,
-				(float newV) => {APSave.file.client.scoreAmt = (int)newV; return ((int)newV).ToString();},
-				() => {return (float)APSave.file.client.scoreAmt;}
+				(double newV) => {APSave.file.client.scoreAmt = (int)newV; return ((int)newV).ToString();},
+				() => {return (double)APSave.file.client.scoreAmt;}
 			);
 			new Options.RangeIten(
 				settings, "Score Max", "What is the maximum the score multiplier items can give?", 0, 100, 1,
-				(float newV) => {APSave.file.client.scoreMax = (int)newV; return ((int)newV).ToString();},
-				() => {return (float)APSave.file.client.scoreMax;}
+				(double newV) => {APSave.file.client.scoreMax = (int)newV; return ((int)newV).ToString();},
+				() => {return (double)APSave.file.client.scoreMax;}
 			);
 			new Options.RangeIten(
-				settings, "Combo Amount", "How much should each combo multiplier item add?", 0, 10, 0.1f,
-				(float newV) => {APSave.file.client.comboAmt = newV; return newV.ToString();},
+				settings, "Combo Amount", "How much should each combo multiplier item add?", 0, 10, 0.1,
+				(double newV) => {APSave.file.client.comboAmt = newV; return newV.ToString();},
 				() => {return APSave.file.client.comboAmt;}
 			);
 			new Options.RangeIten(
-				settings, "Combo Max", "What is the maximum the combo multiplier items can give?", 0, 10, 0.1f,
-				(float newV) => {APSave.file.client.comboMax = newV; return newV.ToString();},
+				settings, "Combo Max", "What is the maximum the combo multiplier items can give?", 0, 10, 0.1,
+				(double newV) => {APSave.file.client.comboMax = newV; return newV.ToString();},
 				() => {return APSave.file.client.comboMax;}
 			);
 			new Options.RangeIten(
-				settings, "Time Stop Amount", "How much should each time stop item multiply the timer speed? A value of 1 means no effect, 0.5 slows by half, etc", 0, 1, 0.1f,
-				(float newV) => {APSave.file.client.timeAmt = newV; return newV.ToString();},
+				settings, "Time Stop Amount", "How much should each time stop item multiply the timer speed? A value of 1 means no effect, 0.5 slows by half, etc", 0, 1, 0.01,
+				(double newV) => {APSave.file.client.timeAmt = newV; return newV.ToString();},
 				() => {return APSave.file.client.timeAmt;}
 			);
 			new Options.RangeIten(
-				settings, "Time Stop Max", "What is the maximum the time stop items can slow down time? A value of 1 means no effect, 0.5 is half, etc", 0, 1, 0.1f,
-				(float newV) => {APSave.file.client.timeMax = newV; return newV.ToString();},
+				settings, "Time Stop Max", "What is the maximum the time stop items can slow down time? A value of 1 means no effect, 0.5 is half, etc", 0, 1, 0.01,
+				(double newV) => {APSave.file.client.timeMax = newV; return newV.ToString();},
 				() => {return APSave.file.client.timeMax;}
 			);
 			

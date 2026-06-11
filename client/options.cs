@@ -79,13 +79,13 @@ namespace Sparkipelago {
 		}
 		
 		public class RangeIten : ListIten {
-			public OnOptSet<float> optionSet;
-			public OnOptGet<float> optionGet;
-			public float min;
-			public float max;
-			public float step;
+			public OnOptSet<double> optionSet;
+			public OnOptGet<double> optionGet;
+			public double min;
+			public double max;
+			public double step;
 
-			public RangeIten(TutorialCategory cat, string name, string desc, float minV, float maxV, float stepV, OnOptSet<float> onSet, OnOptGet<float> onGet) {
+			public RangeIten(TutorialCategory cat, string name, string desc, double minV, double maxV, double stepV, OnOptSet<double> onSet, OnOptGet<double> onGet) {
 				setup(name, desc, cat, templateInput2);
 				optionSet = onSet;
 				optionGet = onGet;
@@ -102,13 +102,22 @@ namespace Sparkipelago {
 			}
 
 			public override void onDirection(int direction) {
-				float oldV = optionGet();
-				optionSet(oldV+(direction*step));
-				onEnable();
+				double oldV = optionGet();
+				oldV += direction*step;
+				double numstep = (int)(oldV/step);
+				double stepfrac = (oldV/step)-numstep;
+				if (stepfrac >= 0.5) numstep += 1;
+				oldV = numstep*step;
+				if (oldV < min) oldV = min;
+				if (oldV > max) oldV = max;
+				nameText.text = string.Format("{0}: {1}", name, optionSet(oldV));
 			}
 			public override void onEnable() {
-				float oldV = optionGet();
-				oldV = Mathf.Round(oldV/step)*step;
+				double oldV = optionGet();
+				double numstep = (int)(oldV/step);
+				double stepfrac = (oldV/step)-numstep;
+				if (stepfrac >= 0.5) numstep += 1;
+				oldV = numstep*step;
 				if (oldV < min) oldV = min;
 				if (oldV > max) oldV = max;
 				nameText.text = string.Format("{0}: {1}", name, optionSet(oldV));
@@ -220,6 +229,41 @@ namespace Sparkipelago {
 			}
 			if (SlotData.labMode) {
 				TutorialCategory lab = addCategory("LAB MODE", Sparkipelago.labTexture);
+				new RangeIten(
+					lab, "Score Item Count", "", 0, 10, 1,
+					(double newV) => {Sparkipelago.itemState[ItemIds.PROGRESSIVE_SCORE] = (int)newV; return ((int)newV).ToString();},
+					() => {return Sparkipelago.itemState[ItemIds.PROGRESSIVE_SCORE];}
+				);
+				new RangeIten(
+					lab, "Combo Item Count", "", 0, 10, 1,
+					(double newV) => {Sparkipelago.itemState[ItemIds.PROGRESSIVE_COMBO] = (int)newV; return ((int)newV).ToString();},
+					() => {return Sparkipelago.itemState[ItemIds.PROGRESSIVE_COMBO];}
+				);
+				new RangeIten(
+					lab, "Timestop Item Count", "", 0, 10, 1,
+					(double newV) => {Sparkipelago.itemState[ItemIds.PROGRESSIVE_TIME_STOP] = (int)newV; return ((int)newV).ToString();},
+					() => {return Sparkipelago.itemState[ItemIds.PROGRESSIVE_TIME_STOP];}
+				);
+				new RangeIten(
+					lab, "Up Power", "", (int)Items.DpadPowers.None, (int)Items.DpadPowers.End-1, 1,
+					(double newV) => {Items.addDpadPower((Items.DpadPowers)newV, Items.DpadDir.Up); return ((Items.DpadPowers)newV).ToString();},
+					() => {return (double)Items.getDpadPower(Items.DpadDir.Up);}
+				);
+				new RangeIten(
+					lab, "Left Power", "", (int)Items.DpadPowers.None, (int)Items.DpadPowers.End-1, 1,
+					(double newV) => {Items.addDpadPower((Items.DpadPowers)newV, Items.DpadDir.Left); return ((Items.DpadPowers)newV).ToString();},
+					() => {return (double)Items.getDpadPower(Items.DpadDir.Left);}
+				);
+				new RangeIten(
+					lab, "Down Power", "", (int)Items.DpadPowers.None, (int)Items.DpadPowers.End-1, 1,
+					(double newV) => {Items.addDpadPower((Items.DpadPowers)newV, Items.DpadDir.Down); return ((Items.DpadPowers)newV).ToString();},
+					() => {return (double)Items.getDpadPower(Items.DpadDir.Down);}
+				);
+				new RangeIten(
+					lab, "Right Power", "", (int)Items.DpadPowers.None, (int)Items.DpadPowers.End-1, 1,
+					(double newV) => {Items.addDpadPower((Items.DpadPowers)newV, Items.DpadDir.Right); return ((Items.DpadPowers)newV).ToString();},
+					() => {return (double)Items.getDpadPower(Items.DpadDir.Right);}
+				);
 				foreach (LabMode.MoveDebugPref move in LabMode.movedbg) {
 					new BoolIten(lab, move.eName, "", (bool newV) => {move.onChange(newV); return newV.ToString();}, () => {return Sparkipelago.hasItem(move.itemID);});
 				}
@@ -234,7 +278,10 @@ namespace Sparkipelago {
 				tutorial.CategoryParents[i] = optCategories[i].parent;
 			}
 		}
-
+		
+		static float lbFrame;
+		static float rbFrame;
+		
 		[HarmonyPatch(typeof(TutorialMenu), "Update")]
 		private class TutorialMenuUpdatePatch {
 			private static void Postfix(TutorialMenu __instance, int ___Category, int ___Index) {
@@ -242,6 +289,21 @@ namespace Sparkipelago {
 				bool LB = __instance.Inp.Rewinp.GetButtonDown("Parry");
 				bool RB = __instance.Inp.Rewinp.GetButtonDown("LockOn");
 				ListIten iten = optCategories[___Category].itens[___Index];
+				
+				if (__instance.Inp.Rewinp.GetButton("Parry")) lbFrame += Time.unscaledDeltaTime;
+				else lbFrame = 0;
+				if (__instance.Inp.Rewinp.GetButton("LockOn")) rbFrame += Time.unscaledDeltaTime;
+				else rbFrame = 0;
+
+				if (lbFrame > 0.5f) {
+					LB = true;
+					lbFrame -= 0.05f;
+				}
+				if (rbFrame > 0.5f) {
+					RB = true;
+					rbFrame -= 0.05f;
+				}
+				
 				if (A) iten.onToggle();
 				if (LB || RB) {
 					int direction = 0;

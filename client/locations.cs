@@ -79,7 +79,14 @@ namespace Sparkipelago {
 				}
 			}
 		}
-
+		
+		public static ItemIds getPageFromIdx(int idx) {
+			if (idx >= 0 && idx <= 7) return ItemIds.SHOP_MOVES;
+			if (idx >= 8 && idx <= 17) return ItemIds.SHOP_POWERS;
+			if (idx >= 18 && idx <= 21) return ItemIds.SHOP_UPGRADES;
+			return ItemIds.SHOP_CHARACTERS;
+		}
+		
 		public static int getItenIndex(ShopItenDetails __instance) {
 			int idx = -1;
 			switch (__instance.Special) {

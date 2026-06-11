@@ -2076,24 +2076,51 @@
 			]}
 		]},
 		{"name": "F.M DOWNTOWN", "id": 142, "type": "spark2", "regions": [
-			{"name": "GOAL", "entrances": {"START": ""}, "checks": [
+			{"name": "GOAL", "entrances": {"1": ""}, "checks": [
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
-				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
-				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
+				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": "co"},
+				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": "co"}
 			]},
 			{"name": "START", "entrances": {}, "checks": [
-				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "1c|wj|ww"},
-				{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": ""},
-				{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": ""}
+				{"name": "BIT BUBBLE #1", "index": 13, "sanity": "bubble", "requires": "cd|(wj+dj)|(wj+sf)|cl|ed|sb"},
+				{"name": "BROWN EXPLORATION MEDAL", "index": 9, "sanity": "explore", "requires": ""},
+				{"name": "HEALTH CAPSULE #1", "index": 2, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #2", "index": 16, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #3", "index": 2, "sanity": "bubble", "requires": ""},
+				{"name": "CYAN EXPLORATION MEDAL", "index": 0, "sanity": "explore", "requires": ""},
+				{"name": "GREEN EXPLORATION MEDAL", "index": 1, "sanity": "explore", "requires": ""},
+				{"name": "CHECKPOINT #1", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "BIT BUBBLE #4", "index": 12, "sanity": "bubble", "requires": ""},
+				{"name": "YELLOW EXPLORATION MEDAL", "index": 2, "sanity": "explore", "requires": ""},
+				{"name": "HEALTH CAPSULE #2", "index": 1, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #5", "index": 17, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #6", "index": 1, "sanity": "bubble", "requires": ""},
+				{"name": "MAGENTA EXPLORATION MEDAL", "index": 4, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #7", "index": 15, "sanity": "bubble", "requires": ""},
+				{"name": "WHITE EXPLORATION MEDAL", "index": 8, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #8", "index": 3, "sanity": "bubble", "requires": ""},
+				{"name": "ENERGY BUBBLE #1", "index": 10, "sanity": "bubble", "requires": ""},
+				{"name": "RED EXPLORATION MEDAL", "index": 3, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #9", "index": 11, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #10", "index": 0, "sanity": "bubble", "requires": ""},
+				{"name": "PURPLE EXPLORATION MEDAL", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #11", "index": 9, "sanity": "bubble", "requires": "cl|(wj+(1c|fl|ed|sf))"},
+				{"name": "BIT BUBBLE #12", "index": 8, "sanity": "bubble", "requires": "cl|(wj+(1c|fl|ed|sf))"},
+				{"name": "BIT BUBBLE #13", "index": 6, "sanity": "bubble", "requires": "da|ed|(spr+cl)"},
+				{"name": "CHECKPOINT #2", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "BIT BUBBLE #14", "index": 7, "sanity": "bubble", "requires": ""},
+				{"name": "HEALTH CAPSULE #3", "index": 0, "sanity": "capsule", "requires": ""}
+			]},
+			{"name": "1", "entrances": {"START": "spr|dj|sf|cl|(wj+(1c|fl|ed))"}, "checks": [
+				{"name": "BIT BUBBLE #15", "index": 14, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #16", "index": 5, "sanity": "bubble", "requires": ""},
+				{"name": "CHECKPOINT #3", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "BLUE EXPLORATION MEDAL", "index": 6, "sanity": "explore", "requires": ""},
+				{"name": "GREY EXPLORATION MEDAL", "index": 7, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #17", "index": 4, "sanity": "bubble", "requires": ""},
+				{"name": "CHECKPOINT #4", "index": 0, "sanity": "checkpoint", "requires": ""}
 			]}
 		]},
 		{"name": "FLORIA HIGHWAY", "id": 143, "type": "spark2", "regions": [
@@ -2101,20 +2128,68 @@
 				{"name": "COMPLETION", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "GOLD SPEED MEDAL", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "DIAMOND SPEED MEDAL", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
-				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
-				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
+				{"name": "GOLD SCORE MEDAL", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": "co"},
+				{"name": "DIAMOND SCORE MEDAL", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": "co"}
 			]},
-			{"name": "START", "entrances": {}, "checks": [
-				{"name": "CYAN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+dj+(cd|da)"},
-				{"name": "GREEN EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
-				{"name": "YELLOW EXPLORATION MEDAL", "sanity": "explore", "requires": "dj|(wj+1c)"},
-				{"name": "RED EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
-				{"name": "MAGENTA EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
-				{"name": "PURPLE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
-				{"name": "BLUE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
-				{"name": "GREY EXPLORATION MEDAL", "sanity": "explore", "requires": "dj+da+cd+wj"},
-				{"name": "WHITE EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"},
-				{"name": "BROWN EXPLORATION MEDAL", "sanity": "explore", "requires": "wj+1c"}
+			{"name": "START", "entrances": {}, "checks": []},
+			{"name": "1", "entrances": {"START": "spr|(wj+(1c|fl))"}, "checks": [
+				{"name": "CHECKPOINT #1", "index": 4, "sanity": "checkpoint", "requires": ""},
+				{"name": "CYAN EXPLORATION MEDAL", "index": 0, "sanity": "explore", "requires": "wj+dj+(cd|da|fl)"}
+			]},
+			{"name": "2", "entrances": {"1": "wj|dj|sf"}, "checks": [
+				{"name": "BIT BUBBLE #1", "index": 7, "sanity": "bubble", "requires": ""},
+				{"name": "GREEN EXPLORATION MEDAL", "index": 1, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #2", "index": 8, "sanity": "bubble", "requires": ""}
+			]},
+			{"name": "3", "entrances": {"2": "spr|(wj+(2c|(fa+da)|(fl+1c)))"}, "checks": [
+				{"name": "CHECKPOINT #2", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "YELLOW EXPLORATION MEDAL", "index": 2, "sanity": "explore", "requires": ""}
+			]},
+			{"name": "4", "entrances": {"3": "spr|dj"}, "checks": [
+				{"name": "CHECKPOINT #3", "index": 2, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "5", "entrances": {"4": "wj+(1c|fl)"}, "checks": [
+				{"name": "CHECKPOINT #4", "index": 5, "sanity": "checkpoint", "requires": ""},
+				{"name": "ENERGY CAPSULE #1", "index": 17, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #2", "index": 18, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #1", "index": 16, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #2", "index": 15, "sanity": "capsule", "requires": ""},
+				{"name": "CHECKPOINT #5", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "ENERGY CAPSULE #3", "index": 14, "sanity": "capsule", "requires": ""},
+				{"name": "RED EXPLORATION MEDAL", "index": 3, "sanity": "explore", "requires": ""},
+				{"name": "BROWN EXPLORATION MEDAL", "index": 9, "sanity": "explore", "requires": ""},
+				{"name": "BIT BUBBLE #3", "index": 9, "sanity": "bubble", "requires": ""},
+				{"name": "BIT BUBBLE #4", "index": 10, "sanity": "bubble", "requires": ""},
+				{"name": "MAGENTA EXPLORATION MEDAL", "index": 4, "sanity": "explore", "requires": ""},
+				{"name": "ENERGY CAPSULE #4", "index": 8, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #3", "index": 9, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY CAPSULE #5", "index": 7, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #4", "index": 10, "sanity": "capsule", "requires": ""},
+				{"name": "PURPLE EXPLORATION MEDAL", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "HEALTH CAPSULE #5", "index": 13, "sanity": "capsule", "requires": ""},
+				{"name": "HEALTH CAPSULE #6", "index": 11, "sanity": "capsule", "requires": ""},
+				{"name": "BLUE EXPLORATION MEDAL", "index": 6, "sanity": "explore", "requires": ""},
+				{"name": "ENERGY CAPSULE #6", "index": 12, "sanity": "capsule", "requires": ""},
+				{"name": "ENERGY BUBBLE #1", "index": 6, "sanity": "bubble", "requires": "cl|(wj+da+cd+dj)|(wj+(sf|fl)+dj+(cd|da|ed))|(wj+fa+da+dj)"},
+				{"name": "HEALTH CAPSULE #7", "index": 6, "sanity": "capsule", "requires": "cl|(wj+da+cd+dj)|(wj+(sf|fl)+dj+(cd|da|ed))|(wj+fa+da+dj)"},
+				{"name": "GREY EXPLORATION MEDAL", "index": 7, "sanity": "explore", "requires": "cl|(wj+da+cd+dj)|(wj+(sf|fl)+dj+(cd|ed))"},
+				{"name": "ENERGY CAPSULE #7", "index": 5, "sanity": "capsule", "requires": ""},
+				{"name": "BIT BUBBLE #5", "index": 5, "sanity": "bubble", "requires": ""},
+				{"name": "CHECKPOINT #6", "index": 0, "sanity": "checkpoint", "requires": ""},
+				{"name": "ENERGY CAPSULE #8", "index": 3, "sanity": "capsule", "requires": "cl|dj|(wj+(1c|fl|ed))"},
+				{"name": "HEALTH CAPSULE #8", "index": 4, "sanity": "capsule", "requires": "cl|dj|(wj+(1c|fl|ed))"}
+			]},
+			{"name": "6", "entrances": {"5": "cl|dj|sf|(wj+(1c|fl|ed))"}, "checks": [
+				{"name": "HEALTH CAPSULE #9", "index": 1, "sanity": "capsule", "requires": "cl|dj|(wj+(1c|fl|ed))"},
+				{"name": "ENERGY CAPSULE #9", "index": 2, "sanity": "capsule", "requires": "cl|dj|(wj+(1c|fl|ed))"},
+				{"name": "CHECKPOINT #7", "index": 6, "sanity": "checkpoint", "requires": ""},
+				{"name": "BIT BUBBLE #6", "index": 4, "sanity": "bubble", "requires": "js|jd|sn|dj|(wj+(1c|fl|ed))"},
+				{"name": "BIT BUBBLE #7", "index": 3, "sanity": "bubble", "requires": "js|jd|sn|dj|(wj+(1c|fl|ed))"},
+				{"name": "ENERGY BUBBLE #2", "index": 2, "sanity": "bubble", "requires": "js|jd|sn|dj|(wj+(1c|fl|ed))"},
+				{"name": "HEALTH CAPSULE #10", "index": 0, "sanity": "capsule", "requires": "js|jd|sn|dj|(wj+(1c|fl|ed))"},
+				{"name": "BIT BUBBLE #8", "index": 0, "sanity": "bubble", "requires": "cl|(wj+da+cd+dj)|(wj+fl+dj+(cd|da|ed))|(wj+fa+da+dj)"},
+				{"name": "WHITE EXPLORATION MEDAL", "index": 8, "sanity": "explore", "requires": "cl|(wj+da+cd+dj)|(wj+fl+dj+(cd|da|ed))|(wj+fa+da+dj)"},
+				{"name": "BIT BUBBLE #9", "index": 1, "sanity": "bubble", "requires": "cl|(wj+da+cd+dj)|(wj+fl+dj+(cd|da|ed))|(wj+fa+da+dj)"}
 			]}
 		]},
 		{"name": "FLORIA PLANT", "id": 144, "type": "spark2", "regions": [
