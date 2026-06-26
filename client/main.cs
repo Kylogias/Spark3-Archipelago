@@ -178,9 +178,9 @@ namespace Sparkipelago {
 		}
 		
 		public static void debugLog(string fmt, params object[] args) {
-			MelonLogger.Msg(string.Format(fmt, args));
 			if (SlotData.labMode && currentSession != null) {
 				try {
+					MelonLogger.Msg(string.Format(fmt, args));
 					currentSession.Say(string.Format(fmt, args));
 				} catch (Exception) {
 					currentSession = null;

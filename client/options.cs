@@ -17,6 +17,7 @@ namespace Sparkipelago {
 		public delegate T OnOptGet<T>();
 
 		public class ListIten {
+			public static TutorialMenu menu;
 			public string name;
 			public string desc;
 			public TutorialMenuIten component;
@@ -31,6 +32,8 @@ namespace Sparkipelago {
 				nameText = go.transform.GetChild(1).gameObject.GetComponent<Text>();
 				nameText.text = name;
 				TutorialMenuIten component = go.GetComponent<TutorialMenuIten>();
+				component.ExampleImage = null;
+				component.ExampleVideo = null;
 				this.desc = desc;
 				component.Description = desc;
 				this.component = component;
@@ -140,6 +143,80 @@ namespace Sparkipelago {
 				}
 			}
 		}
+
+		public class DpadPowerIten : ListIten {
+			struct PowerDesc {
+				public string name;
+				public DpadPowers pow;
+				public PowerDesc(string n, DpadPowers p) {name = n; pow = p;}
+			}
+			
+			static PowerDesc[] powers = {
+				new PowerDesc("No Power", DpadPowers.None),
+				new PowerDesc("Speed Buff", DpadPowers.SpeedBuff),
+				new PowerDesc("Hyper Surge", DpadPowers.HyperSurge),
+				new PowerDesc("Energy Dash", DpadPowers.EnergyDash),
+				new PowerDesc("Overcharge", DpadPowers.Overcharge),
+				new PowerDesc("Snap Portal", DpadPowers.SnapPortal),
+				new PowerDesc("Radar Scout", DpadPowers.RadarScout),
+				new PowerDesc("Multishot Blast", DpadPowers.MultishotBlast),
+				new PowerDesc("Heal", DpadPowers.Heal),
+				new PowerDesc("Cloud Shot", DpadPowers.CloudShot),
+				new PowerDesc("Temp Shield", DpadPowers.TempShield),
+				new PowerDesc("Reaper Jester", DpadPowers.ReaperJester),
+				new PowerDesc("Float", DpadPowers.Float),
+				new PowerDesc("Fark", DpadPowers.Fark),
+				new PowerDesc("Sfarx", DpadPowers.Sfarx),
+				new PowerDesc("This shall not be seen!", DpadPowers.End)
+			};
+			
+			DpadDir dir;
+
+			public DpadPowerIten(TutorialCategory cat, DpadDir dir) {
+				setup("", "", cat, templateInput2);
+				InputIcon icon1 = component.gameObject.transform.GetChild(0).gameObject.GetComponent<InputIcon>();
+				InputIcon icon2 = component.gameObject.transform.GetChild(0).GetChild(1).gameObject.GetComponent<InputIcon>();
+				icon1.Button = InputDevice.ControllerButton.BumperL;
+				icon1.ChangeIcon();
+				icon2.Button = InputDevice.ControllerButton.BumperR;
+				icon2.ChangeIcon();
+				this.dir = dir;
+			}
+
+			void onSet(PowerDesc pow) {
+				nameText.text = string.Format("{0} Power: {1}", dir.ToString(), pow.name);
+				component.Description = Action_13_NewSuperMoves.PowerDescriptionStatic[(int)pow.pow];
+				Items.addDpadPower(pow.pow, dir);
+			}
+			
+			public override void onDirection(int direction) {
+				DpadPowers pow = Items.getDpadPower(dir);
+				int idx = 0;
+				foreach (PowerDesc power in powers) {
+					if (power.pow == pow) break;
+					idx += 1;
+				}
+				do {
+					idx += direction;
+					if (idx < 0) break;
+					if (idx >= powers.Length-1) break;
+				} while (!Items.hasDpadPower(powers[idx].pow));
+				if (idx < 0) idx = powers.Length-2;
+				if (idx == powers.Length-1) idx = 0;
+				onSet(powers[idx]);
+				menu.StartTextBox(component.Description);
+			}
+			
+			public override void onEnable() {
+				DpadPowers pow = Items.getDpadPower(dir);
+				foreach (PowerDesc power in powers) {
+					if (power.pow == pow) {
+						onSet(power);
+						break;
+					}
+				}
+			}
+		}
 		
 		static List<TutorialCategory> optCategories;
 		static TutorialMenu tutorial;
@@ -185,6 +262,7 @@ namespace Sparkipelago {
 		
 		public static void buildCategories() {
 			tutorial = GameObject.Find("PlayerObjects").GetComponentInChildren<TutorialMenu>(true);
+			ListIten.menu = tutorial;
 			optCategories = new List<TutorialCategory>();
 			inactiveColor = new Color(0.8f, 0.3f, 0.2f);
 			activeColor = new Color(0.1f, 0.7f, 0.3f);
@@ -224,6 +302,10 @@ namespace Sparkipelago {
 			
 			APSave.addOptions();
 			TutorialCategory inventory = addCategory("INVENTORY", Sparkipelago.apTexture);
+			new DpadPowerIten(inventory, DpadDir.Up);
+			new DpadPowerIten(inventory, DpadDir.Down);
+			new DpadPowerIten(inventory, DpadDir.Left);
+			new DpadPowerIten(inventory, DpadDir.Right);
 			foreach (long id in APShared.itemIDs) {
 				new InventoryIten(inventory, (ItemIds)id);
 			}
@@ -241,29 +323,21 @@ namespace Sparkipelago {
 				);
 				new RangeIten(
 					lab, "Timestop Item Count", "", 0, 10, 1,
-					(double newV) => {Sparkipelago.itemState[ItemIds.PROGRESSIVE_TIME_STOP] = (int)newV; return ((int)newV).ToString();},
-					() => {return Sparkipelago.itemState[ItemIds.PROGRESSIVE_TIME_STOP];}
+					(double newV) => { Sparkipelago.itemState[ItemIds.PROGRESSIVE_TIME_STOP] = (int)newV; return ((int)newV).ToString(); },
+					() => { return Sparkipelago.itemState[ItemIds.PROGRESSIVE_TIME_STOP]; }
 				);
 				new RangeIten(
-					lab, "Up Power", "", (int)Items.DpadPowers.None, (int)Items.DpadPowers.End-1, 1,
-					(double newV) => {Items.addDpadPower((Items.DpadPowers)newV, Items.DpadDir.Up); return ((Items.DpadPowers)newV).ToString();},
-					() => {return (double)Items.getDpadPower(Items.DpadDir.Up);}
+					lab, "Energy Amount", "", 0, 100, 10,
+					(double newV) => {PlayerHealthAndStats.Energy = (float)newV; return ((float)newV).ToString();},
+					() => {return PlayerHealthAndStats.Energy;}
 				);
-				new RangeIten(
-					lab, "Left Power", "", (int)Items.DpadPowers.None, (int)Items.DpadPowers.End-1, 1,
-					(double newV) => {Items.addDpadPower((Items.DpadPowers)newV, Items.DpadDir.Left); return ((Items.DpadPowers)newV).ToString();},
-					() => {return (double)Items.getDpadPower(Items.DpadDir.Left);}
-				);
-				new RangeIten(
-					lab, "Down Power", "", (int)Items.DpadPowers.None, (int)Items.DpadPowers.End-1, 1,
-					(double newV) => {Items.addDpadPower((Items.DpadPowers)newV, Items.DpadDir.Down); return ((Items.DpadPowers)newV).ToString();},
-					() => {return (double)Items.getDpadPower(Items.DpadDir.Down);}
-				);
-				new RangeIten(
-					lab, "Right Power", "", (int)Items.DpadPowers.None, (int)Items.DpadPowers.End-1, 1,
-					(double newV) => {Items.addDpadPower((Items.DpadPowers)newV, Items.DpadDir.Right); return ((Items.DpadPowers)newV).ToString();},
-					() => {return (double)Items.getDpadPower(Items.DpadDir.Right);}
-				);
+				new BoolIten(lab, "Destroy Labbed Checks", "", (bool newV) => {APSave.file.client.labmodeDestroy = newV; return newV.ToString();}, () => { return APSave.file.client.labmodeDestroy; });
+				new BoolIten(lab, "Track Checkpoints", "", (bool newV) => {APSave.file.client.labTrackCheckpoint = newV; return newV.ToString();}, () => {return APSave.file.client.labTrackCheckpoint;});
+				new BoolIten(lab, "Track Bubbles", "", (bool newV) => {APSave.file.client.labTrackBubble = newV; return newV.ToString();}, () => {return APSave.file.client.labTrackBubble;});
+				new BoolIten(lab, "Track Capsules", "", (bool newV) => {APSave.file.client.labTrackCapsule = newV; return newV.ToString();}, () => {return APSave.file.client.labTrackCapsule;});
+				new BoolIten(lab, "Track Medals", "", (bool newV) => {APSave.file.client.labTrackMedal = newV; return newV.ToString();}, () => {return APSave.file.client.labTrackMedal;});
+				new BoolIten(lab, "Track Coins", "", (bool newV) => {APSave.file.client.labTrackCoin = newV; return newV.ToString();}, () => {return APSave.file.client.labTrackCoin;});
+				new BoolIten(lab, "Track Batteries", "", (bool newV) => {APSave.file.client.labTrackBattery = newV; return newV.ToString();}, () => {return APSave.file.client.labTrackBattery;});
 				foreach (LabMode.MoveDebugPref move in LabMode.movedbg) {
 					new BoolIten(lab, move.eName, "", (bool newV) => {move.onChange(newV); return newV.ToString();}, () => {return Sparkipelago.hasItem(move.itemID);});
 				}

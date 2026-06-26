@@ -70,18 +70,46 @@ C=Checkpoint
 O=Capsule
 B=Bubble
 
+Done:
+	Vehicle Arrows
+	Progressive Score
+	Progressive Combo
+	Progressive Timestop
+	Energy Logic
+	Energy Tracker
+	Character Logic
+		-- Note: FLORIA PLANT BIT BUBBLE #5 is impossible without energy or character logic
+	.whatgate <stage name>
+	Fixed inaccurate dash stage in Radar Scout
+	Fixed Dash-Double-Jump without Double Jump
+	Fixed UT not taking coin hunt into account
+	Fixed explore medals only sending on initial collection
+	Hold LB or RB to quickly increment/decrement range items
+	Should I fix shop spoiling items without page?
+
 Beta Checklist:
 Gimmick Rando
 Score Sanity
 Checkpoint Sanity
-Bubble Sanity
-Capsule Sanity
 Spring Trap
+Reverse Trap
+Gravity Trap
+Bald Trap
+Cutscene Trap
+Trap Link
+Freom Check/Goal
+Title Case Locations
+Logic Doc (generated)
 Progressive Energy(?)
+Combine Progressive Combo and Combat
+Options for combat location
 
 Stable Checklist:
 Speed Sanity
+Bubble Sanity
+Capsule Sanity
 Hard Logic
+Downdash Buttons
 General Stability
 
 TODO:
@@ -124,20 +152,20 @@ TODO:
 	WALL JUMPING:
 	WALL WALKING:
 	FALL DAMAGE:
-	F.M CITY: PSCOBG
+	F.M CITY: POB
 	F.M DOWNTOWN: P
 	FLORIA HIGHWAY: P
-	FLORIA PLANT: PSCOBG
-	FLORESTA BLANCA: PSCOBG
-	CASTELA BLANCA: PSCOBG
-	SHANTORIA TOWN: PSCOBG
-	TECHNORIA CITY: PSCOBG
-	TERMINAL DRAGON: PSCOBG
-	SCARIA STROPOLIS: PSCOBG
-	TITANIC TOWER: PSCOBG
-	PLANETARY STRIPE: PSCOBG
-	HYPERATH FLEET: PSCOBG
-	APOCALYPSE THRUSTER: PSCOBG
+	FLORIA PLANT: P
+	FLORESTA BLANCA: P
+	CASTELA BLANCA: P
+	SHANTORIA TOWN: POB
+	TECHNORIA CITY: P
+	TERMINAL DRAGON: POB
+	SCARIA STROPOLIS: POB
+	TITANIC TOWER: POB
+	PLANETARY STRIPE: POB
+	HYPERATH FLEET: POB
+	APOCALYPSE THRUSTER: POB
 	BOSS: SAW-MAN: PCOBG
 	BOSS: ON THE RUN: COBG
 	BOSS: THROWBACK: PCOBG

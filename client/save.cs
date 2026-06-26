@@ -85,7 +85,14 @@ namespace Sparkipelago {
 		public double comboMax;
 		public double timeAmt;
 		public double timeMax;
-		
+
+		public bool labmodeDestroy;
+		public bool labTrackCheckpoint;
+		public bool labTrackBubble;
+		public bool labTrackCapsule;
+		public bool labTrackMedal;
+		public bool labTrackCoin;
+		public bool labTrackBattery;
 		public bool deathLink;
 		public bool capsuleArrows;
 		public bool bubbleArrows;
@@ -106,6 +113,13 @@ namespace Sparkipelago {
 			comboMax = 1;
 			timeAmt = 0.9f;
 			timeMax = 0.5f;
+			labmodeDestroy = true;
+			labTrackCheckpoint = true;
+			labTrackBubble = true;
+			labTrackCapsule = true;
+			labTrackMedal = true;
+			labTrackCoin = true;
+			labTrackBattery = true;
 			deathLink = false;
 			capsuleArrows = false;
 			bubbleArrows = false;

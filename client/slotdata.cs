@@ -105,7 +105,7 @@ namespace Sparkipelago {
 			completionReq = new int[0];
 			speedReq = new int[0];
 			scoreReq = new int[0];
-			labMode = true;
+			labMode = false;
 			requireCharacters = false;
 			utopiaMedals = false;
 			coinHunt = CoinHunt.NONE;

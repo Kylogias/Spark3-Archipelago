@@ -52,4 +52,22 @@ namespace Sparkipelago {
 			id = i;
 		}
 	}
+
+	public struct APJson {
+		public APJsonStage[] stages;
+	}
+	public struct APJsonStage {
+		public string name;
+		public int id;
+		public APJsonRegion[] regions;
+	}
+	public struct APJsonRegion {
+		public string name;
+		public APJsonCheck[] checks;
+	}
+	public struct APJsonCheck {
+		public string name;
+		public int index;
+		public string sanity;
+	}
 }

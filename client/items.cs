@@ -4,6 +4,32 @@ using MelonLoader;
 using Archipelago.MultiClient.Net.Models;
 
 namespace Sparkipelago {
+	public enum DpadDir {
+		None,
+		Up,
+		Left,
+		Down,
+		Right
+	}
+	public enum DpadPowers {
+		None,
+		SpeedBuff,
+		HyperSurge,
+		EnergyDash,
+		Overcharge,
+		SnapPortal,
+		RadarScout,
+		MultishotBlast,
+		ReaperJester,
+		Float,
+		Fark,
+		Sfarx,
+		Heal,
+		CloudShot,
+		TempShield,
+		End
+	}
+	
 	class Items {
 		public static void addBits(int num) {
 			Objects_Interaction.BitAmmountLocal += num;
@@ -12,31 +38,6 @@ namespace Sparkipelago {
 			PlayerPrefs.SetInt("Bits" + SaveSlot.Slot, ScoreManager.Bits);
 		}
 
-		public enum DpadDir {
-			None,
-			Up,
-			Left,
-			Down,
-			Right
-		}
-		public enum DpadPowers {
-			None,
-			SpeedBuff,
-			HyperSurge,
-			EnergyDash,
-			Overcharge,
-			SnapPortal,
-			RadarScout,
-			MultishotBlast,
-			ReaperJester,
-			Float,
-			Fark,
-			Sfarx,
-			Heal,
-			CloudShot,
-			TempShield,
-			End
-		}
 		public static void addDpadPower(DpadPowers pow) {
 			addDpadPower(pow, DpadDir.None);
 		}
@@ -76,6 +77,26 @@ namespace Sparkipelago {
 			if (dir == DpadDir.Down) return (DpadPowers)currentSave.DpadDown;
 			if (dir == DpadDir.Right) return (DpadPowers)currentSave.DpadRight;
 			return DpadPowers.None;
+		}
+
+		public static bool hasDpadPower(DpadPowers pow) {
+			switch (pow) {
+				case DpadPowers.SpeedBuff: return Sparkipelago.hasItem(ItemIds.SPEED_BUFF);
+				case DpadPowers.HyperSurge: return Sparkipelago.hasItem(ItemIds.HYPER_SURGE);
+				case DpadPowers.EnergyDash: return Sparkipelago.hasItem(ItemIds.ENERGY_DASH);
+				case DpadPowers.Overcharge: return Sparkipelago.hasItem(ItemIds.OVERCHARGE);
+				case DpadPowers.SnapPortal: return Sparkipelago.hasItem(ItemIds.SNAP_PORTAL);
+				case DpadPowers.RadarScout: return Sparkipelago.hasItem(ItemIds.RADAR_SCOUT);
+				case DpadPowers.MultishotBlast: return Sparkipelago.hasItem(ItemIds.MULTISHOT_BLAST);
+				case DpadPowers.Heal: return Sparkipelago.hasItem(ItemIds.HEAL);
+				case DpadPowers.CloudShot: return Sparkipelago.hasItem(ItemIds.CLOUD_SHOT);
+				case DpadPowers.TempShield: return Sparkipelago.hasItem(ItemIds.TEMP_SHIELD);
+				case DpadPowers.ReaperJester: return Sparkipelago.hasItem(ItemIds.REAPER_JESTER);
+				case DpadPowers.Float: return Sparkipelago.hasItem(ItemIds.FLOAT);
+				case DpadPowers.Fark: return Sparkipelago.hasItem(ItemIds.FARK);
+				case DpadPowers.Sfarx: return Sparkipelago.hasItem(ItemIds.SFARX);
+			}
+			return true;
 		}
 
 		public static bool isStageItem(ItemIds item) {

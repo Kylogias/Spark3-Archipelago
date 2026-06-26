@@ -234,7 +234,9 @@ namespace Sparkipelago {
 				const long id = 16295300000;
 				for (int i = 0; i < 26; i++) {
 					ShopItenDetails iten = itenlist[i];
-					if (Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i) && Sparkipelago.hasItem(Locations.getPageFromIdx(i))) {
+					bool itenAvailable = Sparkipelago.currentSession.Locations.AllLocations.Contains(id+i);
+					if (false) itenAvailable = itenAvailable && Sparkipelago.hasItem(Locations.getPageFromIdx(i));
+					if (itenAvailable) {
 						iten.Description = Sparkipelago.shopItems[i];
 					}
 				}
@@ -274,6 +276,14 @@ namespace Sparkipelago {
 				} else {
 					textComponent.color = new Color(0.25f, 1.0f, 0.25f);
 				}
+			}
+		}
+
+		// i hate you and i hope you die. screw you
+		[HarmonyPatch(typeof(SpinyMachine), "Update")]
+		private static class SpinyMachinePatch {
+			private static bool Prefix() {
+				return false;
 			}
 		}
 	}

@@ -22,8 +22,8 @@ COMMANDBASE = [
 INCLUDE_MANAGED = [
 	"Assembly-CSharp.dll", "UnityEngine.dll", "UnityEngine.CoreModule.dll", "UnityEngine.UI.dll", "UnityEngine.UIModule.dll",
 	"UnityEngine.AudioModule.dll", "UnityEngine.JSONSerializeModule", "Rewired_Core.dll", "UnityEngine.UnityWebRequestModule.dll",
-	"UnityEngine.UnityWebRequestAudioModule.dll", "UnityEngine.PhysicsModule.dll", "UnityEngine.InputLegacyModule", "UnityEngine.TextRenderingModule",
-	"UnityEngine.ImageConversionModule"
+	"UnityEngine.UnityWebRequestAudioModule.dll", "UnityEngine.PhysicsModule.dll", "UnityEngine.InputLegacyModule.dll", "UnityEngine.TextRenderingModule.dll",
+	"UnityEngine.ImageConversionModule.dll", "UnityEngine.VideoModule.dll"
 ]
 
 command = COMMANDBASE[0]
@@ -98,6 +98,8 @@ for stage in shared["stages"]:
 		sanity_seen[sanity] = []
 	for region in stage["regions"]:
 		for entrance in region["entrances"].keys():
+			if region["name"] == "GOAL" and entrance == "START" and len(stage["regions"]) > 2:
+				print(f"WARNING: {stage['name']} GOAL HAS START ENTRANCE WITH >2 REGIONS")
 			if isinstance(region["entrances"][entrance], str):
 				region["entrances"][entrance] = {"base": region["entrances"][entrance]}
 		for check in region["checks"].copy():
