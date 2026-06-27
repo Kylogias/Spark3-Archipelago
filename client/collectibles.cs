@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace Sparkipelago {
 	class Collectibles {
-		static string[] MEDALNAMES = {"CYAN", "GREEN", "YELLOW", "RED", "MAGENTA", "PURPLE", "BLUE", "GREY", "WHITE", "BROWN"};
+		static string[] MEDALNAMES = {"Cyan", "Green", "Yellow", "Red", "Magenta", "Purple", "Blue", "Grey", "White", "Brown"};
 		static List<RotateRing> capsules;
 		static List<CheckPointData> checkpoints;
 		static List<MonitorData> bubbles;
@@ -480,7 +480,7 @@ namespace Sparkipelago {
 			if (coins.Count > 0) {
 				CollectablesController collect = GameObject.Find("[ Collectable UI ]").GetComponent<CollectablesController>();
 				if (collect.MedalAmm > coinLeft) collect.MedalAmm = coinLeft;
-				if ((Locations.isLocationComplete(stage, "COMPLETION") || (SlotData.coinHunt > 0))) {
+				if ((Locations.isLocationComplete(stage, "Completion") || (SlotData.coinHunt > 0))) {
 					collect.StageTime = 30000;
 					if (SlotData.coinHunt > 0) coinLeft *= 1000;
 					collect.MedalAmm = coinLeft > 0 ? coinLeft : 1000000;
@@ -539,8 +539,8 @@ namespace Sparkipelago {
 				if (col.tag == "Player" || col.tag == "PlayerVehicle") {
 					int medal = __instance.MedalId;
 					if (APSave.file.client.labTrackMedal)
-						Sparkipelago.debugLog("{{\"name\": \"{0} EXPLORATION MEDAL\", \"index\": {1}, \"sanity\": \"explore\", \"requires\": \"\"}},", MEDALNAMES[medal], medal);
-					Locations.sendLocationCheck(Save.CurrentStageIndex, string.Format("{0} EXPLORATION MEDAL", MEDALNAMES[medal]));
+						Sparkipelago.debugLog("{{\"name\": \"{0} Exploration Medal\", \"index\": {1}, \"sanity\": \"explore\", \"requires\": \"\"}},", MEDALNAMES[medal], medal);
+						Locations.sendLocationCheck(Save.CurrentStageIndex, string.Format("{0} Exploration Medal", MEDALNAMES[medal]));
 					Transform arrow = __instance.gameObject.transform.Find("Arrow");
 					arrow.gameObject.SetActive(false);
 					foreach (CollectibleScout.ScoutData sd in scout.allLocations) {
@@ -560,10 +560,10 @@ namespace Sparkipelago {
 				MonitorData mon = col.GetComponent<MonitorData>();
 				int count = -1;
 				if (!bubbles.Contains(mon)) return;
-				if (mon.Type == MonitorType.Ring) {type = "BIT"; count = bBubCount; bBubCount += 1;}
-				if (mon.Type == MonitorType.Energy) { type = "ENERGY"; count = eBubCount; eBubCount += 1; }
+				if (mon.Type == MonitorType.Ring) {type = "Bit"; count = bBubCount; bBubCount += 1;}
+				if (mon.Type == MonitorType.Energy) { type = "Energy"; count = eBubCount; eBubCount += 1; }
 				if (APSave.file.client.labTrackBubble)
-					Sparkipelago.debugLog("{{\"name\": \"{0} BUBBLE #{1}\", \"index\": {2}, \"sanity\": \"bubble\", \"requires\": \"\"}},", type, count, bubbles.IndexOf(mon));
+					Sparkipelago.debugLog("{{\"name\": \"{0} Bubble #{1}\", \"index\": {2}, \"sanity\": \"bubble\", \"requires\": \"\"}},", type, count, bubbles.IndexOf(mon));
 				bubbles[bubbles.IndexOf(mon)] = null;
 			}
 		}
@@ -576,11 +576,11 @@ namespace Sparkipelago {
 				if (!capsules.Contains(rotring)) return;
 				string capType = "";
 				int count = -1;
-				if (col.tag == "Ring") {capType = "HEALTH"; count = hCapCount; hCapCount += 1;}
-				if (col.tag == "ScoreCapsule") {capType = "SCORE"; count = sCapCount; sCapCount += 1;}
-				if (col.tag == "EnergyCap") { capType = "ENERGY"; count = eCapCount; eCapCount += 1; }
+				if (col.tag == "Ring") {capType = "Health"; count = hCapCount; hCapCount += 1;}
+				if (col.tag == "ScoreCapsule") {capType = "Score"; count = sCapCount; sCapCount += 1;}
+				if (col.tag == "EnergyCap") { capType = "Energy"; count = eCapCount; eCapCount += 1; }
 				if (APSave.file.client.labTrackCapsule)
-					Sparkipelago.debugLog("{{\"name\": \"{0} CAPSULE #{1}\", \"index\": {2}, \"sanity\": \"capsule\", \"requires\": \"\"}},", capType, count, capsules.IndexOf(rotring));
+					Sparkipelago.debugLog("{{\"name\": \"{0} Capsule #{1}\", \"index\": {2}, \"sanity\": \"capsule\", \"requires\": \"\"}},", capType, count, capsules.IndexOf(rotring));
 				capsules[capsules.IndexOf(rotring)] = null;
 			}
 		}
@@ -592,7 +592,7 @@ namespace Sparkipelago {
 				int count = checkpointCount;
 				checkpointCount += 1;
 				if (APSave.file.client.labTrackCheckpoint)
-					Sparkipelago.debugLog("{{\"name\": \"CHECKPOINT #{0}\", \"index\": {1}, \"sanity\": \"checkpoint\", \"requires\": \"\"}},", count, checkpoints.IndexOf(check));
+					Sparkipelago.debugLog("{{\"name\": \"Checkpoint #{0}\", \"index\": {1}, \"sanity\": \"checkpoint\", \"requires\": \"\"}},", count, checkpoints.IndexOf(check));
 				Transform arrow = check.gameObject.transform.Find("Arrow");
 				arrow.gameObject.SetActive(false);
 				foreach (CollectibleScout.ScoutData sd in scout.allLocations) {
@@ -610,7 +610,7 @@ namespace Sparkipelago {
 					int count = coinCount;
 					coinCount += 1;
 					if (APSave.file.client.labTrackCoin)
-						Sparkipelago.debugLog("{{\"name\": \"BLUE COIN #{0}\", \"index\": {1}, \"sanity\": \"coin\", \"requires\": \"\"}},", count, idx);
+						Sparkipelago.debugLog("{{\"name\": \"Blue Coin #{0}\", \"index\": {1}, \"sanity\": \"coin\", \"requires\": \"\"}},", count, idx);
 					Locations.sendLocationByIndex(Save.CurrentStageIndex, "coin", idx);
 					coins[idx] = null;
 				}
@@ -625,7 +625,7 @@ namespace Sparkipelago {
 					int count = batteryCount;
 					batteryCount += 1;
 					if (APSave.file.client.labTrackBattery)
-						Sparkipelago.debugLog("{{\"name\": \"BATTERY #{0}\", \"index\": {1}, \"sanity\": \"battery\", \"requires\": \"ca\"}},", count, idx);
+						Sparkipelago.debugLog("{{\"name\": \"Battery #{0}\", \"index\": {1}, \"sanity\": \"battery\", \"requires\": \"ca\"}},", count, idx);
 					Locations.sendLocationByIndex(Save.CurrentStageIndex, "battery", idx);
 					batteries[idx] = null;
 				}

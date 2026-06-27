@@ -277,28 +277,28 @@ namespace Sparkipelago {
 		
 		public static void onLevelComplete(int idx) {
 			MelonLogger.Msg("Send Location For Level " + idx.ToString());
-			sendLocationCheck(idx, "COMPLETION");
+			sendLocationCheck(idx, "Completion");
 			Save.SaveFile savefile = Save.Saves[Save.CurrentSaveSlot];
 			if (savefile.SpeedGoldMedals[idx]) {
 				MelonLogger.Msg("Send Gold Speed");
-				sendLocationCheck(idx, "GOLD SPEED MEDAL");
+				sendLocationCheck(idx, "Gold Speed Medal");
 			}
 			if (savefile.SpeedDiaMedals[idx]) {
 				MelonLogger.Msg("Send Diamond Speed");
-				sendLocationCheck(idx, "DIAMOND SPEED MEDAL");
+				sendLocationCheck(idx, "Diamond Speed Medal");
 			}
 			if (savefile.ScoreGoldMedals[idx]) {
 				MelonLogger.Msg("Send Gold Score");
-				sendLocationCheck(idx, "GOLD SCORE MEDAL");
+				sendLocationCheck(idx, "Gold Score Medal");
 			}
 			if (savefile.ScoreDiaMedals[idx]) {
 				MelonLogger.Msg("Send Diamond Score");
-				sendLocationCheck(idx, "DIAMOND SCORE MEDAL");
+				sendLocationCheck(idx, "Diamond Score Medal");
 			}
 			int numExplore = Save.GetAmmountOfExploreMedalsInSaveFile(savefile, idx);
-			if (SlotData.exploreHunt == ExploreHunt.VANILLA && numExplore == 10) sendLocationCheck(idx, "EXPLORE HUNT");
+			if (SlotData.exploreHunt == ExploreHunt.VANILLA && numExplore == 10) sendLocationCheck(idx, "Explore Hunt");
 			if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+idx))
-				if (SlotData.exploreHunt == ExploreHunt.SHUFFLED && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+idx] >= 10) sendLocationCheck(idx, "EXPLORE HUNT");
+				if (SlotData.exploreHunt == ExploreHunt.SHUFFLED && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+idx] >= 10) sendLocationCheck(idx, "Explore Hunt");
 		}
 
 		[HarmonyPatch(typeof(Arena), "Start")]

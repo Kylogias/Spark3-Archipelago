@@ -86,6 +86,8 @@ Done:
 	Fixed explore medals only sending on initial collection
 	Hold LB or RB to quickly increment/decrement range items
 	Should I fix shop spoiling items without page?
+	Logic Doc (generated)
+	Title Case Locations
 
 Beta Checklist:
 Gimmick Rando
@@ -98,8 +100,6 @@ Bald Trap
 Cutscene Trap
 Trap Link
 Freom Check/Goal
-Title Case Locations
-Logic Doc (generated)
 Progressive Energy(?)
 Combine Progressive Combo and Combat
 Options for combat location

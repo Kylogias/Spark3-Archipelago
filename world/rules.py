@@ -126,7 +126,7 @@ class RulesState:
 		for i in range(4):
 			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
 			self.set_gate_entrance_rule(world, gate_entrance, i, True_())
-		utopia_entrance = world.get_entrance(f"Entrance to UTOPIA SHELTER")
+		utopia_entrance = world.get_entrance(f"Entrance to Utopia Shelter")
 		utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
 		if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
 		self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
@@ -140,12 +140,12 @@ class RulesState:
 			for region in stage_data["regions"]:
 				for enter in region["entrances"].keys():
 					from_region = world.get_region(f"{stage_data['name']} {enter}")
-					entrance = from_region.connect(world.get_region(f"{stage_data['name']} {region['name']}"), f"{stage_data['name']} {enter} TO {region['name']}")
+					entrance = from_region.connect(world.get_region(f"{stage_data['name']} {region['name']}"), f"{stage_data['name']} {enter} to {region['name']}")
 					entrance_rule = self.parse_location_rules(world, region['entrances'][enter])
-					if region["name"] == "GOAL":
+					if region["name"] == "Goal":
 						if stage_data["coin_count"]:
-							if world.coin_hunt == 1: entrance_rule = entrance_rule & Has(f"{stage_name} COIN", count=stage_data["coin_req"])
-							if world.coin_hunt == 2: entrance_rule = entrance_rule & Has(f"{stage_name} COIN", count=stage_data["coin_count"])
+							if world.coin_hunt == 1: entrance_rule = entrance_rule & Has(f"{stage_name} Coin", count=stage_data["coin_req"])
+							if world.coin_hunt == 2: entrance_rule = entrance_rule & Has(f"{stage_name} Coin", count=stage_data["coin_count"])
 					world.set_rule(entrance, entrance_rule)
 				
 				for check in region["checks"]:
@@ -153,6 +153,6 @@ class RulesState:
 						loc = world.get_location(f"{stage_data['name']} {check['name']}")
 						world.set_rule(loc, self.parse_location_rules(world, check['requires']))
 						if check["sanity"] == "hunt" and world.explore_hunt:
-							world.set_rule(loc, Has(f"{stage_name} EXPLORE MEDAL", count=10))
+							world.set_rule(loc, Has(f"{stage_name} Explore Medal", count=10))
 
 		world.multiworld.completion_condition[world.player] = lambda state: state.has("Victory", world.player)

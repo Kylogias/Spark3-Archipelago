@@ -4,6 +4,9 @@ sparkdir
 Archipelago
 world/__pycache__
 world/apshared.py
+logicshared.py
+logicdoc.xlsx
+__pycache__
 client/apshared.cs
 music
 mod

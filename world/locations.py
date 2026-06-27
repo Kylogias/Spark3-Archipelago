@@ -100,7 +100,7 @@ class LocationState:
 		explore_locations = []
 		for region in stage["regions"]:
 			new_region = Region(f"{stage['name']} {region['name']}", world.player, world.multiworld)
-			if region["name"] == "START":
+			if region["name"] == "Start":
 				stage_region.connect(new_region, f"{stage['name']} {region['name']}")
 			region_locs = {}
 			event_locations = []
@@ -119,46 +119,46 @@ class LocationState:
 				if check["sanity"] == "explore":
 					has_explore = True
 					explore_locations.append(f"{stage['name']} {check['name']}")
-			if event and region["name"] == "GOAL":
+			if event and region["name"] == "Goal":
 				for loc in region_locs.keys():
 					new_region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
 			else:
 				new_region.add_locations(region_locs)
 			for event_loc in event_locations:
-				event = f"{event_loc['name']} EVENT" if event_loc['name'] in shuffled_locations else event_loc['name']
+				event = f"{event_loc['name']} Event" if event_loc['name'] in shuffled_locations else event_loc['name']
 				rule = CanReachLocation(f"{stage['name']} {event_loc['name']}") if event_loc['name'] in shuffled_locations else True_()
 				new_region.add_event(
 					f"{stage['name']} {event}", event_loc['event_item'],
 					location_type=Spark3Location, item_type=Spark3Item,
 					rule=rule, show_in_spoiler=False
 				)
-		completion_region = world.get_region(f"{stage['name']} GOAL")
+		completion_region = world.get_region(f"{stage['name']} Goal")
 		if has_explore:
 			for xl in explore_locations:
-				event_name = f"{xl} EXPLORE EVENT" if "explore" in self.sanities else xl
+				event_name = f"{xl} Explore Event" if "explore" in self.sanities else xl
 				stage_region.add_event(
-					event_name, f"{stage['name']} EVENT MEDAL",
+					event_name, f"{stage['name']} Event Medal",
 					location_type=Spark3Location, item_type=Spark3Item,
 					rule=CanReachLocation(xl) if "explore" in self.sanities else None, show_in_spoiler=False
 				)
 				if world.explore_hunt == 1:
 					stage_region.add_event(
-						f"{xl} HUNT EVENT", f"{stage['name']} EXPLORE MEDAL",
+						f"{xl} HUNT EVENT", f"{stage['name']} Explore Medal",
 						location_type=Spark3Location, item_type=Spark3Item,
 						rule=CanReachLocation(xl), show_in_spoiler=False
 					)
 			if self.UTOPIA_HUNT_MEDALS:
 				completion_region.add_event(
-					f"{stage['name']} EXPLORED", "Stage Explored",
+					f"{stage['name']} Explored", "Stage Explored",
 					location_type=Spark3Location, item_type=Spark3Item,
-					rule=Has(f"{stage['name']} EXPLORE MEDAL", count=10), show_in_spoiler=False
+					rule=Has(f"{stage['name']} Explore Medal", count=10), show_in_spoiler=False
 				);
 			else:
 				rule = True_()
 				for xl in explore_locations:
 					rule = CanReachLocation(xl) & rule
 				completion_region.add_event(
-					f"{stage['name']} EXPLORED", "Stage Explored",
+					f"{stage['name']} Explored", "Stage Explored",
 					location_type=Spark3Location, item_type=Spark3Item,
 					rule=rule, show_in_spoiler=False
 				);
@@ -226,11 +226,11 @@ class LocationState:
 		
 		dive_locations = {}
 		for i in range(self.ENDLESS_COUNT):
-			dive_locations[f"ENDLESS DIVE #{i+1}"] = location_name_to_id[f"ENDLESS DIVE #{i+1}"]
+			dive_locations[f"Endless Dive #{i+1}"] = location_name_to_id[f"Endless Dive #{i+1}"]
 
-		dive_region = Region("ENDLESS DIVE", world.player, world.multiworld)
+		dive_region = Region("Endless Dive", world.player, world.multiworld)
 		world.multiworld.regions += [dive_region]
-		gates[0].connect(dive_region, "Gate 0 to Endless Dive", Has("OoB Clip") & Has(COMBAT))
+		gates[0].connect(dive_region, "Gate 0 to Endless Dive", Has("Out Of Bounds") & Has(COMBAT))
 		dive_region.add_locations(dive_locations, Spark3Location)
 		
 		if world.spark2:

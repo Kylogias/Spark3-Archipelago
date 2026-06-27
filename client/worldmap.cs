@@ -122,7 +122,7 @@ namespace Sparkipelago {
 			int numScore = 0;
 			int i = 0;
 			for (i = 0; i < save.StageCompleted.Length; i++) {
-				if (Locations.isLocationComplete(i, "COMPLETION")) save.StageCompleted[i] = true;
+				if (Locations.isLocationComplete(i, "Completion")) save.StageCompleted[i] = true;
 				if (save.StageCompleted[i]) numComplete++;
 				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed += 1;
 				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed += 1;

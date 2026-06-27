@@ -70,16 +70,16 @@ for sanity in sanity_priority:
 	sanities[sanity] = []
 
 medal_names = [
-	"CYAN EXPLORATION MEDAL",
-	"GREEN EXPLORATION MEDAL",
-	"YELLOW EXPLORATION MEDAL",
-	"RED EXPLORATION MEDAL",
-	"MAGENTA EXPLORATION MEDAL",
-	"PURPLE EXPLORATION MEDAL",
-	"BLUE EXPLORATION MEDAL",
-	"GREY EXPLORATION MEDAL",
-	"WHITE EXPLORATION MEDAL",
-	"BROWN EXPLORATION MEDAL"
+	"Cyan Exploration Medal",
+	"Green Exploration Medal",
+	"Yellow Exploration Medal",
+	"Red Exploration Medal",
+	"Magenta Exploration Medal",
+	"Purple Exploration Medal",
+	"Blue Exploration Medal",
+	"Grey Exploration Medal",
+	"White Exploration Medal",
+	"Brown Exploration Medal"
 ]
 
 itemID = 16295351000
@@ -98,7 +98,7 @@ for stage in shared["stages"]:
 		sanity_seen[sanity] = []
 	for region in stage["regions"]:
 		for entrance in region["entrances"].keys():
-			if region["name"] == "GOAL" and entrance == "START" and len(stage["regions"]) > 2:
+			if region["name"] == "Goal" and entrance == "Start" and len(stage["regions"]) > 2:
 				print(f"WARNING: {stage['name']} GOAL HAS START ENTRANCE WITH >2 REGIONS")
 			if isinstance(region["entrances"][entrance], str):
 				region["entrances"][entrance] = {"base": region["entrances"][entrance]}
@@ -121,12 +121,12 @@ for stage in shared["stages"]:
 			if not i in sanity_seen[sanity]:
 				print(f"WARNING: {i} missing in {stage['name']} {sanity}")
 	if len(explore_rules):
-		explore_name = f"{stage['name']} EXPLORE MEDAL"
+		explore_name = f"{stage['name']} Explore Medal"
 		item_name_to_id[explore_name] = itemID + stage["id"]
 		shared["items"].append({"name": explore_name, "itemtype": "EXPLORE2" if stage["type"] == "spark2" else "EXPLORE3", "id": itemID+stage["id"]})
-		check = {"name": "EXPLORE HUNT", "sanity": "hunt", "requires": ""}
+		check = {"name": "Explore Hunt", "sanity": "hunt", "requires": ""}
 		for region in stage["regions"]:
-			if region["name"] == "GOAL":
+			if region["name"] == "Goal":
 				region["checks"].append(check)
 		sanities["hunt"].append([stage, check])
 
@@ -141,6 +141,10 @@ for sanity in sanity_priority:
 		if not "index" in check:
 			check["index"] = -1;
 		curID += 1
+
+with open("logicshared.py", "w") as aplogic:
+	aplogic.write("shared = ")
+	aplogic.write(json.dumps(shared))
 
 with open("world/apshared.py", "w") as appy:
 	appy.write("from .items import ItemType\n")
