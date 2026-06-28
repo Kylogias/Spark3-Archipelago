@@ -46,9 +46,13 @@ namespace Sparkipelago {
 		private GameObject redWorld;
 		private GameObject grayWorld;
 		public static GameObject flint;
+		public static GameObject spring;
 		public static List<GameObject> flintList;
 		public static GameObject playerRed;
 		public static GameObject playerGray;
+		public static StageProprietiesAlterations gravityTrap;
+		public static float gravityTimer;
+		public static float baldTimer;
 
 		public static GameObject eBubble;
 		public static GameObject eCapsule;
@@ -111,6 +115,12 @@ namespace Sparkipelago {
 				new SlotData();
 			}
 			
+			messages.Clear();
+			foreach (DisplayedMessage dm in messageText) {
+				messages.Enqueue("");
+				messages.Enqueue("");
+			}
+			
 			APSavedata data = APSave.getAPSave();
 			APConnectionInfo connect = APSave.getAPConnect();
 			currentSession = ArchipelagoSessionFactory.CreateSession(connect.ip, connect.port);
@@ -159,10 +169,10 @@ namespace Sparkipelago {
 				}
 			} else {
 				MelonLogger.Error("Error while connecting to Archipelago");
-				messages.Enqueue("Error while connecting to Archipelago");
+				messages.Enqueue("<color=#E02010>Error while connecting to Archipelago</color>");
 				foreach(string e in ((LoginFailure)result).Errors) {
 					MelonLogger.Error(e);
-					messages.Enqueue(e);
+					messages.Enqueue(string.Format("<color=#E02010>{0}</color>", e));
 				}
 				currentSession = null;
 			}
@@ -271,6 +281,13 @@ namespace Sparkipelago {
 					}
 				}
 				Collectibles.updateTracker();
+
+				baldTimer -= Time.deltaTime;
+				gravityTimer -= Time.deltaTime;
+				if (baldTimer > 0) Items.makePlayerBald();
+				else Items.makePlayerUnbald();
+				if (gravityTimer > 0) gravityTrap.ConstantUpForce = true;
+				else gravityTrap.ConstantUpForce = false;
 			}
 			foreach (DisplayedMessage dm in messageText) {
 				dm.timeLeft -= Time.unscaledDeltaTime;
@@ -351,6 +368,7 @@ namespace Sparkipelago {
 			GameObject hCapPrefab = GameObject.Find("[Core prefabs]/Capsule");
 			GameObject sCapPrefab = GameObject.Find("[Core prefabs]/Capsule_Score");
 			GameObject eBubPrefab = GameObject.Find("[Core prefabs]/EnergyBubble");
+			GameObject springPrefab = GameObject.Find("[Core prefabs]/SpringTire/SpringRoot");
 			GameObject copterPrefab = GameObject.Find("[PREFABS HOLDER]/[CityPrefabs]/PlayableCopter");
 			
 			GameObject ragingInstance = UnityEngine.Object.Instantiate(ragingPrefab, prefabObject.transform);
@@ -379,6 +397,8 @@ namespace Sparkipelago {
 			setupPrefabChildren(hCapsule, true, null);
 			sCapsule = UnityEngine.Object.Instantiate(sCapPrefab, prefabObject.transform);
 			setupPrefabChildren(sCapsule, true, null);
+			spring = UnityEngine.Object.Instantiate(springPrefab, prefabObject.transform);
+			setupPrefabChildren(spring, true, null);
 			flint = UnityEngine.Object.Instantiate(flintPrefab, prefabObject.transform);
 			setupPrefabChildren(flint, true, null);
 			copter = UnityEngine.Object.Instantiate(copterPrefab, prefabObject.transform);
@@ -392,8 +412,9 @@ namespace Sparkipelago {
 			currentScene = sceneName;
 			player = GameObject.Find("Player_Fark");
 
+			GameObject canvasGO = null;
 			if (APSave.sparkFont != null) {
-				GameObject canvasGO = new GameObject("APCanvas", typeof(Canvas), typeof(CanvasScaler));
+				canvasGO = new GameObject("APCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(StageProprietiesAlterations));
 				Canvas canvas = canvasGO.GetComponent<Canvas>();
 				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 				
@@ -419,6 +440,13 @@ namespace Sparkipelago {
 			}
 
 			if (player != null) {
+				if (canvasGO != null) {
+					gravityTrap = canvasGO.GetComponent<StageProprietiesAlterations>();
+					gravityTrap.Player = player.GetComponent<PlayerBhysics>();
+					gravityTrap.Actions = player.GetComponent<ActionManager>();
+					gravityTrap.UpForce = -1;
+					gravityTrap.ConstantUpForce = false;
+				}
 				float score = APSave.file.client.scoreAmt * itemState[ItemIds.PROGRESSIVE_SCORE];
 				if (score > APSave.file.client.scoreMax) score = APSave.file.client.scoreMax;
 				ScoreManager.Charge = score;

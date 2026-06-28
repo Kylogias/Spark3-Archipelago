@@ -80,28 +80,28 @@ Done:
 	Character Logic
 		-- Note: FLORIA PLANT BIT BUBBLE #5 is impossible without energy or character logic
 	.whatgate <stage name>
-	Fixed inaccurate dash stage in Radar Scout
+	Fixed inaccurate dash state in Radar Scout
 	Fixed Dash-Double-Jump without Double Jump
 	Fixed UT not taking coin hunt into account
+	Fixed connection errors disappearing too quickly
 	Fixed explore medals only sending on initial collection
 	Hold LB or RB to quickly increment/decrement range items
+	Hold the left stick or dpad to quickly go through the database
 	Should I fix shop spoiling items without page?
 	Logic Doc (generated)
 	Title Case Locations
+	Combine Progressive Combo and Combat
+	Spring Trap
+	Zoom Trap
+	Gravity Trap
+	Bald Trap
+	Damage Trap
 
 Beta Checklist:
 Gimmick Rando
 Score Sanity
 Checkpoint Sanity
-Spring Trap
-Reverse Trap
-Gravity Trap
-Bald Trap
-Cutscene Trap
-Trap Link
-Freom Check/Goal
 Progressive Energy(?)
-Combine Progressive Combo and Combat
 Options for combat location
 
 Stable Checklist:
@@ -110,6 +110,8 @@ Bubble Sanity
 Capsule Sanity
 Hard Logic
 Downdash Buttons
+Trap Link
+Freom Check/Goal
 General Stability
 
 TODO:

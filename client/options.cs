@@ -317,9 +317,9 @@ namespace Sparkipelago {
 					() => {return Sparkipelago.itemState[ItemIds.PROGRESSIVE_SCORE];}
 				);
 				new RangeIten(
-					lab, "Combo Item Count", "", 0, 10, 1,
-					(double newV) => {Sparkipelago.itemState[ItemIds.PROGRESSIVE_COMBO] = (int)newV; return ((int)newV).ToString();},
-					() => {return Sparkipelago.itemState[ItemIds.PROGRESSIVE_COMBO];}
+					lab, "Combo Item Count", "", 0, 11, 1,
+					(double newV) => {Sparkipelago.itemState[ItemIds.COMBAT] = (int)newV; return ((int)newV).ToString();},
+					() => {return Sparkipelago.itemState[ItemIds.COMBAT];}
 				);
 				new RangeIten(
 					lab, "Timestop Item Count", "", 0, 10, 1,
@@ -355,6 +355,48 @@ namespace Sparkipelago {
 		
 		static float lbFrame;
 		static float rbFrame;
+		static float axisFrame;
+
+		[HarmonyPatch(typeof(TutorialMenu), "AxisManager")]
+		private class TutorialMenuPrefixPatch {
+			private static void Prefix(TutorialMenu __instance, ref int ___axiscount, ref int ___AxisInput) {
+				bool right = __instance.Inp.Rewinp.GetButton("D_right");
+				bool left = __instance.Inp.Rewinp.GetButton("D_left");
+				bool down = __instance.Inp.Rewinp.GetButton("D_down");
+				bool up = __instance.Inp.Rewinp.GetButton("D_up");
+				if (___axiscount > 0 || right || left || down || up) {
+					axisFrame += Time.unscaledDeltaTime;
+					___axiscount += 1;
+				}
+				else axisFrame = 0;
+				if (axisFrame > 0.35f) {
+					___axiscount = 0;
+					axisFrame -= 0.1f;
+				}
+				if (___axiscount == 0) {
+					if (right) {
+						if (___axiscount < 1) ___AxisInput = 1;
+						else ___AxisInput = 0;
+						___axiscount += 1;
+					}
+					else if (left) {
+						if (___axiscount < 1) ___AxisInput = -1;
+						else ___AxisInput = 0;
+						___axiscount += 1;
+					}
+					if (down) {
+						if (___axiscount < 1) ___AxisInput = -2;
+						else ___AxisInput = 0;
+						___axiscount += 1;
+					}
+					else if (up) {
+						if (___axiscount < 1) ___AxisInput = 2;
+						else ___AxisInput = 0;
+						___axiscount += 1;
+					}
+				}
+			}
+		}
 		
 		[HarmonyPatch(typeof(TutorialMenu), "Update")]
 		private class TutorialMenuUpdatePatch {
@@ -369,11 +411,11 @@ namespace Sparkipelago {
 				if (__instance.Inp.Rewinp.GetButton("LockOn")) rbFrame += Time.unscaledDeltaTime;
 				else rbFrame = 0;
 
-				if (lbFrame > 0.5f) {
+				if (lbFrame > 0.35f) {
 					LB = true;
 					lbFrame -= 0.05f;
 				}
-				if (rbFrame > 0.5f) {
+				if (rbFrame > 0.35f) {
 					RB = true;
 					rbFrame -= 0.05f;
 				}

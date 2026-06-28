@@ -71,8 +71,8 @@ class Spark3World(World):
 			self.gimmick_rando = False
 		
 		self.multipliers = []
-		for i in range(self.options.progressive_combo.value):
-			self.multipliers.append("Progressive Combo")
+		for i in range(self.options.progressive_combo.value-1):
+			self.multipliers.append("Combat")
 		for i in range(self.options.progressive_score.value):
 			self.multipliers.append("Progressive Score")
 		for i in range(self.options.progressive_timestop.value):

@@ -23,12 +23,12 @@
 		{"name": "Nightmare Trap", "itemtype": "TRAP"},
 		{"name": "Laser Trap", "itemtype": "TRAP"},
 		{"name": "Flint Trap", "itemtype": "TRAP"},
-		{"name": "Spring Trap", "itemtype": "UNIMPLEMENTED"},
-		{"name": "Gravity Trap", "itemtype": "UNIMPLEMENTED"},
-		{"name": "Reverse Trap", "itemtype": "UNIMPLEMENTED"},
-		{"name": "Cutscene Trap", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Spring Trap", "itemtype": "TRAP"},
+		{"name": "Gravity Trap", "itemtype": "TRAP"},
+		{"name": "Zoom Trap", "itemtype": "TRAP"},
+		{"name": "Bald Trap", "itemtype": "TRAP"},
+		{"name": "Damage Trap", "itemtype": "TRAP"},
 		
-		{"name": "Progressive Combo", "itemtype": "MULTIPLIER"},
 		{"name": "Progressive Score", "itemtype": "MULTIPLIER"},
 		{"name": "Progressive Time Stop", "itemtype": "MULTIPLIER"},
 		

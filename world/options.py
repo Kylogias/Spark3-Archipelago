@@ -49,15 +49,16 @@ class CharacterLogic(Toggle):
 
 class ProgressiveCombo(Range):
 	"""
-	How many combo items should be in the pool?
-	These items are progressive and can be adjusted in client settings
+	How many combat items should be in the pool?
+	These items are progressive, first one provides the ability to fight
+	and subsequent items give you permanent combo (adjustable in client settings)
 	"""
-	display_name = "Progressive Combo"
+	display_name = "Progressive Combat"
 
-	range_start = 0
-	range_end = 10
+	range_start = 1
+	range_end = 11
 
-	default = 0
+	default = 1
 
 class ProgressiveScore(Range):
 	"""
