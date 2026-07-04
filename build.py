@@ -64,7 +64,7 @@ for shop in shared["shop"]:
 	location_name_to_id[f"Shop {shop['page']} {shop['name']}"] = curID
 	curID += 1
 
-sanity_priority = ["base", "speedgold", "speeddia", "scoregold", "scoredia", "explore", "hunt", "coin", "battery"]
+sanity_priority = ["base", "speedgold", "speeddia", "scoregold", "scoredia", "explore", "hunt", "coin", "battery", "checkpoint"]
 sanities = {}
 for sanity in sanity_priority:
 	sanities[sanity] = []

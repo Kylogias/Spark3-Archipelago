@@ -10,13 +10,16 @@ class Shopsanity(Toggle):
 class Difficulty(Choice):
 	"""
 	How difficult should the logic be
+	WARNING: The only implemented difficulty at the moment is hard! Other difficulties will use hard logic settings
 
 	normal: The easiest option, designed for those new to the game and GrimmyHunter
 	hard: You will need to be observant of the stage layout and know how to best utilize Spark's movement and simple tech
 	expert: Requires knowledge for hard difficulty as well as less simple speedrun tricks. All tricks are fair game
 	"""
-	
+
+	option_base = 0
 	option_hard = 1
+	option_expert = 2
 	default = option_hard
 
 class Spark2Stages(DefaultOnToggle):
@@ -113,7 +116,6 @@ class Speedsanity(Choice):
 class Scoresanity(Choice):
 	"""
 	Adds the 14 gold and/or 14 diamond score medals to the location pool. (28 each with Spark 2 stages)
-	WARNING: Logic Not Implemented
 	"""
 	display_name = "ScoreSanity"
 	
@@ -128,6 +130,12 @@ class Exploresanity(Toggle):
 	Adds the 180 exploration medals as checks (300 with Spark 2 stages)
 	"""
 	display_name = "ExploreSanity"
+
+class Checkpointsanity(Toggle):
+	"""
+	Adds the 237 checkpoints as checks (355 with Spark 2 stages)
+	"""
+	display_name = "CheckpointSanity"
 
 class Coinsanity(Choice):
 	"""
@@ -309,6 +317,7 @@ class Spark3Options(PerGameCommonOptions):
 	speedsanity: Speedsanity
 	shopsanity: Shopsanity
 	coinsanity: Coinsanity
+	checkpointsanity: Checkpointsanity
 	batterysanity: Batterysanity
 	endless_dive_checks: EndlessDiveChecks
 
@@ -330,7 +339,7 @@ option_groups = [
 	),
 	OptionGroup(
 		"Extra Checks",
-		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, EndlessDiveChecks]
+		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, Checkpointsanity, EndlessDiveChecks]
 	),
 	OptionGroup(
 		"Item Options",

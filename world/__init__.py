@@ -47,6 +47,8 @@ class Spark3World(World):
 			self.location_state.sanities.append("coin")
 		if self.options.batterysanity:
 			self.location_state.sanities.append("battery")
+		if self.options.checkpointsanity:
+			self.location_state.sanities.append("checkpoint")
 		if self.options.coinsanity == 2:
 			self.coin_hunt = 1
 		elif self.options.coinsanity == 3:
@@ -65,7 +67,6 @@ class Spark3World(World):
 			self.ability_rando = False
 
 		if self.options.gimmick_rando:
-			raise ValueError("Gimmick Rando isn't implemented in this release, try again later")
 			self.gimmick_rando = True
 		else:
 			self.gimmick_rando = False
@@ -151,9 +152,6 @@ class Spark3World(World):
 			self.coin_hunt = slot_data["coin_hunt"]
 			return
 
-	#	if self.ability_rando and (self.options.scoresanity.value or self.options.speedsanity.value):
-	#		raise ValueError("Ability logic not implemented for Score/Speed Sanities")
-
 		location_count = 43 + self.location_state.ENDLESS_COUNT
 		if self.spark2: location_count += 14
 		if self.shop_enabled: location_count += 26
@@ -164,6 +162,7 @@ class Spark3World(World):
 		if self.options.exploresanity: location_count += 300 if self.spark2 else 180
 		if self.options.coinsanity: location_count += 72
 		if self.options.batterysanity: location_count += 13
+		if self.options.checkpointsanity: location_count += 355 if self.spark2 else 237
 		if self.explore_hunt: location_count += 30 if self.spark2 else 18
 
 		reserved_items = 28 + len(self.multipliers)

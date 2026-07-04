@@ -124,6 +124,8 @@ class LocationState:
 					new_region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
 			else:
 				new_region.add_locations(region_locs)
+			if "event" in region:
+				event_locations.append({"name": "Access", "sanity": "base", "event_item": region["event"]})
 			for event_loc in event_locations:
 				event = f"{event_loc['name']} Event" if event_loc['name'] in shuffled_locations else event_loc['name']
 				rule = CanReachLocation(f"{stage['name']} {event_loc['name']}") if event_loc['name'] in shuffled_locations else True_()

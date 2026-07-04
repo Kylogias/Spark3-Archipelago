@@ -120,6 +120,7 @@ namespace Sparkipelago {
 		}
 		
 		public static void makePlayerBald() {
+			if (ButtonTips.Playing != PlayableUnit.Character) return;
 			int ch = CharacterAnimatorChange.Character;
 			switch (ch) {
 				case 0: { // Spark
@@ -151,6 +152,7 @@ namespace Sparkipelago {
 		}
 
 		public static void makePlayerUnbald() {
+			if (ButtonTips.Playing != PlayableUnit.Character) return;
 			int ch = CharacterAnimatorChange.Character;
 			switch (ch) {
 				case 0: { // Spark
