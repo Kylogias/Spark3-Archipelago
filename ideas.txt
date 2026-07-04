@@ -101,14 +101,25 @@ Beta Checklist:
 Gimmick Rando
 Score Sanity
 Checkpoint Sanity
-Progressive Energy(?)
 Options for combat location
+	- None
+	- Optional Bosses
+	- Sphere 1
+	- Local Item
+	- Start With
+Progression Modes
+	- Gates
+	- Open World
+	- Vanilla Entrance Rando
+	- Levels Items
 
 Stable Checklist:
+Progressive Energy(?)
 Speed Sanity
 Bubble Sanity
 Capsule Sanity
-Hard Logic
+Normal Logic
+Expert Logic
 Downdash Buttons
 Trap Link
 Freom Check/Goal
@@ -126,11 +137,11 @@ TODO:
 	BEATDOWN TOWER: P
 	ARID HOLE:
 	SPLASH GROTTO: P
-	DISTRICT 5: PSCOBG
-	DISTRICT 6: PSCOBG
-	DISTRICT 9: PSCOBG
+	DISTRICT 5: POB
+	DISTRICT 6: POB
+	DISTRICT 9: POB
 	DISTRICT 4: P
-	DISTRICT 79: PSCOBG
+	DISTRICT 79: POB
 	DOWNTOWN DISSENT: PSCOBG
 	RESIDENTIAL RATTLE: PSCOBG
 	ROADWAY RALLY: PCOB

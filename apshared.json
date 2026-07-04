@@ -1,6 +1,6 @@
 {
 	"version": 13,
-	"difficulties": ["base", "hard"],
+	"difficulties": ["base", "hard", "expert"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
 		{"name": "Dash", "rule": "da", "itemtype": "ABILITY"},
@@ -590,7 +590,7 @@
 				{"name": "Start Clocktower Blue Coin", "index": 2, "sanity": "coin", "requires": ""},
 				{"name": "Left Neighborhood Near Start Blue Coin", "index": 3, "sanity": "coin", "requires": ""},
 				{"name": "Blue Coin #5", "index": 4, "sanity": "coin", "requires": "spr|vtn"},
-				{"name": "Radio Tower Blue Coin", "index": 5, "sanity": "coin", "requires": "spr+(cd|cl|ed)"},
+				{"name": "Radio Tower Blue Coin", "index": 5, "sanity": "coin", "requires": "spr+(cd|cl|ed|(fl+(jd|sn)))"},
 				{"name": "Back Left Neighborhood Blue Coin", "index": 6, "sanity": "coin", "requires": ""},
 				{"name": "Back Blue Coin", "index": 7, "sanity": "coin", "requires": ""},
 				{"name": "Upper Back Blue Coin", "index": 8, "sanity": "coin", "requires": ""},
@@ -1050,7 +1050,7 @@
 			]}
 		]},
 		{"name": "District 5", "id": 8, "type": "stage", "regions": [
-			{"name": "Goal", "entrances": {"Start": ""}, "checks": [
+			{"name": "Goal", "entrances": {"3": ""}, "checks": [
 				{"name": "Completion", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "Gold Speed Medal", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "Diamond Speed Medal", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
@@ -1058,56 +1058,107 @@
 				{"name": "Diamond Score Medal", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
-				{"name": "Cyan Exploration Medal", "sanity": "explore", "requires": "wj+2c"},
-				{"name": "Green Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Yellow Exploration Medal", "sanity": "explore", "requires": "wj+(dj|cd)"},
-				{"name": "Red Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Magenta Exploration Medal", "sanity": "explore", "requires": "1c"},
-				{"name": "Purple Exploration Medal", "sanity": "explore", "requires": "wj|dj|ww"},
-				{"name": "Blue Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Grey Exploration Medal", "sanity": "explore", "requires": "cd|da"},
-				{"name": "White Exploration Medal", "sanity": "explore", "requires": "cd|da"},
-				{"name": "Brown Exploration Medal", "sanity": "explore", "requires": ""}
+				{"name": "Cyan Exploration Medal", "index": 0, "sanity": "explore", "requires": "1c|fl"},
+				{"name": "Green Exploration Medal", "index": 1, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #1", "index": 0, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #2", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "White Exploration Medal", "index": 8, "sanity": "explore", "requires": ""},
+				{"name": "Yellow Exploration Medal", "index": 2, "sanity": "explore", "requires": "1c|fl"},
+				{"name": "Checkpoint #3", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #4", "index": 13, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #5", "index": 12, "sanity": "checkpoint", "requires": ""},
+				{"name": "Red Exploration Medal", "index": 3, "sanity": "explore", "requires": ""}
+			]},
+			{"name": "1", "entrances": {"Start": "pr"}, "checks": [
+				{"name": "Checkpoint #6", "index": 11, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #7", "index": 10, "sanity": "checkpoint", "requires": ""},
+				{"name": "Magenta Exploration Medal", "index": 4, "sanity": "explore", "requires": "cl|(spr+(1c|fl|ed|sb|sf|fa))"},
+				{"name": "Checkpoint #8", "index": 9, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #9", "index": 8, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "2", "entrances": {"1": "spr|(wj+(dj|fl|(sf+1c)|(fa+da)))"}, "checks": [
+				{"name": "Checkpoint #10", "index": 7, "sanity": "checkpoint", "requires": ""},
+				{"name": "Purple Exploration Medal", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "Brown Exploration Medal", "index": 9, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #11", "index": 6, "sanity": "checkpoint", "requires": ""},
+				{"name": "Blue Exploration Medal", "index": 6, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #12", "index": 5, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #13", "index": 4, "sanity": "checkpoint", "requires": ""},
+				{"name": "Grey Exploration Medal", "index": 7, "sanity": "explore", "requires": "ra|cd|dj|fl|fa|cl|ed|sb"}
+			]},
+			{"name": "3", "entrances": {"2": "spr|js|jd|sn|dj|cd|cl|ed|(wj+(fl|da))"}, "checks": [
+				{"name": "Checkpoint #14", "index": 3, "sanity": "checkpoint", "requires": ""}
 			]}
 		]},
 		{"name": "District 6", "id": 14, "type": "stage", "regions": [
-			{"name": "Goal", "entrances": {"Start": "cd|da"}, "checks": [
+			{"name": "Goal", "entrances": {"3": "spr|1c|fl"}, "checks": [
 				{"name": "Completion", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "Gold Speed Medal", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "Diamond Speed Medal", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
 				{"name": "Gold Score Medal", "event_item": "Gold Score Medal", "sanity": "scoregold", "requires": ""},
-				{"name": "Diamond Score Medal", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
+				{"name": "Diamond Score Medal", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": "co"}
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
-				{"name": "Cyan Exploration Medal", "sanity": "explore", "requires": "wj+1c"},
-				{"name": "Green Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Yellow Exploration Medal", "sanity": "explore", "requires": "dj"},
-				{"name": "Red Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Magenta Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Purple Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Blue Exploration Medal", "sanity": "explore", "requires": "dj|cd"},
-				{"name": "Grey Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "White Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Brown Exploration Medal", "sanity": "explore", "requires": ""}
+			]},
+			{"name": "0B", "entrances": {"Start": "(wj+(1c|fl|ed))|(sf+dj)|cl", "3": ""}, "checks": [
+				{"name": "Cyan Exploration Medal", "index": 0, "sanity": "explore", "requires": ""}
+			]},
+			{"name": "1", "entrances": {"Start": "pu|cd|cl|ed|sb|(fl+(dj|da))|(dj+da)"}, "checks": [
+				{"name": "Green Exploration Medal", "index": 1, "sanity": "explore", "requires": ""},
+				{"name": "Red Exploration Medal", "index": 3, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #1", "index": 4, "sanity": "checkpoint", "requires": ""},
+				{"name": "Purple Exploration Medal", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "Magenta Exploration Medal", "index": 4, "sanity": "explore", "requires": ""}
+			]},
+			{"name": "1B", "entrances": {"1": "dj|da|sf|jd|sn|cl|(wj+(cd|fl|ed))", "3": ""}, "checks": [
+				{"name": "Yellow Exploration Medal", "index": 2, "sanity": "explore", "requires": ""}
+			]},
+			{"name": "2", "entrances": {"1": "spr|1c|cl|ed|sb|sf"}, "checks": [
+				{"name": "Blue Exploration Medal", "index": 6, "sanity": "explore", "requires": "ed|cd|dj|cl"}
+			]},
+			{"name": "3", "entrances": {"2": "pu|cl|ed|cd|da|(wj+fl)"}, "checks": [
+				{"name": "Checkpoint #2", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "Grey Exploration Medal", "index": 7, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #3", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #4", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "Brown Exploration Medal", "index": 9, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #5", "index": 0, "sanity": "checkpoint", "requires": ""},
+				{"name": "White Exploration Medal", "index": 8, "sanity": "explore", "requires": ""}
 			]}
 		]},
 		{"name": "District 9", "id": 15, "type": "stage", "regions": [
-			{"name": "Goal", "entrances": {"Start": "1c"}, "checks": [
+			{"name": "Goal", "entrances": {"4": ""}, "checks": [
 				{"name": "Completion", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "Gold Speed Medal", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "Diamond Speed Medal", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
-				{"name": "Cyan Exploration Medal", "sanity": "explore", "requires": "cd|da"},
-				{"name": "Green Exploration Medal", "sanity": "explore", "requires": "da"},
-				{"name": "Yellow Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Red Exploration Medal", "sanity": "explore", "requires": "cd"},
-				{"name": "Magenta Exploration Medal", "sanity": "explore", "requires": "da+cd"},
-				{"name": "Purple Exploration Medal", "sanity": "explore", "requires": "cd"},
-				{"name": "Blue Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "Grey Exploration Medal", "sanity": "explore", "requires": "1c"},
-				{"name": "White Exploration Medal", "sanity": "explore", "requires": "1c"},
-				{"name": "Brown Exploration Medal", "sanity": "explore", "requires": "1c"}
+				{"name": "Cyan Exploration Medal", "index": 0, "sanity": "explore", "requires": "1c|fl"}
+			]},
+			{"name": "1", "entrances": {"Start": "pu|1c|fl"}, "checks": [
+				{"name": "Checkpoint #1", "index": 6, "sanity": "checkpoint", "requires": ""},
+				{"name": "Green Exploration Medal", "index": 1, "sanity": "explore", "requires": ""},
+				{"name": "Green Exploration Medal", "index": 1, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #2", "index": 5, "sanity": "checkpoint", "requires": ""},
+				{"name": "Yellow Exploration Medal", "index": 2, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #3", "index": 4, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "2", "entrances": {"1": "cd"}, "checks": [
+				{"name": "Purple Exploration Medal", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "Magenta Exploration Medal", "index": 4, "sanity": "explore", "requires": "cl|da"}
+			]},
+			{"name": "3", "entrances": {"1": "pr", "2": "spr"}, "checks": [
+				{"name": "Checkpoint #4", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "Red Exploration Medal", "index": 3, "sanity": "explore", "requires": ""},
+				{"name": "Blue Exploration Medal", "index": 6, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #5", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #6", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "Grey Exploration Medal", "index": 7, "sanity": "explore", "requires": ""},
+				{"name": "White Exploration Medal", "index": 8, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #7", "index": 0, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "4", "entrances": {"3": "pr"}, "checks": [
+				{"name": "Brown Exploration Medal", "index": 9, "sanity": "explore", "requires": ""}
 			]}
 		]},
 		{"name": "District 4", "id": 16, "type": "stage", "regions": [
@@ -1119,7 +1170,7 @@
 			{"name": "Start", "entrances": {}, "checks": []}
 		]},
 		{"name": "District 79", "id": 17, "type": "stage", "regions": [
-			{"name": "Goal", "entrances": {"Start": "co+dj"}, "checks": [
+			{"name": "Goal", "entrances": {"3": ""}, "checks": [
 				{"name": "Completion", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "Gold Speed Medal", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "Diamond Speed Medal", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},
@@ -1127,16 +1178,30 @@
 				{"name": "Diamond Score Medal", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
-				{"name": "Cyan Exploration Medal", "sanity": "explore", "requires": "dj|cd"},
-				{"name": "Green Exploration Medal", "sanity": "explore", "requires": "co"},
-				{"name": "Yellow Exploration Medal", "sanity": "explore", "requires": "co"},
-				{"name": "Red Exploration Medal", "sanity": "explore", "requires": "co"},
-				{"name": "Magenta Exploration Medal", "sanity": "explore", "requires": "co+dj"},
-				{"name": "Purple Exploration Medal", "sanity": "explore", "requires": "co+dj"},
-				{"name": "Blue Exploration Medal", "sanity": "explore", "requires": "co+dj"},
-				{"name": "Grey Exploration Medal", "sanity": "explore", "requires": ""},
-				{"name": "White Exploration Medal", "sanity": "explore", "requires": "co"},
-				{"name": "Brown Exploration Medal", "sanity": "explore", "requires": "co"}
+				{"name": "Grey Exploration Medal", "index": 7, "sanity": "explore", "requires": ""},
+				{"name": "Cyan Exploration Medal", "index": 0, "sanity": "explore", "requires": ""}
+			]},
+			{"name": "1", "entrances": {"Start": "co|js|mb"}, "checks": [
+				{"name": "Checkpoint #1", "index": 6, "sanity": "checkpoint", "requires": ""},
+				{"name": "Green Exploration Medal", "index": 1, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #2", "index": 7, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #3", "index": 5, "sanity": "checkpoint", "requires": ""},
+				{"name": "Yellow Exploration Medal", "index": 2, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #4", "index": 4, "sanity": "checkpoint", "requires": ""},
+				{"name": "White Exploration Medal", "index": 8, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #5", "index": 3, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "2", "entrances": {"1": "pu|dj|cl|(wj+((cd+da)|ed|((fl|fa)+da)))"}, "checks": [
+				{"name": "Brown Exploration Medal", "index": 9, "sanity": "explore", "requires": ""},
+				{"name": "Red Exploration Medal", "index": 3, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #6", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "Checkpoint #7", "index": 1, "sanity": "checkpoint", "requires": ""},
+				{"name": "Magenta Exploration Medal", "index": 4, "sanity": "explore", "requires": ""},
+				{"name": "Checkpoint #8", "index": 0, "sanity": "checkpoint", "requires": ""}
+			]},
+			{"name": "3", "entrances": {"2": "co"}, "checks": [
+				{"name": "Purple Exploration Medal", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "Blue Exploration Medal", "index": 6, "sanity": "explore", "requires": ""}
 			]}
 		]},
 		{"name": "Downtown Dissent", "id": 10, "type": "stage", "regions": [

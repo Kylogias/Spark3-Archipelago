@@ -10,10 +10,14 @@ class Shopsanity(Toggle):
 class Difficulty(Choice):
 	"""
 	How difficult should the logic be
+
+	normal: The easiest option, designed for those new to the game and GrimmyHunter
+	hard: You will need to be observant of the stage layout and know how to best utilize Spark's movement and simple tech
+	expert: Requires knowledge for hard difficulty as well as less simple speedrun tricks. All tricks are fair game
 	"""
 	
-	option_base = 0
-	default = option_base
+	option_hard = 1
+	default = option_hard
 
 class Spark2Stages(DefaultOnToggle):
 	"""
@@ -29,7 +33,7 @@ class AbilityRando(DefaultOnToggle):
 	"""
 	display_name = "Randomize Abilities"
 
-class GimmickRando(Toggle):
+class GimmickRando(DefaultOnToggle):
 	"""
 	Puts the stage gimmicks into the item pool
 	"""
@@ -41,9 +45,10 @@ class EnergyLogic(Toggle):
 	"""
 	display_name = "Energy Logic"
 
-class CharacterLogic(Toggle):
+class CharacterLogic(DefaultOnToggle):
 	"""
-	Should characters be relevant in logic? Does not affect Utopia Shelter
+	Should characters be relevant in logic? Does not affect the unlock requirements for Utopia Shelter
+	You may still be required to use energy with Fark
 	"""
 	display_name = "Character Logic"
 
