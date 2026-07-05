@@ -114,6 +114,7 @@ namespace Sparkipelago {
 			
 			int[] bossids = {9, 24, 37, 38};
 			bool[] bossUnlocked = {false, false, false, false};
+			bool[] bossOpen = {false, false, false, false};
 			
 			Save.SaveFile save = Save.GetCurrentSave();
 			
@@ -140,6 +141,11 @@ namespace Sparkipelago {
 			foreach (SlotData.Level boss in SlotData.bosses) {
 				MelonLogger.Msg(boss.id.ToString());
 				bossids[i] = boss.id;
+				bossOpen[i] = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[i]
+					&& numComplete >= SlotData.completionReq[i]
+					&& numSpeed >= SlotData.speedReq[i]
+					&& numScore >= SlotData.scoreReq[i];
+				bossUnlocked[i] = bossOpen[i] && (save.StageCompleted[bossids[i]] || SlotData.optionalBosses);
 				if (save.StageCompleted[bossids[i]]) numComplete--;
 				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed -= 1;
 				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed -= 1;
@@ -165,15 +171,7 @@ namespace Sparkipelago {
 				
 				i = 0;
 				foreach (SlotData.Level boss in SlotData.bosses) {
-					if (placeStage(boss, level)
-						&& Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[i]
-						&& numComplete >= SlotData.completionReq[i]
-						&& numSpeed >= SlotData.speedReq[i]
-						&& numScore >= SlotData.scoreReq[i]
-					) {
-						unlocked = true;
-						bossUnlocked[i] = save.StageCompleted[bossids[i]] || SlotData.optionalBosses;
-					}
+					if (placeStage(boss, level) && bossOpen[i]) unlocked = true;
 					i++;
 				}
 				
