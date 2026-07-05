@@ -1,4 +1,4 @@
-WIP and Unstable Archipelago integration for Spark the Electric Jester 3
+Archipelago integration for Spark the Electric Jester 3
 
 [Archipelago](https://archipelago.gg/) is "a cross-game modification system which randomizes different games, then uses the result to build a single unified multi-player game. Items from one game may be present in another, and you will need your fellow players to find items you need in their games to help you complete your own" (copied from the website)
 

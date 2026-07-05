@@ -593,6 +593,7 @@ namespace Sparkipelago {
 				checkpointCount += 1;
 				if (APSave.file.client.labTrackCheckpoint)
 					Sparkipelago.debugLog("{{\"name\": \"Checkpoint #{0}\", \"index\": {1}, \"sanity\": \"checkpoint\", \"requires\": \"\"}},", count, checkpoints.IndexOf(check));
+				Locations.sendLocationByIndex(Save.CurrentStageIndex, "checkpoint", checkpoints.IndexOf(check));
 				Transform arrow = check.gameObject.transform.Find("Arrow");
 				arrow.gameObject.SetActive(false);
 				foreach (CollectibleScout.ScoutData sd in scout.allLocations) {

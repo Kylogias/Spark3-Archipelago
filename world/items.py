@@ -72,10 +72,11 @@ class ItemState:
 		return world.random.choice(self.FILLER_ITEMS)
 	
 	def construct_item(self, world, name: str):
-		classif = self.ITEM_TO_CLASSIFICATION[name]
 		if name == "M-Combat":
 			classif = ItemClassification.useful
 			name = "Combat"
+		else:
+			classif = self.ITEM_TO_CLASSIFICATION[name]
 		return Spark3Item(name, classif, item_name_to_id[name], world.player)
 	
 	def create_items(self, world):

@@ -71,43 +71,6 @@ O=Capsule
 B=Bubble
 
 Done:
-	Vehicle Arrows
-	Progressive Score
-	Progressive Combo
-	Progressive Timestop
-	Energy Logic
-	Energy Tracker
-	Character Logic
-		-- Note: FLORIA PLANT BIT BUBBLE #5 is impossible without energy or character logic
-	.whatgate <stage name>
-	Fixed inaccurate dash state in Radar Scout
-	Fixed Dash-Double-Jump without Double Jump
-	Fixed UT not taking coin hunt into account
-	Fixed connection errors disappearing too quickly
-	Fixed explore medals only sending on initial collection
-	Fixed generation logs getting clogged by debug prints
-	Added option to destroy collectathon coins, fixing potential softlock
-	Hold LB or RB to quickly increment/decrement range items
-	Hold the left stick or dpad to quickly go through the database
-	Should I fix shop spoiling items without page?
-	Logic Doc (generated)
-	Title Case Locations
-	Combine Progressive Combo and Combat
-	Spring Trap
-	Zoom Trap
-	Gravity Trap
-	Bald Trap
-	Damage Trap
-	Gimmick Rando
-	Score Sanity
-	Checkpoint Sanity
-	Options for combat location
-		- None
-		- Optional Bosses
-		- Local Early
-		- Start With
-	Combat Moves can be not randomized
-	Progressive Energy(?)
 
 Beta Checklist:
 

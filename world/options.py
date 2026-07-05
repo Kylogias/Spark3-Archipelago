@@ -365,6 +365,7 @@ class Spark3Options(PerGameCommonOptions):
 	progressive_combo: ProgressiveCombo
 	progressive_score: ProgressiveScore
 	progressive_timestop: ProgressiveTimestop
+	progressive_energy: ProgressiveEnergy
 	trap_chance: TrapChance
 	
 	labmode: LabMode
@@ -384,7 +385,7 @@ option_groups = [
 	),
 	OptionGroup(
 		"Item Options",
-		[CombatMoves, CombatOptions, ProgressiveCombo, ProgressiveScore, ProgressiveTimestop, TrapChance]
+		[CombatMoves, CombatOptions, ProgressiveCombo, ProgressiveScore, ProgressiveTimestop, ProgressiveEnergy, TrapChance]
 	),
 	OptionGroup(
 		"Miscellaneous",
