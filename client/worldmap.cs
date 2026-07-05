@@ -113,6 +113,7 @@ namespace Sparkipelago {
 			LevelData[] levels = GameObject.Find("Map/Stages").GetComponentsInChildren<LevelData>(true);
 			
 			int[] bossids = {9, 24, 37, 38};
+			bool[] bossUnlocked = {false, false, false, false};
 			
 			Save.SaveFile save = Save.GetCurrentSave();
 			
@@ -169,14 +170,17 @@ namespace Sparkipelago {
 						&& numComplete >= SlotData.completionReq[i]
 						&& numSpeed >= SlotData.speedReq[i]
 						&& numScore >= SlotData.scoreReq[i]
-					) unlocked = true;
+					) {
+						unlocked = true;
+						bossUnlocked[i] = save.StageCompleted[bossids[i]] || SlotData.optionalBosses;
+					}
 					i++;
 				}
 				
 				i = 0;
 				foreach (SlotData.Level[] gate in SlotData.gates) {
 					if (i > 0 && i < SlotData.gates.Count()-1) {
-						if (!force && !save.StageCompleted[bossids[i-1]]) {i++; continue;}
+						if (!force && !bossUnlocked[i-1]) {i++; continue;}
 					} else if (i == SlotData.gates.Count()-1) {
 						if (!force && !(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[i-1]
 							&& numComplete >= SlotData.completionReq[i-1]

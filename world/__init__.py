@@ -1,7 +1,7 @@
 from worlds.AutoWorld import World, WebWorld
 from . import items, locations, rules
 from . import options as opts
-from .constants import GAME_NAME
+from .constants import GAME_NAME, COMBAT
 from .apshared import location_name_to_id as loctoid
 from .apshared import item_name_to_id as itemtoid
 from .apshared import apshared
@@ -70,10 +70,18 @@ class Spark3World(World):
 			self.gimmick_rando = True
 		else:
 			self.gimmick_rando = False
+
+		self.combat_option = self.options.combat_option.value
+		if self.options.combat_option == 1:
+			self.multiworld.local_early_items[self.player][COMBAT] = 1
+		if self.options.combat_moves:
+			self.combat_moves = True
+		else:
+			self.combat_moves = False
 		
 		self.multipliers = []
 		for i in range(self.options.progressive_combo.value-1):
-			self.multipliers.append("Combat")
+			self.multipliers.append("M-Combat")
 		for i in range(self.options.progressive_score.value):
 			self.multipliers.append("Progressive Score")
 		for i in range(self.options.progressive_timestop.value):
@@ -139,6 +147,7 @@ class Spark3World(World):
 			self.rules_state.CHARACTER_LOGIC = slot_data["character_logic"]
 			self.speed_type = slot_data["speed_type"]
 			self.score_type = slot_data["score_type"]
+			self.combat_option = slot_data["combat_option"]
 			self.location_state.UTOPIA_HUNT_MEDALS = slot_data["utopia_hunt_medals"]
 			self.difficulty = slot_data["difficulty"]
 			self.location_state.sanities = slot_data["sanities"]
@@ -165,7 +174,8 @@ class Spark3World(World):
 		if self.options.checkpointsanity: location_count += 355 if self.spark2 else 237
 		if self.explore_hunt: location_count += 30 if self.spark2 else 18
 
-		reserved_items = 28 + len(self.multipliers)
+		reserved_items = 20 + len(self.multipliers)
+		if self.combat_moves: reserved_items += 8
 		if self.ability_rando: reserved_items += 9
 		if self.gimmick_rando: reserved_items += 11
 		if self.explore_hunt == 2: reserved_items += 300 if self.spark2 else 180
@@ -216,6 +226,7 @@ class Spark3World(World):
 			"sanities": self.location_state.sanities,
 			"explore_hunt": self.explore_hunt,
 			"coin_hunt": self.coin_hunt,
+			"combat_option": self.combat_option,
 			"difficulty": self.difficulty,
 			"gates": self.location_state.gate_data,
 			"bosses": self.location_state.boss_data,

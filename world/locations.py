@@ -277,7 +277,8 @@ class LocationState:
 			boss_region = self.stage_regions[self.bosses[i]["name"]][0]
 			goal_region = self.stage_regions[self.bosses[i]["name"]][2]
 			gates[i].connect(boss_region, f"Gate {i} to Boss")
-			goal_region.connect(gates[i+1], f"Boss to Gate {i+1}")
+			if world.combat_option == 2: boss_region.connect(gates[i+1], f"Boss to Gate {i+1}")
+			else: goal_region.connect(gates[i+1], f"Boss to Gate {i+1}")
 			self.boss_data.append([self.bosses[i]["id"], self.BOSS_CENTERS[i][0], self.BOSS_CENTERS[i][1]])
 		
 	#	world.get_region(STAGE_UTOPIA_SHELTER).add_event("Defeat Claritas Centralis", "Victory", location_type=Spark3Location, item_type=Spark3Item)

@@ -99,14 +99,14 @@ Done:
 	Gimmick Rando
 	Score Sanity
 	Checkpoint Sanity
+	Options for combat location
+		- None
+		- Optional Bosses
+		- Sphere 1
+		- Local Item
+		- Start With
 
 Beta Checklist:
-Options for combat location
-	- None
-	- Optional Bosses
-	- Sphere 1
-	- Local Item
-	- Start With
 Progression Modes
 	- Gates
 	- Open World
@@ -179,8 +179,8 @@ TODO:
 	PLANETARY STRIPE: POB
 	HYPERATH FLEET: POB
 	APOCALYPSE THRUSTER: POB
-	BOSS: SAW-MAN: P
-	BOSS: ON THE RUN: 
-	BOSS: THROWBACK: P
-	BOSS: MECHA MADNESS: P
-	UTOPIA SHELTER: 
+	BOSS: SAW-MAN: POB
+	BOSS: ON THE RUN: OB
+	BOSS: THROWBACK: POB
+	BOSS: MECHA MADNESS: POB
+	UTOPIA SHELTER: OB

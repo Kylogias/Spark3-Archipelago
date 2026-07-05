@@ -43,6 +43,7 @@ namespace Sparkipelago {
 		public static bool labMode;
 		public static bool requireCharacters;
 		public static bool utopiaMedals;
+		public static bool optionalBosses;
 		public static CoinHunt coinHunt;
 		public static ExploreHunt exploreHunt;
 		public static Level[][] gates;
@@ -71,6 +72,7 @@ namespace Sparkipelago {
 			labMode = (long)data["labmode"] != 0;
 			requireCharacters = (long)data["require_characters"] != 0;
 			utopiaMedals = (long)data["utopia_hunt_medals"] != 0;
+			optionalBosses = (long)data["combat_option"] == 2;
 			coinHunt = (CoinHunt)(long)data["coin_hunt"];
 			exploreHunt = (ExploreHunt)(long)data["explore_hunt"];
 			bosses = new Level[((JArray)data["bosses"]).Count()];

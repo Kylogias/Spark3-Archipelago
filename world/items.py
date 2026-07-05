@@ -72,14 +72,18 @@ class ItemState:
 		return world.random.choice(self.FILLER_ITEMS)
 	
 	def construct_item(self, world, name: str):
-		return Spark3Item(name, self.ITEM_TO_CLASSIFICATION[name], item_name_to_id[name], world.player)
+		classif = self.ITEM_TO_CLASSIFICATION[name]
+		if name == "M-Combat":
+			classif = ItemClassification.useful
+			name = "Combat"
+		return Spark3Item(name, classif, item_name_to_id[name], world.player)
 	
 	def create_items(self, world):
 		itempool: list[Item] = []
 		precollect = []
 		for i in self.PROGRESSION_ITEMS:
 			if i[1] == ItemType.ABILITY:
-				if not world.ability_rando:
+				if (i[0] == COMBAT and world.combat_option == 3) or not world.ability_rando:
 					precollect.append(i[0])
 					continue
 			if i[1] == ItemType.SHOP:
@@ -97,10 +101,10 @@ class ItemState:
 		for i in range(self.FREEDOM_COUNT):
 			itempool.append(world.create_item(world.random.choice(self.FREEDOM_ITEMS)))
 		for i in self.MOVE_ITEMS:
-			if i != "Radar Scout":
-				itempool.append(world.create_item(i))
-			else:
+			if i == "Radar Scout" or not world.combat_moves:
 				precollect.append(i)
+			else:
+				itempool.append(world.create_item(i))
 		for i in world.multipliers:
 			itempool.append(world.create_item(i))
 		if world.coin_hunt:

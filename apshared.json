@@ -48,9 +48,9 @@
 		{"name": "Snap Portal", "rule": "sn", "itemtype": "ENERGY"},
 		{"name": "Radar Scout", "itemtype": "MOVE"},
 		{"name": "Multishot Blast", "rule": "mb", "itemtype": "ENERGY"},
-		{"name": "Heal", "itemtype": "MOVE"},
+		{"name": "Heal", "itemtype": "POWER"},
 		{"name": "Cloud Shot", "rule": "cl", "itemtype": "ENERGY"},
-		{"name": "Temp Shield", "itemtype": "MOVE"},
+		{"name": "Temp Shield", "itemtype": "POWER"},
 		
 		{"name": "Charged Shot", "rule": "cs", "itemtype": "POWER"},
 		{"name": "Rail Boost", "rule": "rb", "itemtype": "ENERGY"},

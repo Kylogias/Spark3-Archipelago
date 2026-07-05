@@ -184,7 +184,7 @@ def recurse_region_rule(stage, region, seen):
 		rule[difficulty] = f"({all_entrances})"
 	return rule
 
-colors = {"region_header": ["d090d0"], "check_header": ["7070d0", "6767c7"], "base": ["a0d0a0", "97c797"], "hard": ["d07070", "c76767"]}
+colors = {"region_header": ["d090d0"], "check_header": ["7070d0", "6767c7"], "base": ["a0d0a0", "97c797"], "hard": ["d07070", "c76767"], "expert": ["7070d0", "6767c7"]}
 class SheetState:
 	def __init__(self, ws, style, color_index):
 		self.column_size = 6

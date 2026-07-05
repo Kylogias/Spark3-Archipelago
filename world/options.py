@@ -12,7 +12,7 @@ class Difficulty(Choice):
 	How difficult should the logic be
 	WARNING: The only implemented difficulty at the moment is hard! Other difficulties will use hard logic settings
 
-	normal: The easiest option, designed for those new to the game and GrimmyHunter
+	normal: The easiest option, designed for those new to the game
 	hard: You will need to be observant of the stage layout and know how to best utilize Spark's movement and simple tech
 	expert: Requires knowledge for hard difficulty as well as less simple speedrun tricks. All tricks are fair game
 	"""
@@ -291,6 +291,32 @@ class EndlessDiveChecks(Range):
 
 	default = 0
 
+class CombatOptions(Choice):
+	"""
+	Under the normal gating mode, Combat hard locks anything past the first gate.
+	This means you are at the whim of the randomizer to progress past Gate 0
+	These options can help you progress quicker
+
+	Normal: Bosses must be defeated, Combat is placed purely at the randomizer's whim
+	Local Early: Guarantees the required combat item is in this game and early sphere
+	Optional Bosses: You do not need to defeat bosses in order to unlock the next gate
+	Start: Start with combat, takes it out of the item pool
+	"""
+	display_name = "Combat Option"
+	
+	option_normal = 0
+	option_local_early = 1
+	option_optional_bosses = 2
+	option_start = 3
+	
+	default = option_normal
+
+class CombatMoves(DefaultOnToggle):
+	"""
+	Should the 8 combat moves be in the item pool?
+	"""
+	display_name = "Combat Moves"
+
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
@@ -321,6 +347,8 @@ class Spark3Options(PerGameCommonOptions):
 	batterysanity: Batterysanity
 	endless_dive_checks: EndlessDiveChecks
 
+	combat_moves: CombatMoves
+	combat_option: CombatOptions
 	progressive_combo: ProgressiveCombo
 	progressive_score: ProgressiveScore
 	progressive_timestop: ProgressiveTimestop
@@ -343,7 +371,7 @@ option_groups = [
 	),
 	OptionGroup(
 		"Item Options",
-		[ProgressiveCombo, ProgressiveScore, ProgressiveTimestop, TrapChance]
+		[CombatMoves, CombatOptions, ProgressiveCombo, ProgressiveScore, ProgressiveTimestop, TrapChance]
 	),
 	OptionGroup(
 		"Miscellaneous",
