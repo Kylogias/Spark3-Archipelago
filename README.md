@@ -1,19 +1,25 @@
 WIP and Unstable Archipelago integration for Spark the Electric Jester 3
 
-[Archipelago](https://archipelago.gg/) is "a cross-game modification system which randomizes different games, then uses the result to build a single unified multi-player game. Items from one game may be present in another, and you will need your fellow players to find items you need in their games to help you complete your own," (copied from the website)
+[Archipelago](https://archipelago.gg/) is "a cross-game modification system which randomizes different games, then uses the result to build a single unified multi-player game. Items from one game may be present in another, and you will need your fellow players to find items you need in their games to help you complete your own" (copied from the website)
+
+The best place for support is the thread on the [Archipelago Discord Server](https://discord.com/invite/8Z65BR2)
 
 By default, level and boss completions may have archipelago items, though there are various options to enable other collectibles.
 
-The items that may be randomized include
+The items that may be randomized include, but aren't limited to
 - Bit/Energy Bubbles
 - Health/Score/Energy Capsules
-- Double Jump, Wall Jump/Walk, Dash, Jester Dash, Charged Jester Dash, Down Dash, Combat (can be disabled in the settings)
+- Spark's movement abilities, other than moving and jumping
+- Gimmicks within the stages
+- Vehicles
 - Shop items
 - Shop pages (if the shop locations are enabled)
 
-Stages are locked behind level gates, akin to the Sonic Adventure 2 Archipelago, needing a certain amount of Freedom Medals to unlock a gate. Each gate (aside from the first) has a boss that must be defeated before accessing the stages within.
+Stages are locked behind level gates, akin to the Sonic Adventure 2 Archipelago, needing to complete certain requirements to unlock the next gate. Each gate (aside from the first) has a boss that must be defeated before accessing the stages within (can be toggled off).
 
-Music in stages can also be randomized. Enable it in your YAML, and drop any `.ogg` format music files into the `apmusic` folder
+The item inventory and the settings can be viewed inside the in-game database
+
+Music in stages can also be randomized. Drop any `.ogg` format music files into the `apmusic` folder, enable it in the in-game database, and restart the stage
 
 The goal of the randomizer is to complete Utopia Shelter and defeat the final boss within, Claritas Centralis
 
