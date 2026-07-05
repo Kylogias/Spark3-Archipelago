@@ -85,6 +85,8 @@ namespace Sparkipelago {
 		public double comboMax;
 		public double timeAmt;
 		public double timeMax;
+		public double energyAmt;
+		public double energyMax;
 
 		public bool labmodeDestroy;
 		public bool labTrackCheckpoint;
@@ -93,7 +95,9 @@ namespace Sparkipelago {
 		public bool labTrackMedal;
 		public bool labTrackCoin;
 		public bool labTrackBattery;
+
 		public bool deathLink;
+		public bool destroyCoins;
 		public bool capsuleArrows;
 		public bool bubbleArrows;
 		public bool checkpointArrows;
@@ -111,8 +115,10 @@ namespace Sparkipelago {
 			scoreMax = 30;
 			comboAmt = 1;
 			comboMax = 1;
-			timeAmt = 0.9f;
-			timeMax = 0.5f;
+			energyAmt = 1.7;
+			energyMax = 10;
+			timeAmt = 0.9;
+			timeMax = 0.5;
 			labmodeDestroy = true;
 			labTrackCheckpoint = true;
 			labTrackBubble = true;
@@ -121,6 +127,7 @@ namespace Sparkipelago {
 			labTrackCoin = true;
 			labTrackBattery = true;
 			deathLink = false;
+			destroyCoins = true;
 			capsuleArrows = false;
 			bubbleArrows = false;
 			checkpointArrows = false;
@@ -219,6 +226,16 @@ namespace Sparkipelago {
 				(double newV) => {APSave.file.client.timeMax = newV; return newV.ToString();},
 				() => {return APSave.file.client.timeMax;}
 			);
+			new Options.RangeIten(
+				settings, "Energy Amount", "How much energy per second should each progressive energy item generate?", 0, 20, 0.1,
+				(double newV) => {APSave.file.client.energyAmt = newV; return newV.ToString();},
+				() => {return APSave.file.client.energyAmt;}
+			);
+			new Options.RangeIten(
+				settings, "Energy Max", "What is the maximum energy per second progressive energy can give", 0, 20, 0.1,
+				(double newV) => {APSave.file.client.energyMax = newV; return newV.ToString();},
+				() => {return APSave.file.client.energyMax;}
+			);
 			
 			new Options.BoolIten(
 				settings, "Death Link", "Should Death Link be enabled?",
@@ -231,6 +248,11 @@ namespace Sparkipelago {
 					return newV.ToString();
 				},
 				() => {return APSave.file.client.deathLink;}
+			);
+			new Options.BoolIten(
+				settings, "Destroy Collectathon Coins", "Should collected blue coins in collectathon stages be destroyed?",
+				(bool newV) => {APSave.file.client.capsuleArrows = newV; return newV.ToString();},
+				() => {return APSave.file.client.capsuleArrows;}
 			);
 			new Options.BoolIten(
 				settings, "Capsule Check Arrows", "Should there be arrows above capsules denoting progressiveness?",

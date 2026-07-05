@@ -263,9 +263,22 @@ namespace Sparkipelago {
 				id += 1;
 			}
 		}
-		
+
+		static float groundTime;
 		public override void OnUpdate() {
 			if (player) {
+				bool onGround = player.GetComponent<PlayerBhysics>().Grounded;
+				if (onGround) groundTime += Time.deltaTime;
+				else groundTime = 0;
+				if (groundTime > 1) {
+					double energyRegen = 0;
+					for (int i = 0; i < itemState[ItemIds.PROGRESSIVE_ENERGY]; i++) {
+						energyRegen += APSave.file.client.energyAmt;
+					}
+					if (energyRegen > APSave.file.client.energyMax) energyRegen = APSave.file.client.energyMax;
+					PlayerHealthAndStats.Energy += (float)energyRegen * Time.deltaTime;
+				}
+				
 				if (itemTimer < 0 && itemQueue.Count > 0) {
 					itemTimer = 2;
 					ItemIds item = itemQueue.Dequeue();
@@ -407,6 +420,7 @@ namespace Sparkipelago {
 		
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName) {
 			itemTimer = -1;
+			groundTime = 0;
 			flintList.Clear();
 			debugLog("Scene Loaded: {0}", sceneName);
 			currentScene = sceneName;

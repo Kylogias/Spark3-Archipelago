@@ -85,6 +85,8 @@ Done:
 	Fixed UT not taking coin hunt into account
 	Fixed connection errors disappearing too quickly
 	Fixed explore medals only sending on initial collection
+	Fixed generation logs getting clogged by debug prints
+	Added option to destroy collectathon coins, fixing potential softlock
 	Hold LB or RB to quickly increment/decrement range items
 	Hold the left stick or dpad to quickly go through the database
 	Should I fix shop spoiling items without page?
@@ -102,19 +104,19 @@ Done:
 	Options for combat location
 		- None
 		- Optional Bosses
-		- Sphere 1
-		- Local Item
+		- Local Early
 		- Start With
+	Combat Moves can be not randomized
+	Progressive Energy(?)
 
 Beta Checklist:
+
+Stable Checklist:
 Progression Modes
 	- Gates
 	- Open World
 	- Vanilla Entrance Rando
 	- Levels Items
-
-Stable Checklist:
-Progressive Energy(?)
 Speed Sanity
 Bubble Sanity
 Capsule Sanity

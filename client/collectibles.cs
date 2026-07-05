@@ -470,7 +470,7 @@ namespace Sparkipelago {
 			
 			int coinLeft = 0;
 			for (int i = 0; i < coins.Count; i++) {
-				if (Locations.isLocationCompleteByIndex(stage, "coin", i)) {
+				if (APSave.file.client.destroyCoins && Locations.isLocationCompleteByIndex(stage, "coin", i)) {
 					GameObject.Destroy(coins[i].gameObject);
 					CollectableCoin.CollectableCoinList.Remove(coins[i]);
 				//	Material mat = coins[i].transform.Find("Pivot/CoinMesh").gameObject.GetComponent<MeshRenderer>().material;

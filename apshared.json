@@ -1,5 +1,5 @@
 {
-	"version": 13,
+	"version": 14,
 	"difficulties": ["base", "hard", "expert"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
@@ -31,6 +31,7 @@
 		
 		{"name": "Progressive Score", "itemtype": "MULTIPLIER"},
 		{"name": "Progressive Time Stop", "itemtype": "MULTIPLIER"},
+		{"name": "Progressive Energy", "itemtype": "MULTIPLIER"},
 		
 		{"name": "Spin Charge", "itemtype": "MOVE"},
 		{"name": "Dual Air Kick", "itemtype": "MOVE"},

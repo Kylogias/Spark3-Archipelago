@@ -27,7 +27,6 @@ class Spark3World(World):
 	
 	def __init__(self, multiworld, player):
 		super().__init__(multiworld, player)
-		print("Creating a new MultiWorld!")
 		self.location_state = locations.LocationState()
 		self.item_state = items.ItemState()
 		self.rules_state = rules.RulesState()

@@ -33,7 +33,6 @@ class RulesState:
 		self.ENERGY_LOGIC = True
 	
 	def add_to_rule(self, op, rule, add):
-		print(f"{rule} {op} {add}")
 		if op == RuleToken.UNK: return add
 		if op == RuleToken.AND: return And(rule, add)
 		if op == RuleToken.OR: return Or(rule, add)
@@ -41,10 +40,8 @@ class RulesState:
 	def recurse_tokens(self, tokens):
 		op = RuleToken.UNK
 		rule = None
-		print("New Rule!")
 		while len(tokens):
 			token = tokens.pop(0)
-			print(f"\t{token}")
 			if isinstance(token, RuleToken):
 				match token:
 					case RuleToken.UNK: pass
@@ -58,7 +55,6 @@ class RulesState:
 				
 		if rule == None:
 			rule = True_()
-		print(f"\t{rule}")
 		return rule
 
 	def parse_rule_string(self, rule):
@@ -98,7 +94,6 @@ class RulesState:
 		rule = rules["base"]
 		if world.difficulty in rules:
 			rule = rules[world.difficulty]
-		print(rule)
 		return self.recurse_tokens(self.parse_rule_string(rule))
 	
 	def set_shop_rules(self, world):

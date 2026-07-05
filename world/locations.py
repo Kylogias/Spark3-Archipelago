@@ -244,7 +244,6 @@ class LocationState:
 			self.stages.clear()
 			self.bosses.clear()
 			for gate in range(len(self.gate_data)-1): # last gate is utopia
-				print(gate)
 				self.GATE_STAGE_COUNT[gate] = 0
 				cur_gate = self.gate_data[gate]
 				for stage in cur_gate:

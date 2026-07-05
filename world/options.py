@@ -80,6 +80,19 @@ class ProgressiveScore(Range):
 
 	default = 0
 
+class ProgressiveEnergy(Range):
+	"""
+	How many progressive energy items should be in the pool?
+	Each item provides a configurable amount of energy per second
+	while on the ground, configurable in the client
+	"""
+	display_name = "Progressive Energy"
+
+	range_start = 0
+	range_end = 10
+
+	default = 0
+
 class ProgressiveTimestop(Range):
 	"""
 	How many timestop items should be in the pool?
