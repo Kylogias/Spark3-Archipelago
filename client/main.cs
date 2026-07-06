@@ -30,10 +30,11 @@ namespace Sparkipelago {
 		public static ArchipelagoSession currentSession;
 		public static DeathLinkService deathLink;
 		static Dictionary<string, object> slotDataDict;
-		int currentSaveSlot = -1;
+		public static int currentSaveSlot = -1;
 		public static GameObject player;
-
-		private float itemTimer;
+		public static int levelsUnlocked;
+		
+		private static float itemTimer;
 		private static Queue<ItemIds> itemQueue;
 
 		private static Queue<string> messages;
@@ -99,11 +100,12 @@ namespace Sparkipelago {
 			MusicRandomization.registerMusic();
 		}
 		
-		public void ConnectToArchipelago(bool newServer) {
+		public static void ConnectToArchipelago(bool newServer) {
 			if (newServer) {
 				foreach (long id in APShared.itemIDs) {
 					itemState[(ItemIds)id] = 0;
 				}
+				levelsUnlocked = 0;
 				itemQueue.Clear();
 				if (currentSession != null) {
 					currentSession.Items.ItemReceived -= HandleItem;
@@ -140,9 +142,10 @@ namespace Sparkipelago {
 					currentSession = null;
 					return;
 				}
-				
-				if ((long)slotDataDict["version"] != APShared.version) {
-					string msg = string.Format("Client Version does not match APWorld (expected {0}, got {1})! Refusing connection", APShared.version, slotDataDict["version"]);
+
+				int version = (int)(long)slotDataDict["version"];
+				if (APShared.version < version || APShared.min_version > version) {
+					string msg = string.Format("Client Version does not match APWorld (expected {0}-{2}, got {1})! Refusing connection", APShared.version, slotDataDict["version"], APShared.min_version);
 					MelonLogger.Error(msg);
 					messages.Enqueue(msg);
 					currentSession = null;

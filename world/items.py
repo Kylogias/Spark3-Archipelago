@@ -24,7 +24,10 @@ class ItemType(Enum):
 	MULTIPLIER = 13
 	GIMMICK = 14
 	ENERGY = 15
-	UNIMPLEMENTED = 16
+	LEVEL2 = 16
+	LEVEL3 = 17
+	ENDLESS = 18
+	UNIMPLEMENTED = 19
 from .apshared import item_name_to_id, apshared
 
 class ItemState:
@@ -38,6 +41,7 @@ class ItemState:
 		self.EXPLORE_ITEMS = []
 		self.COIN_ITEMS = []
 		self.MULTIPLIERS = []
+		self.LEVEL_ITEMS = []
 		self.FREEDOM_COUNT = 20
 		self.TRAP_CHANCE = 0
 	
@@ -45,12 +49,15 @@ class ItemState:
 			if i["type"] == ItemType.FREEDOM:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 				self.FREEDOM_ITEMS.append(i["name"])
-			if i["type"] in [ItemType.ABILITY, ItemType.SHOP, ItemType.GIMMICK, ItemType.CHARACTER, ItemType.VEHICLE, ItemType.POWER, ItemType.ENERGY]:
+			if i["type"] in [ItemType.ABILITY, ItemType.SHOP, ItemType.GIMMICK, ItemType.CHARACTER, ItemType.VEHICLE, ItemType.POWER, ItemType.ENERGY, ItemType.ENDLESS]:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 				self.PROGRESSION_ITEMS.append([i["name"], i["type"]])
 			if i["type"] in [ItemType.EXPLORE2, ItemType.EXPLORE3]:
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
 				self.EXPLORE_ITEMS.append([i["name"], i["type"]])
+			if i["type"] in [ItemType.LEVEL2, ItemType.LEVEL3]:
+				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
+				self.LEVEL_ITEMS.append([i["name"], i["type"]])
 			if i["type"] == ItemType.COIN:
 				self.COIN_ITEMS.append([i["name"], i["count"]])
 				self.ITEM_TO_CLASSIFICATION[i["name"]] = ItemClassification.progression
@@ -95,6 +102,9 @@ class ItemState:
 				if not world.gimmick_rando:
 					precollect.append(i[0])
 					continue
+			if i[1] == ItemType.ENDLESS:
+				if world.location_state.ENDLESS_COUNT == 0:
+					continue
 			if not world.labbing:
 				itempool.append(world.create_item(i[0]))
 			else:
@@ -122,6 +132,19 @@ class ItemState:
 				if include:
 					for i in range(10):
 						itempool.append(world.create_item(explore[0]))
+		if world.progression_mode == 3:
+			starting_stage = world.random.choice(world.location_state.SPHERE_ZERO_STAGES)
+			for level in self.LEVEL_ITEMS:
+				include = False
+				if world.spark2 and level[1] == ItemType.LEVEL2:
+					include = True
+				if level[1] == ItemType.LEVEL3:
+					include = True
+				if include:
+					if level[0] == f"{starting_stage} Unlocked":
+						precollect.append(level[0])
+					else:
+						itempool.append(world.create_item(level[0]))
 		
 		num_items = len(itempool)
 		unfilled_locs = len(world.multiworld.get_unfilled_locations(world.player))

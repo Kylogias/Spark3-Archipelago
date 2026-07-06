@@ -1,5 +1,6 @@
 {
-	"version": 14,
+	"version": 15,
+	"min_version": 14,
 	"difficulties": ["base", "hard", "expert"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
@@ -65,7 +66,7 @@
 		
 		{"name": "Car", "rule": "ca", "itemtype": "VEHICLE"},
 		{"name": "Copter", "rule": "pc", "itemtype": "VEHICLE"},
-		{"name": "Out Of Bounds", "itemtype": "VEHICLE"},
+		{"name": "Out Of Bounds", "itemtype": "ENDLESS"},
 		
 		{"name": "Shop Moves", "itemtype": "SHOP"},
 		{"name": "Shop Powers", "itemtype": "SHOP"},

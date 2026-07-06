@@ -184,7 +184,7 @@ class LocationState:
 		world.multiworld.regions += shop_pages
 		
 		for page in shop_pages:
-			world.get_region("Gate 0").connect(page, f"Gate 0 to {page.name}")
+			world.get_region("World Map").connect(page, f"World Map to {page.name}")
 		
 		i = 0
 		for page in self.PAGES.values():
@@ -219,19 +219,9 @@ class LocationState:
 			world.rules_state.SCORE_REQUIREMENTS[gateidx] = int(math.ceil(self.total_score * self.SCORE_PERCENT))
 		return curstage
 	
-	def setup_gates(self, world):
-		gates = [
-			Region("Gate 0", world.player, world.multiworld),
-			Region("Gate 1", world.player, world.multiworld),
-			Region("Gate 2", world.player, world.multiworld),
-			Region("Gate 3", world.player, world.multiworld),
-			Region("Gate 4", world.player, world.multiworld)
-		]
-		world.multiworld.regions += gates
-	#	gates[0].connect(gates[1], "Gate 0 to 1")
-	#	gates[1].connect(gates[2], "Gate 1 to 2")
-	#	gates[2].connect(gates[3], "Gate 2 to 3")
-	#	gates[3].connect(gates[4], "Gate 3 to 4")
+	def setup_locations(self, world):
+		worldmap = Region("World Map", world.player, world.multiworld)
+		world.multiworld.regions += [worldmap]
 		
 		dive_locations = {}
 		for i in range(self.ENDLESS_COUNT):
@@ -239,7 +229,7 @@ class LocationState:
 
 		dive_region = Region("Endless Dive", world.player, world.multiworld)
 		world.multiworld.regions += [dive_region]
-		gates[0].connect(dive_region, "Gate 0 to Endless Dive", Has("Out Of Bounds") & Has(COMBAT))
+		worldmap.connect(dive_region, "World Map to Endless Dive", Has("Out Of Bounds") & Has(COMBAT))
 		dive_region.add_locations(dive_locations, Spark3Location)
 		
 		if world.spark2:
@@ -251,7 +241,24 @@ class LocationState:
 		for boss in self.bosses:
 			stage_region = self.setup_stage_region(world, boss)
 			self.stage_regions[boss['name']] = [stage_region[0], boss, stage_region[1]]
+		stage_region = self.setup_stage_region(world, self.utopia, event="Victory")
+		self.stage_regions[self.utopia['name']] = [stage_region[0], self.utopia, stage_region[1]]
 		
+			
+		if (world.progression_mode == 1): self.setup_gates(world, worldmap)
+		if (world.progression_mode == 2): self.setup_gates(world, worldmap)
+		if (world.progression_mode == 3): self.setup_level_unlocks(world, worldmap)
+
+	def setup_gates(self, world, worldmap):
+		gates = [
+			Region("Gate 0", world.player, world.multiworld),
+			Region("Gate 1", world.player, world.multiworld),
+			Region("Gate 2", world.player, world.multiworld),
+			Region("Gate 3", world.player, world.multiworld),
+			Region("Gate 4", world.player, world.multiworld)
+		]
+		world.multiworld.regions += gates
+		worldmap.connect(gates[0], "World Map to Gate 0")
 		if self.regen:
 			old_stages = self.stages.copy()
 			old_bosses = self.bosses.copy()
@@ -301,5 +308,8 @@ class LocationState:
 			if world.combat_option == 2: boss_region.connect(gates[i+1], f"Boss to Gate {i+1}")
 			else: goal_region.connect(gates[i+1], f"Boss to Gate {i+1}")
 			self.boss_data.append([self.bosses[i]["id"], self.BOSS_CENTERS[i][0], self.BOSS_CENTERS[i][1]])
-		
-	#	world.get_region(STAGE_UTOPIA_SHELTER).add_event("Defeat Claritas Centralis", "Victory", location_type=Spark3Location, item_type=Spark3Item)
+	
+	def setup_level_unlocks(self, world, worldmap):
+		for stage_name in self.stage_regions:
+			stage_region = self.stage_regions[stage_name][0]
+			worldmap.connect(stage_region, f"World Map to {stage_name}", Has(f"{stage_name} Unlocked"))

@@ -23,7 +23,7 @@ class Spark3World(World):
 	options_dataclass = opts.Spark3Options
 	options: opts.Spark3Options
 
-	origin_region_name = "Gate 0"
+	origin_region_name = "World Map"
 	
 	def __init__(self, multiworld, player):
 		super().__init__(multiworld, player)
@@ -32,6 +32,8 @@ class Spark3World(World):
 		self.rules_state = rules.RulesState()
 	
 	def generate_early(self):
+		self.progression_mode = self.options.progression_mode.value
+		
 		if self.options.scoresanity & 1:
 			self.location_state.sanities.append("scoregold")
 		if self.options.scoresanity & 2:
@@ -161,6 +163,7 @@ class Spark3World(World):
 			self.shop_enabled = True
 			self.explore_hunt = slot_data["explore_hunt"]
 			self.coin_hunt = slot_data["coin_hunt"]
+			self.progression_mode = slot_data["progression_mode"]
 			return
 
 		location_count = 43 + self.location_state.ENDLESS_COUNT
@@ -176,19 +179,22 @@ class Spark3World(World):
 		if self.options.checkpointsanity: location_count += 355 if self.spark2 else 237
 		if self.explore_hunt: location_count += 30 if self.spark2 else 18
 
-		reserved_items = 20 + len(self.multipliers)
+		reserved_items = 19 + len(self.multipliers)
 		if self.combat_moves: reserved_items += 8
+		if self.shop_enabled: reserved_items += 4
 		if self.ability_rando: reserved_items += 9
 		if self.gimmick_rando: reserved_items += 11
 		if self.explore_hunt == 2: reserved_items += 300 if self.spark2 else 180
+		if self.progression_mode == 3: reserved_items += 58 if self.spark2 else 44
 		if self.coin_hunt: reserved_items += 72
+		if self.location_state.ENDLESS_COUNT > 0: reserved_items += 1
 		if reserved_items > location_count:
 			raise ValueError(f"Too many items in the pool! {reserved_items} items and {location_count} locations")
 		if self.options.freedom_count.value > location_count - reserved_items:
 			raise ValueError(f"Too many freedom medals in pool (have {self.options.freedom_count.value}, max {location_count - reserved_items})")
 	
 	def create_regions(self):
-		self.location_state.setup_gates(self)
+		self.location_state.setup_locations(self)
 		if self.shop_enabled:
 			self.location_state.setup_shop(self)
 	
@@ -232,6 +238,7 @@ class Spark3World(World):
 			"difficulty": self.difficulty,
 			"gates": self.location_state.gate_data,
 			"bosses": self.location_state.boss_data,
+			"progression_mode": self.progression_mode,
 			"musicseed": self.random.randint(0, 2**31),
 		}
 		return slot_data

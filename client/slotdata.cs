@@ -21,6 +21,13 @@ namespace Sparkipelago {
 		GOLD_FLAG = 1,
 		DIAMOND_FLAG = 2
 	}
+	
+	public enum ProgressionType {
+		GATES = 1,
+		VANILLA_ER = 2,
+		LEVEL = 3
+	}
+	
 	public class SlotData {
 		public struct Level {
 			public int id;
@@ -34,6 +41,7 @@ namespace Sparkipelago {
 		}
 		
 		public static int version;
+		public static ProgressionType progressionMode;
 		public static int musicSeed;
 		public static int exploreReq;
 		public static int[] freedomReq;
@@ -63,6 +71,7 @@ namespace Sparkipelago {
 		
 		public SlotData(Dictionary<string, object> data) {
 			version = (int)(long)data["version"];
+			progressionMode = (ProgressionType)(long)data["progression_mode"];
 			musicSeed = (int)(long)data["musicseed"];
 			exploreReq = (int)(long)data["explore_requirement"];
 			freedomReq = fillReqArray((JArray)data["freedom_requirements"]);

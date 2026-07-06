@@ -112,6 +112,30 @@ namespace Sparkipelago {
 			// Randomize Entrances
 			LevelData[] levels = GameObject.Find("Map/Stages").GetComponentsInChildren<LevelData>(true);
 			
+			switch (SlotData.progressionMode) {
+				case ProgressionType.GATES:
+					gateProgression(levels);
+					break;
+				case ProgressionType.VANILLA_ER:
+					break;
+				case ProgressionType.LEVEL:
+					levelProgression(levels);
+					break;
+			}
+
+			int stageidx = Save.CurrentStageIndex;
+			foreach (LevelData level in levels) {
+				if (level.ID == stageidx || (Sparkipelago.levelsUnlocked == 1 && level.gameObject.activeSelf)) {
+					GameObject reticule = GameObject.Find("Reticule");
+					reticule.transform.position = level.gameObject.transform.position;
+				}
+			}
+
+			UnityEngine.UI.Text fplabel = GameObject.Find("UI/WorldMapInfo/Fp/FpText").GetComponent<UnityEngine.UI.Text>();
+			fplabel.text = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL].ToString();
+		}
+
+		public static void gateProgression(LevelData[] levels) {
 			int[] bossids = {9, 24, 37, 38};
 			bool[] bossUnlocked = {false, false, false, false};
 			bool[] bossOpen = {false, false, false, false};
@@ -152,8 +176,6 @@ namespace Sparkipelago {
 				if (bossids[i] > 200) save.StageCompleted[bossids[i]] = true;
 				i++;
 			}
-
-			int stageidx = Save.CurrentStageIndex;
 			
 			foreach(LevelData level in levels) {
 				bool unlocked = false;
@@ -199,17 +221,19 @@ namespace Sparkipelago {
 				} else {
 					level.gameObject.SetActive(false);
 				}
-
-				if (level.ID == stageidx) {
-					GameObject reticule = GameObject.Find("Reticule");
-					reticule.transform.position = level.gameObject.transform.position;
-				}
 			}
-
-			UnityEngine.UI.Text fplabel = GameObject.Find("UI/WorldMapInfo/Fp/FpText").GetComponent<UnityEngine.UI.Text>();
-			fplabel.text = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL].ToString();
 		}
 
+		public static void levelProgression(LevelData[] levels) {
+			foreach (LevelData level in levels) {
+				level.gameObject.SetActive(false);
+				if (level.ID == -99) level.gameObject.SetActive(true);
+				if (Sparkipelago.itemState.ContainsKey((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) {
+					if (Sparkipelago.hasItem((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) level.gameObject.SetActive(true);
+				}
+			}
+		}
+		
 		static ShopaloShop shop;
 		
 		[HarmonyPatch(typeof(ShopaloShop), "SwitchPage")]

@@ -542,9 +542,11 @@ namespace Sparkipelago {
 						Sparkipelago.debugLog("{{\"name\": \"{0} Exploration Medal\", \"index\": {1}, \"sanity\": \"explore\", \"requires\": \"\"}},", MEDALNAMES[medal], medal);
 						Locations.sendLocationCheck(Save.CurrentStageIndex, string.Format("{0} Exploration Medal", MEDALNAMES[medal]));
 					Transform arrow = __instance.gameObject.transform.Find("Arrow");
-					arrow.gameObject.SetActive(false);
-					foreach (CollectibleScout.ScoutData sd in scout.allLocations) {
-						if (sd.go == arrow.gameObject) sd.go = null;
+					if (arrow) {
+						arrow.gameObject.SetActive(false);
+						foreach (CollectibleScout.ScoutData sd in scout.allLocations) {
+							if (sd.go == arrow.gameObject) sd.go = null;
+						}
 					}
 					__instance.MedalId = -1;
 				}
@@ -595,9 +597,11 @@ namespace Sparkipelago {
 					Sparkipelago.debugLog("{{\"name\": \"Checkpoint #{0}\", \"index\": {1}, \"sanity\": \"checkpoint\", \"requires\": \"\"}},", count, checkpoints.IndexOf(check));
 				Locations.sendLocationByIndex(Save.CurrentStageIndex, "checkpoint", checkpoints.IndexOf(check));
 				Transform arrow = check.gameObject.transform.Find("Arrow");
-				arrow.gameObject.SetActive(false);
-				foreach (CollectibleScout.ScoutData sd in scout.allLocations) {
-					if (sd.go == arrow.gameObject) sd.go = null;
+				if (arrow) {
+					arrow.gameObject.SetActive(false);
+					foreach (CollectibleScout.ScoutData sd in scout.allLocations) {
+						if (sd.go == arrow.gameObject) sd.go = null;
+					}
 				}
 				checkpoints[checkpoints.IndexOf(check)] = null;
 			}

@@ -82,7 +82,8 @@ medal_names = [
 	"Brown Exploration Medal"
 ]
 
-itemID = 16295351000
+EXPLORE_BASE = 16295351000
+LEVEL_UNLOCK_BASE = 16295351500
 for stage in shared["stages"]:
 	explore_rules = []
 	if not "coin_count" in stage:
@@ -120,15 +121,19 @@ for stage in shared["stages"]:
 		for i in range(sanity_max[sanity]+1):
 			if not i in sanity_seen[sanity]:
 				print(f"WARNING: {i} missing in {stage['name']} {sanity}")
+	if stage["type"] != "endless":
+		item_name_to_id[f"{stage['name']} Unlocked"] = LEVEL_UNLOCK_BASE + stage["id"]
+		shared["items"].append({"name": f"{stage['name']} Unlocked", "itemtype": "LEVEL2" if stage["type"] == "spark2" else "LEVEL3", "id": LEVEL_UNLOCK_BASE+stage["id"]})
 	if len(explore_rules):
 		explore_name = f"{stage['name']} Explore Medal"
-		item_name_to_id[explore_name] = itemID + stage["id"]
-		shared["items"].append({"name": explore_name, "itemtype": "EXPLORE2" if stage["type"] == "spark2" else "EXPLORE3", "id": itemID+stage["id"]})
+		item_name_to_id[explore_name] = EXPLORE_BASE + stage["id"]
+		shared["items"].append({"name": explore_name, "itemtype": "EXPLORE2" if stage["type"] == "spark2" else "EXPLORE3", "id": EXPLORE_BASE+stage["id"]})
 		check = {"name": "Explore Hunt", "sanity": "hunt", "requires": ""}
 		for region in stage["regions"]:
 			if region["name"] == "Goal":
 				region["checks"].append(check)
 		sanities["hunt"].append([stage, check])
+	
 
 for sanity in sanity_priority:
 	for location in sanities[sanity]:
@@ -169,10 +174,12 @@ with open("client/apshared.cs", "w") as apcs:
 	apcs.write("\tpublic enum ItemIds : long {\n")
 	for item in shared["items"]:
 		apcs.write(f"\t\t{item['name'].replace(' ', '_').replace('.', '').replace('-', '').upper()} = {item['id']},\n")
-	apcs.write(f"\t\tBASE_EXPLORE_MEDAL = {itemID}\n")
+	apcs.write(f"\t\tBASE_EXPLORE_MEDAL = {EXPLORE_BASE},\n")
+	apcs.write(f"\t\tBASE_LEVEL_UNLOCK = {LEVEL_UNLOCK_BASE}\n")
 	apcs.write("\t};\n")
 	apcs.write("\tclass APShared {\n")
 	apcs.write(f"\t\tpublic static int version = {shared['version']};\n")
+	apcs.write(f"\t\tpublic static int min_version = {shared['min_version']};\n")
 	apcs.write("\t\tpublic static long[] itemIDs = {")
 	for item in shared["items"]:
 		apcs.write(f"{item['id']}")

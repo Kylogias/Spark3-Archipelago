@@ -187,6 +187,10 @@ namespace Sparkipelago {
 			Save.SaveFile save = Save.Saves[Save.CurrentSaveSlot];
 			
 			GameObject player = Sparkipelago.player;
+			if (item >= ItemIds.BASE_LEVEL_UNLOCK && item < ItemIds.BASE_LEVEL_UNLOCK+300 && !catchup) {
+				save.StageJustUnlocked[item-ItemIds.BASE_LEVEL_UNLOCK] = true;
+				Sparkipelago.levelsUnlocked += 1;
+			}
 			switch (item) {
 				case ItemIds.FREEDOM_MEDAL:
 					if (Sparkipelago.currentScene == "[WORLD MAP]") WorldMap.onMapLoad();

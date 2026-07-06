@@ -71,6 +71,8 @@ O=Capsule
 B=Bubble
 
 Done:
+	Option for Sphere 0 stages in Gate 0
+	Level Items progression
 
 Beta Checklist:
 

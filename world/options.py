@@ -341,8 +341,25 @@ class GuaranteedCompletions(Range):
 
 	default = 2
 
+class ProgressionMode(Choice):
+	"""
+	What should be the mode of progression for this player?
+
+	Gates: Similar to Sonic Adventure 2 AP, levels are placed in gates with very configurable requirements to move to the next gate
+	Vanilla Entrance Randomizer: The world map is unlocked like in vanilla Spark 3
+	Level Items: You must find levels in the stages in order to progress. Levels are in their vanilla locations
+	"""
+	display_name = "Progression Mode"
+
+	option_gates = 1
+#	option_vanilla_entrance_randomizer = 2
+	option_level_items = 3
+
+	default = option_gates
+
 @dataclass
 class Spark3Options(PerGameCommonOptions):
+	progression_mode: ProgressionMode
 	ability_rando: AbilityRando
 	gimmick_rando: GimmickRando
 	character_logic: CharacterLogic
@@ -385,10 +402,10 @@ class Spark3Options(PerGameCommonOptions):
 option_groups = [
 	OptionGroup(
 		"Basic Options",
-		[AbilityRando, GimmickRando, Difficulty, EnergyLogic, CharacterLogic, Spark2Stages]
+		[ProgressionMode, AbilityRando, GimmickRando, Difficulty, EnergyLogic, CharacterLogic, Spark2Stages]
 	),
 	OptionGroup(
-		"Gate Options",
+		"Gate Progression Options",
 		[GuaranteedCompletions, FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
 	),
 	OptionGroup(

@@ -97,10 +97,10 @@ class RulesState:
 		return self.recurse_tokens(self.parse_rule_string(rule))
 	
 	def set_shop_rules(self, world):
-		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_MOVES}"), Has(SHOP_MOVES))
-		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_POWERS}"), Has(SHOP_POWERS))
-		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_UPGRADES}"), Has(SHOP_UPGRADES))
-		world.set_rule(world.get_entrance(f"Gate 0 to {SHOP_CHARACTERS}"), Has(SHOP_CHARACTERS))
+		world.set_rule(world.get_entrance(f"World Map to {SHOP_MOVES}"), Has(SHOP_MOVES))
+		world.set_rule(world.get_entrance(f"World Map to {SHOP_POWERS}"), Has(SHOP_POWERS))
+		world.set_rule(world.get_entrance(f"World Map to {SHOP_UPGRADES}"), Has(SHOP_UPGRADES))
+		world.set_rule(world.get_entrance(f"World Map to {SHOP_CHARACTERS}"), Has(SHOP_CHARACTERS))
 
 	def set_gate_entrance_rule(self, world, entrance, i, extra):
 		speed_rule = True_()
@@ -118,13 +118,14 @@ class RulesState:
 		
 	
 	def set_stage_rules(self, world):
-		for i in range(4):
-			gate_entrance = world.get_entrance(f"Gate {i} to Boss")
-			self.set_gate_entrance_rule(world, gate_entrance, i, True_())
-		utopia_entrance = world.get_entrance(f"Entrance to Utopia Shelter")
-		utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
-		if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
-		self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
+		if world.progression_mode == 1:
+			for i in range(4):
+				gate_entrance = world.get_entrance(f"Gate {i} to Boss")
+				self.set_gate_entrance_rule(world, gate_entrance, i, True_())
+			utopia_entrance = world.get_entrance(f"Entrance to Utopia Shelter")
+			utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
+			if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
+			self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			stage_region = world.location_state.stage_regions[stage_name]
