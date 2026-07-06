@@ -274,6 +274,11 @@ for stage in shared["stages"]:
 	sheet.reset_to_next_row("check_header", color_index)
 	stage_checks = []
 	for region in stage["regions"]:
+		if region["name"] == "Goal":
+			region_rule = recurse_region_rule(stage, region, [])
+			parsed = make_path_strings(region_rule["base"])
+			if len(parsed[0]) == 0:
+				print(f"Sphere 0 Stage: {stage['name']}")
 		for entrance in region["entrances"]:
 			sheet.add_cell(region["name"]).next_column().add_cell(entrance)
 			for difficulty in shared["difficulties"]:

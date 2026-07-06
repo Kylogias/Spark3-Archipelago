@@ -330,6 +330,17 @@ class CombatMoves(DefaultOnToggle):
 	"""
 	display_name = "Combat Moves"
 
+class GuaranteedCompletions(Range):
+	"""
+	How many guaranteed completable stages should be in the first gate? Increasing this can help with generation errors
+	"""
+	display_name = "Gate 0 Guaranteed Completions"
+
+	range_start = 0
+	range_end = 8
+
+	default = 2
+
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	ability_rando: AbilityRando
@@ -339,6 +350,7 @@ class Spark3Options(PerGameCommonOptions):
 	difficulty: Difficulty
 	spark2_stages: Spark2Stages
 
+	gate_zero_completions: GuaranteedCompletions
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
 	require_characters: RequireCharacters
@@ -377,7 +389,7 @@ option_groups = [
 	),
 	OptionGroup(
 		"Gate Options",
-		[FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
+		[GuaranteedCompletions, FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
 	),
 	OptionGroup(
 		"Extra Checks",

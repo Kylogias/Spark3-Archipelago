@@ -127,6 +127,7 @@ class Spark3World(World):
 		self.score_type = self.options.score_type.value
 		
 		self.location_state.ENDLESS_COUNT = self.options.endless_dive_checks.value
+		self.location_state.SPHERE_ZERO_COUNT = self.options.gate_zero_completions.value
 
 		self.rules_state.COMPLETION_REQUIREMENTS = []
 		completion_total = 0

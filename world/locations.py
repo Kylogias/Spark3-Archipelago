@@ -16,6 +16,9 @@ class LocationState:
 	def __init__(self):
 		self.SHOP_LOCATIONS = {}
 		self.ENDLESS_COUNT = 0
+
+		self.SPHERE_ZERO_COUNT = 0
+		self.SPHERE_ZERO_STAGES = ["Cold-Dry Desert", "A.M Village", "Lost Riviera", "Arid Hole", "Roadway Rally", "Squabble Spillway", "Airstrip Madness", "Aviator Highway"]
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11]
 
@@ -85,8 +88,12 @@ class LocationState:
 				locs[i] = location_name_to_id[i]
 	
 	def add_stage_to_gate(self, world, gate: Region, stage, event=None):
-		region = self.setup_stage_region(world, stage, event)
-		self.stage_regions[stage['name']] = [region[0], stage, region[1]]
+		if stage['name'] in self.stage_regions:
+			stage_region = self.stage_regions[stage['name']]
+			region = [stage_region[0], stage_region[2]]
+		else:
+			region = self.setup_stage_region(world, stage, event)
+			self.stage_regions[stage['name']] = [region[0], stage, region[1]]
 		if (gate): gate.connect(region[0], f"Entrance to {stage['name']}")
 		if not event:
 			self.spoiler_text += f"\t{stage['name']}\n"
@@ -238,6 +245,13 @@ class LocationState:
 		if world.spark2:
 			self.stages += self.spark2
 		
+		for stage in self.stages:
+			stage_region = self.setup_stage_region(world, stage)
+			self.stage_regions[stage['name']] = [stage_region[0], stage, stage_region[1]]
+		for boss in self.bosses:
+			stage_region = self.setup_stage_region(world, boss)
+			self.stage_regions[boss['name']] = [stage_region[0], boss, stage_region[1]]
+		
 		if self.regen:
 			old_stages = self.stages.copy()
 			old_bosses = self.bosses.copy()
@@ -259,8 +273,16 @@ class LocationState:
 						self.bosses.append(data)
 						break
 		elif not world.labbing:
+			world.random.shuffle(self.SPHERE_ZERO_STAGES)
+			s0 = []
+			names = self.SPHERE_ZERO_STAGES[:self.SPHERE_ZERO_COUNT]
+			for stage in self.stages.copy():
+				if stage["name"] in names:
+					s0.append(stage)
+					self.stages.remove(stage)
 			world.random.shuffle(self.stages)
 			world.random.shuffle(self.bosses)
+			self.stages = s0 + self.stages
 		
 		self.spoiler_text += f"\nLevel Gates for {world.multiworld.player_name[world.player]}:\n"
 		total = 0
