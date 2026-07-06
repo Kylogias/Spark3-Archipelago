@@ -14,7 +14,6 @@ using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.MessageLog.Parts;
-using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Newtonsoft.Json.Linq;
 using HarmonyLib;
 
@@ -28,16 +27,16 @@ namespace Sparkipelago {
 		public static string currentScene;
 		
 		public static ArchipelagoSession currentSession;
-		public static DeathLinkService deathLink;
 		static Dictionary<string, object> slotDataDict;
 		public static int currentSaveSlot = -1;
 		public static GameObject player;
 		public static int levelsUnlocked;
 		
 		private static float itemTimer;
-		private static Queue<ItemIds> itemQueue;
+		public static Queue<ItemIds> itemQueue;
+		public static Queue<ItemIds> prioItemQueue;
 
-		private static Queue<string> messages;
+		public static Queue<string> messages;
 		class DisplayedMessage {
 			public GameObject go;
 			public float timeLeft;
@@ -85,6 +84,7 @@ namespace Sparkipelago {
 			
 			LabMode.initPrefs();
 			itemQueue = new Queue<ItemIds>();
+			prioItemQueue = new Queue<ItemIds>();
 			messages = new Queue<string>();
 			messageText = new DisplayedMessage[5];
 			for (int i = 0; i < messageText.Length; i++) {
@@ -107,12 +107,12 @@ namespace Sparkipelago {
 				}
 				levelsUnlocked = 0;
 				itemQueue.Clear();
+				prioItemQueue.Clear();
 				if (currentSession != null) {
 					currentSession.Items.ItemReceived -= HandleItem;
 					currentSession.MessageLog.OnMessageReceived -= OnMessageReceived;
-					deathLink.DisableDeathLink();
 					currentSession = null;
-					deathLink = null;
+					Bounce.onDisconnect();
 				}
 				new SlotData();
 			}
@@ -155,9 +155,7 @@ namespace Sparkipelago {
 				new SlotData(slotDataDict);
 				currentSession.Items.ItemReceived += HandleItem;
 				currentSession.MessageLog.OnMessageReceived += OnMessageReceived;
-				deathLink = DeathLinkProvider.CreateDeathLinkService(currentSession);
-				deathLink.OnDeathLinkReceived += HandleDeathLink;
-				if (APSave.file.client.deathLink) deathLink.EnableDeathLink();
+				Bounce.onConnect();
 				messages.Enqueue("Successful Connection to Spark 3! You may now collect checks");
 				data.room = curRoom;
 				int i = 0;
@@ -184,7 +182,7 @@ namespace Sparkipelago {
 		private static void onItem(ItemInfo item, bool catchup)  {
 			MelonLogger.Msg("Receiving {0} with ID {1}", item.ItemDisplayName, item.ItemId);
 			itemState[(ItemIds)item.ItemId] += 1;
-			MelonLogger.Msg("Handling Item");
+			if (!catchup) Bounce.trySendTrap((ItemIds)item.ItemId);
 			if (Items.isStageItem((ItemIds)item.ItemId)) {
 				if (!catchup) itemQueue.Enqueue((ItemIds)item.ItemId);
 			} else Items.handleItem((ItemIds)item.ItemId, catchup);
@@ -232,32 +230,6 @@ namespace Sparkipelago {
 				onItem(item, false);
 			}
 		}
-
-		static bool isDeathLink;
-		public static void HandleDeathLink(DeathLink deathLink) {
-			if (player) {
-				StringBuilder sb = new StringBuilder("", 65536);
-				sb.Append("<color=#E02010>Death Link: ");
-				if (deathLink.Cause != null) sb.Append(deathLink.Cause);
-				else sb.Append(deathLink.Source);
-				sb.Append("</color>");
-				messages.Enqueue(sb.ToString());
-				
-				PlayerHealthAndStats.PlayerHP = -1;
-				isDeathLink = true;
-				player.GetComponent<HurtControl>().CheckForDeathAndKill();
-			}
-		}
-
-		[HarmonyPatch(typeof(HurtControl), "PlayedDied")]
-		private static class OnDeathPatch {
-			private static void Prefix() {
-				if (APSave.file.client.deathLink && !isDeathLink) {
-					deathLink.SendDeathLink(new DeathLink(APSave.getAPConnect().slot));
-				}
-				isDeathLink = false;
-			}
-		}
 		
 		public static void HandleShopScout(Dictionary<long, ScoutedItemInfo> scouted) {
 			for (int i = 0; i < 26; i++) {
@@ -281,7 +253,12 @@ namespace Sparkipelago {
 					if (energyRegen > APSave.file.client.energyMax) energyRegen = APSave.file.client.energyMax;
 					PlayerHealthAndStats.Energy += (float)energyRegen * Time.deltaTime;
 				}
-				
+
+				if (itemTimer < 0 && prioItemQueue.Count > 0) {
+					itemTimer = 2;
+					ItemIds item = prioItemQueue.Dequeue();
+					Items.handleItem(item, false);
+				}
 				if (itemTimer < 0 && itemQueue.Count > 0) {
 					itemTimer = 2;
 					ItemIds item = itemQueue.Dequeue();

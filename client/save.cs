@@ -97,6 +97,7 @@ namespace Sparkipelago {
 		public bool labTrackBattery;
 
 		public bool deathLink;
+		public bool trapLink;
 		public bool destroyCoins;
 		public bool capsuleArrows;
 		public bool bubbleArrows;
@@ -127,6 +128,7 @@ namespace Sparkipelago {
 			labTrackCoin = true;
 			labTrackBattery = true;
 			deathLink = false;
+			trapLink = false;
 			destroyCoins = true;
 			capsuleArrows = false;
 			bubbleArrows = false;
@@ -239,15 +241,13 @@ namespace Sparkipelago {
 			
 			new Options.BoolIten(
 				settings, "Death Link", "Should Death Link be enabled?",
-				(bool newV) => {
-					APSave.file.client.deathLink = newV;
-					if (Sparkipelago.deathLink != null) {
-						if (newV) Sparkipelago.deathLink.EnableDeathLink();
-						else Sparkipelago.deathLink.DisableDeathLink();
-					}
-					return newV.ToString();
-				},
+				(bool newV) => {APSave.file.client.deathLink = newV; Bounce.updateTags(); return newV.ToString();},
 				() => {return APSave.file.client.deathLink;}
+			);
+			new Options.BoolIten(
+				settings, "Trap Link", "Should Trap Link be enabled?",
+				(bool newV) => {APSave.file.client.trapLink = newV; Bounce.updateTags(); return newV.ToString();},
+				() => {return APSave.file.client.trapLink;}
 			);
 			new Options.BoolIten(
 				settings, "Destroy Collectathon Coins", "Should collected blue coins in collectathon stages be destroyed?",

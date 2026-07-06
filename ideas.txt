@@ -73,6 +73,7 @@ B=Bubble
 Done:
 	Option for Sphere 0 stages in Gate 0
 	Level Items progression
+	Trap Link
 
 Beta Checklist:
 
@@ -88,7 +89,6 @@ Capsule Sanity
 Normal Logic
 Expert Logic
 Downdash Buttons
-Trap Link
 Freom Check/Goal
 General Stability
 
