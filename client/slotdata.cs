@@ -71,7 +71,8 @@ namespace Sparkipelago {
 		
 		public SlotData(Dictionary<string, object> data) {
 			version = (int)(long)data["version"];
-			progressionMode = (ProgressionType)(long)data["progression_mode"];
+			if (data.ContainsKey("progression_mode")) progressionMode = (ProgressionType)(long)data["progression_mode"];
+			else progressionMode = ProgressionType.GATES;
 			musicSeed = (int)(long)data["musicseed"];
 			exploreReq = (int)(long)data["explore_requirement"];
 			freedomReq = fillReqArray((JArray)data["freedom_requirements"]);
