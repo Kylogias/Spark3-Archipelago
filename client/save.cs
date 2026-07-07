@@ -183,7 +183,7 @@ namespace Sparkipelago {
 				() => {return (double)APSave.file.client.diveFloors;}
 			);
 			new Options.RangeIten(
-				settings, "Tracker Mode", "What is the default mode of the tracker arrow?", 0, SlotData.labMode ? 5 : 4, 1,
+				settings, "Tracker Mode", "What is the default mode of the tracker arrow?", 0, SlotData.labMode ? 5 : 3, 1,
 				(double newV) => {APSave.file.client.trackerMode = (TrackType)newV; return ((TrackType)newV).ToString();},
 				() => {return (double)APSave.file.client.trackerMode;}
 			);

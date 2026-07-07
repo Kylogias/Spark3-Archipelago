@@ -121,6 +121,11 @@ namespace Sparkipelago {
 				case ProgressionType.LEVEL:
 					levelProgression(levels);
 					break;
+				default:
+					foreach (LevelData level in levels) {
+						level.gameObject.SetActive(false);
+					}
+					break;
 			}
 
 			int stageidx = Save.CurrentStageIndex;

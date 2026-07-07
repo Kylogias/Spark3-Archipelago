@@ -39,6 +39,7 @@ namespace Sparkipelago {
 				public GameObject go;
 				public ItemFlags flags;
 				public string sanity;
+				public int index;
 				public bool collected;
 				public bool enabled;
 			};
@@ -57,6 +58,7 @@ namespace Sparkipelago {
 				ScoutData sd = new ScoutData();
 				sd.go = go;
 				sd.sanity = sanity;
+				sd.index = index;
 				allLocations.Add(sd);
 				if (key != -1) locids.Add(key, sd);
 			}
@@ -172,7 +174,7 @@ namespace Sparkipelago {
 		}
 		
 		static bool trackFixed;
-		public static Transform trackXfrm;
+		public static CollectibleScout.ScoutData trackXfrm;
 		static GameObject playerArrow;
 
 		public static void trackCheckByName(string command) {
@@ -181,7 +183,7 @@ namespace Sparkipelago {
 				if (stagedata.id == stage) {
 					foreach (APStageCheck check in stagedata.checks) {
 						if (check.name == search && scout.locids.ContainsKey(check.id)) {
-							trackXfrm = scout.locids[check.id].go.transform;
+							trackXfrm = scout.locids[check.id];
 							trackFixed = true;
 							break;
 						}
@@ -196,22 +198,12 @@ namespace Sparkipelago {
 			int index = -1;
 			string sanity = args[2];
 			if (Int32.TryParse(args[1], out index)) {
-				switch (sanity) {
-					case "explore":
-						if (index < medals.Count() && medals[index] != null) {trackXfrm = medals[index].gameObject.transform; trackFixed = true;}
+				foreach (CollectibleScout.ScoutData sd in scout.allLocations) {
+					if (sd.sanity == sanity && sd.index == index) {
+						trackXfrm = sd;
+						trackFixed = true;
 						break;
-					case "capsule":
-						if (index < capsules.Count() && capsules[index] != null) {trackXfrm = capsules[index].gameObject.transform; trackFixed = true;}
-						break;
-					case "bubble":
-						if (index < bubbles.Count() && bubbles[index] != null) {trackXfrm = bubbles[index].gameObject.transform; trackFixed = true;}
-						break;
-					case "coin":
-						if (index < coins.Count() && coins[index] != null) {trackXfrm = coins[index].gameObject.transform; trackFixed = true;}
-						break;
-					case "battery":
-						if (index < batteries.Count() && batteries[index] != null) {trackXfrm = batteries[index].gameObject.transform; trackFixed = true;}
-						break;
+					}
 				}
 			}
 		}
@@ -259,14 +251,17 @@ namespace Sparkipelago {
 					else sd.go.SetActive(true);
 				}
 			}
+			if (trackFixed) {
+				if (trackXfrm != null && trackXfrm.collected) trackXfrm = null;
+			}
 			if (trackType == TrackType.None && !trackFixed) {
 				trackXfrm = null;
 			} else if (!trackFixed) {
-				Transform nearestAny = null;
+				CollectibleScout.ScoutData nearestAny = null;
 				float anyDist = 10000000;
-				Transform nearestUseful = null;
+				CollectibleScout.ScoutData nearestUseful = null;
 				float usefulDist = 10000000;
-				Transform nearestProg = null;
+				CollectibleScout.ScoutData nearestProg = null;
 				float progDist = 10000000;
 
 				if (trackType == TrackType.IncludeAll) foreach (CollectibleScout.ScoutData sd in scout.allLocations) {
@@ -292,9 +287,10 @@ namespace Sparkipelago {
 					float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
 					if (xfrmDist < anyDist) {
 						anyDist = xfrmDist;
-						nearestAny = xfrm;
+						nearestAny = sd;
 					}
 				} else if (trackType == TrackType.Energy) {
+				/*
 					foreach (MonitorData mon in bubbles) {
 						if (!mon) continue;
 						if (mon.Type != MonitorType.Energy) continue;
@@ -309,12 +305,13 @@ namespace Sparkipelago {
 						if (!cap) continue;
 						if (cap.tag != "EnergyCap") continue;
 						Vector3 xfrmPos = cap.gameObject.transform.position;
-						float xfrmDist = Vector3.Distance(xfrmPos, playerPos) * 10;
+						float xfrmDist = Vector3.Distance(xfrmPos, playerPos) * 6;
 						if (xfrmDist < anyDist) {
 							anyDist = xfrmDist;
 							nearestAny = cap.gameObject.transform;
 						}
 					}
+				*/
 				} else foreach (CollectibleScout.ScoutData sd in scout.locids.Values) {
 					if (sd.collected || !sd.enabled || !sd.go) continue;
 					Transform goParent = sd.go.transform.parent.parent; // Parent is the check
@@ -331,15 +328,15 @@ namespace Sparkipelago {
 					float xfrmDist = Vector3.Distance(xfrmPos, playerPos);
 					if ((sd.flags & ItemFlags.Advancement) != 0 && xfrmDist < progDist) {
 						progDist = xfrmDist;
-						nearestProg = sd.go.transform;
+						nearestProg = sd;
 					}
 					if ((sd.flags & (ItemFlags.NeverExclude | ItemFlags.Advancement)) != 0 && xfrmDist < usefulDist) {
 						usefulDist = xfrmDist;
-						nearestUseful = sd.go.transform;
+						nearestUseful = sd;
 					}
 					if (xfrmDist < anyDist) {
 						anyDist = xfrmDist;
-						nearestAny = sd.go.transform;
+						nearestAny = sd;
 					}
 				}
 				
@@ -357,9 +354,9 @@ namespace Sparkipelago {
 						break;
 				}
 			}
-			if (trackXfrm) {
+			if (trackXfrm != null) {
 				playerArrow.SetActive(true);
-				playerArrow.transform.LookAt(trackXfrm);
+				playerArrow.transform.LookAt(trackXfrm.go.transform);
 			} else {
 				playerArrow.SetActive(false);
 				trackFixed = false;
