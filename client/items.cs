@@ -98,95 +98,9 @@ namespace Sparkipelago {
 			}
 			return true;
 		}
-
-		public static bool isStageItem(ItemIds item) {
-			switch (item) {
-				case ItemIds.SCORE_CAPSULE:
-				case ItemIds.HEALTH_CAPSULE:
-				case ItemIds.ENERGY_CAPSULE:
-				case ItemIds.ENERGY_BUBBLE:
-				case ItemIds.NIGHTMARE_TRAP:
-				case ItemIds.LASER_TRAP:
-				case ItemIds.FLINT_TRAP:
-				case ItemIds.SPRING_TRAP:
-				case ItemIds.GRAVITY_TRAP:
-				case ItemIds.ZOOM_TRAP:
-				case ItemIds.BALD_TRAP:
-				case ItemIds.DAMAGE_TRAP:
-					return true;
-				default:
-					return false;
-			}
-		}
-		
-		public static void makePlayerBald() {
-			if (ButtonTips.Playing != PlayableUnit.Character) return;
-			int ch = CharacterAnimatorChange.Character;
-			switch (ch) {
-				case 0: { // Spark
-					GameObject.Find("FarkSkin/SparkModel/Crown").SetActive(false);
-					GameObject.Find("FarkSkin/SparkModel/JesterHat").SetActive(false);
-					GameObject.Find("FarkSkin/SparkModel/Ponpon").SetActive(false);
-					break;
-				}
-				case 1: { // Reaper
-					GameObject.Find("FarkSkin/ReaperJesterModel/Crown").SetActive(false);
-					GameObject.Find("FarkSkin/ReaperJesterModel/JesterHat").SetActive(false);
-					GameObject.Find("FarkSkin/ReaperJesterModel/Ponpon").SetActive(false);
-					break;
-				}
-				case 2: { // Float
-					GameObject.Find("FarkSkin/FloatPlayableBody/metarig/Root/hips/spine/chest/neck/Hat").transform.localScale = Vector3.zero;
-					break;
-				}
-				case 3: { // Fark
-					GameObject.Find("FarkSkin/FarkSmallModel/metarig/Root/hips/spine/chest/neck/Head/shoulder_L_002").transform.localScale = Vector3.one*0.001f;
-					GameObject.Find("FarkSkin/FarkSmallModel/metarig/Root/hips/spine/chest/neck/Head/shoulder_R_002").transform.localScale = Vector3.one*0.001f;
-					break;
-				}
-				case 4: { // Sfarx
-					GameObject.Find("FarkSkin/SfarxModel/SfarxJesterHat").SetActive(false);
-					break;
-				}
-			}
-		}
-
-		public static void makePlayerUnbald() {
-			if (ButtonTips.Playing != PlayableUnit.Character) return;
-			int ch = CharacterAnimatorChange.Character;
-			switch (ch) {
-				case 0: { // Spark
-					GameObject.Find("FarkSkin/SparkModel/Crown").SetActive(true);
-					GameObject.Find("FarkSkin/SparkModel/JesterHat").SetActive(true);
-					GameObject.Find("FarkSkin/SparkModel/Ponpon").SetActive(true);
-					break;
-				}
-				case 1: { // Reaper
-					GameObject.Find("FarkSkin/ReaperJesterModel/Crown").SetActive(true);
-					GameObject.Find("FarkSkin/ReaperJesterModel/JesterHat").SetActive(true);
-					GameObject.Find("FarkSkin/ReaperJesterModel/Ponpon").SetActive(true);
-					break;
-				}
-				case 2: { // Float
-					GameObject.Find("FarkSkin/FloatPlayableBody/metarig/Root/hips/spine/chest/neck/Hat").transform.localScale = Vector3.one;
-					break;
-				}
-				case 3: { // Fark
-					GameObject.Find("FarkSkin/FarkSmallModel/metarig/Root/hips/spine/chest/neck/Head/shoulder_L_002").transform.localScale = Vector3.one;
-					GameObject.Find("FarkSkin/FarkSmallModel/metarig/Root/hips/spine/chest/neck/Head/shoulder_R_002").transform.localScale = Vector3.one;
-					break;
-				}
-				case 4: { // Sfarx
-					GameObject.Find("FarkSkin/SfarxModel/SfarxJesterHat").SetActive(true);
-					break;
-				}
-			}
-		}
 		
 		public static void handleItem(ItemIds item, bool catchup) {
 			Save.SaveFile save = Save.Saves[Save.CurrentSaveSlot];
-			
-			GameObject player = Sparkipelago.player;
 			if (item >= ItemIds.BASE_LEVEL_UNLOCK && item < ItemIds.BASE_LEVEL_UNLOCK+300 && !catchup) {
 				save.StageJustUnlocked[item-ItemIds.BASE_LEVEL_UNLOCK] = true;
 				Sparkipelago.levelsUnlocked += 1;
@@ -196,45 +110,6 @@ namespace Sparkipelago {
 					if (Sparkipelago.currentScene == "[WORLD MAP]") WorldMap.onMapLoad();
 					APSavedata data = APSave.getAPSave();
 					data.fpCount = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL];
-					break;
-				case ItemIds.SCORE_CAPSULE: GameObject.Instantiate(Sparkipelago.sCapsule, player.transform); break;
-				case ItemIds.HEALTH_CAPSULE: GameObject.Instantiate(Sparkipelago.hCapsule, player.transform); break;
-				case ItemIds.ENERGY_CAPSULE: GameObject.Instantiate(Sparkipelago.eCapsule, player.transform); break;
-				case ItemIds.BIT_BUBBLE: if (!catchup) addBits(30); break; // 30 bits
-				case ItemIds.ENERGY_BUBBLE: GameObject.Instantiate(Sparkipelago.eBubble, player.transform.position, Quaternion.identity); break;
-				case ItemIds.NIGHTMARE_TRAP:
-					if (Sparkipelago.playerRed != null) Sparkipelago.playerRed.SetActive(true);
-					break;
-				case ItemIds.LASER_TRAP:
-					if (Sparkipelago.playerGray != null) Sparkipelago.playerGray.SetActive(true);
-					break;
-				case ItemIds.FLINT_TRAP:
-					Sparkipelago.flintList.Add(GameObject.Instantiate(Sparkipelago.flint, player.transform.position, Quaternion.identity));
-					break;
-				case ItemIds.SPRING_TRAP: {
-					Vector3 speedDir = Sparkipelago.player.GetComponent<PlayerBhysics>().SpeedDir * 0.01f;
-					if (speedDir == Vector3.zero) speedDir = Vector3.down;
-					GameObject spring = GameObject.Instantiate(Sparkipelago.spring, player.transform.position + speedDir, Quaternion.identity);
-					spring.transform.LookAt(Sparkipelago.player.transform);
-					spring.transform.localScale = Vector3.one*2;
-					break;
-				}
-				case ItemIds.GRAVITY_TRAP:
-					Sparkipelago.gravityTimer = 15;
-					break;
-				case ItemIds.ZOOM_TRAP:
-					if (Sparkipelago.player) {
-						HedgeCamera hc = GameObject.Find("PlayerObjects/Camera_Objects/Main Camera").GetComponent<HedgeCamera>();
-						hc.CameraMaxDistance = 2;
-						hc.CameraCombatMaxDistance = -2;
-					}
-					break;
-				case ItemIds.BALD_TRAP:
-					Sparkipelago.baldTimer = 30;
-					break;
-				case ItemIds.DAMAGE_TRAP:
-					PlayerHealthAndStats.PlayerHP -= 1;
-					Sparkipelago.player.GetComponent<HurtControl>().CheckForDeathAndKill();
 					break;
 				case ItemIds.SPIN_CHARGE: save.Move00_SpinCharge = true; save.Move00_SpinCharge_Enabled = true; break;
 				case ItemIds.DUAL_AIR_KICK: save.Move01_DualAirKick = true; save.Move01_DualAirKick_Enabled = true; break;

@@ -31,10 +31,6 @@ namespace Sparkipelago {
 		public static int currentSaveSlot = -1;
 		public static GameObject player;
 		public static int levelsUnlocked;
-		
-		private static float itemTimer;
-		public static Queue<ItemIds> itemQueue;
-		public static Queue<ItemIds> prioItemQueue;
 
 		public static Queue<string> messages;
 		class DisplayedMessage {
@@ -43,21 +39,6 @@ namespace Sparkipelago {
 		}
 		private static DisplayedMessage[] messageText;
 		
-		private GameObject redWorld;
-		private GameObject grayWorld;
-		public static GameObject flint;
-		public static GameObject spring;
-		public static List<GameObject> flintList;
-		public static GameObject playerRed;
-		public static GameObject playerGray;
-		public static StageProprietiesAlterations gravityTrap;
-		public static float gravityTimer;
-		public static float baldTimer;
-
-		public static GameObject eBubble;
-		public static GameObject eCapsule;
-		public static GameObject hCapsule;
-		public static GameObject sCapsule;
 		public static GameObject copter;
 		
 		public static Dictionary<ItemIds, int> itemState;
@@ -66,6 +47,7 @@ namespace Sparkipelago {
 		public static Texture2D apTexture;
 		public static Texture2D settingsTexture;
 		public static Texture2D labTexture;
+		public static List<Texture2D> ddbtnTextures;
 
 		void loadTexture(ref Texture2D tex, string path) {
 			tex = new Texture2D(1, 1);
@@ -83,19 +65,23 @@ namespace Sparkipelago {
 			shopItems = new string[26];
 			
 			LabMode.initPrefs();
-			itemQueue = new Queue<ItemIds>();
-			prioItemQueue = new Queue<ItemIds>();
 			messages = new Queue<string>();
 			messageText = new DisplayedMessage[5];
 			for (int i = 0; i < messageText.Length; i++) {
 				messageText[i] = new DisplayedMessage();
 			}
-			flintList = new List<GameObject>();
 			new SlotData();
 			
 			loadTexture(ref apTexture, "aplogo.png");
 			loadTexture(ref settingsTexture, "settings.png");
 			loadTexture(ref labTexture, "lab.png");
+
+			ddbtnTextures = new List<Texture2D>();
+			for (int i = 0; i <= 5; i++) {
+				Texture2D tex = null;
+				loadTexture(ref tex, string.Format("dd{0}.png", i));
+				ddbtnTextures.Add(tex);
+			}
 			
 			MusicRandomization.registerMusic();
 		}
@@ -106,8 +92,7 @@ namespace Sparkipelago {
 					itemState[(ItemIds)id] = 0;
 				}
 				levelsUnlocked = 0;
-				itemQueue.Clear();
-				prioItemQueue.Clear();
+				Traps.onDisconnect();
 				if (currentSession != null) {
 					currentSession.Items.ItemReceived -= HandleItem;
 					currentSession.MessageLog.OnMessageReceived -= OnMessageReceived;
@@ -182,9 +167,8 @@ namespace Sparkipelago {
 		private static void onItem(ItemInfo item, bool catchup)  {
 			MelonLogger.Msg("Receiving {0} with ID {1}", item.ItemDisplayName, item.ItemId);
 			itemState[(ItemIds)item.ItemId] += 1;
-			if (!catchup) Bounce.trySendTrap((ItemIds)item.ItemId);
-			if (Items.isStageItem((ItemIds)item.ItemId)) {
-				if (!catchup) itemQueue.Enqueue((ItemIds)item.ItemId);
+			if (Traps.isStageItem((ItemIds)item.ItemId)) {
+				if (!catchup) Traps.itemQueue.Enqueue((ItemIds)item.ItemId);
 			} else Items.handleItem((ItemIds)item.ItemId, catchup);
 		}
 		
@@ -253,34 +237,8 @@ namespace Sparkipelago {
 					if (energyRegen > APSave.file.client.energyMax) energyRegen = APSave.file.client.energyMax;
 					PlayerHealthAndStats.Energy += (float)energyRegen * Time.deltaTime;
 				}
-
-				if (itemTimer < 0 && prioItemQueue.Count > 0) {
-					itemTimer = 2;
-					ItemIds item = prioItemQueue.Dequeue();
-					Items.handleItem(item, false);
-				}
-				if (itemTimer < 0 && itemQueue.Count > 0) {
-					itemTimer = 2;
-					ItemIds item = itemQueue.Dequeue();
-					Items.handleItem(item, false);
-				}
-				itemTimer -= Time.deltaTime;
-				foreach (GameObject fl in flintList) {
-					if (fl == null) continue;
-					if (Vector3.Distance(fl.transform.position, player.transform.position) > 100 && hasItem(ItemIds.COMBAT)) {
-						Vector3 pos = player.transform.position;
-						pos.y += 5;
-						fl.transform.position = pos;
-					}
-				}
+				Traps.onUpdate();
 				Collectibles.updateTracker();
-
-				baldTimer -= Time.deltaTime;
-				gravityTimer -= Time.deltaTime;
-				if (baldTimer > 0) Items.makePlayerBald();
-				else Items.makePlayerUnbald();
-				if (gravityTimer > 0) gravityTrap.ConstantUpForce = true;
-				else gravityTrap.ConstantUpForce = false;
 			}
 			foreach (DisplayedMessage dm in messageText) {
 				dm.timeLeft -= Time.unscaledDeltaTime;
@@ -340,75 +298,32 @@ namespace Sparkipelago {
 		
 		private void setupPrefabs() {
 			GameObject prefabHolder = GameObject.Find("[PREFABS HOLDER]");
-			prefabHolder.transform.GetChild(0).gameObject.SetActive(true);
-			prefabHolder.transform.GetChild(9).gameObject.SetActive(true);
-			prefabHolder.transform.GetChild(12).gameObject.SetActive(true); // Should be AbyssPrefabs
-			Transform bossXfrm = prefabHolder.transform.GetChild(2);
+			for (int i = 0; i < prefabHolder.transform.childCount; i++) {
+				prefabHolder.transform.GetChild(i).gameObject.SetActive(true);
+			}
 			
 			GameObject prefabObject = new GameObject("AP Prefabs");
 			prefabObject.SetActive(false);
 			prefabObject.hideFlags = HideFlags.HideAndDontSave;
+			Traps.collectPrefabs(prefabHolder, prefabObject);
 
 			EnemyRando.setupEnemyRando(prefabHolder, prefabObject);
 			
-			GameObject redPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/RedGhostWorld");
-			GameObject grayPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/GrayGhostWorld");
-			GameObject ragingPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/RagingGhost");
-			GameObject wanderingPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/MinorGhost");
-			GameObject lazerPrefab = GameObject.Find("[PREFABS HOLDER]/[AbyssPrefabs]/LazerFirerer");
-			GameObject flintPrefab = bossXfrm.Find("PowerFlintModel").gameObject;
-			GameObject eCapPrefab = GameObject.Find("[Core prefabs]/EnergyCapsule");
-			GameObject hCapPrefab = GameObject.Find("[Core prefabs]/Capsule");
-			GameObject sCapPrefab = GameObject.Find("[Core prefabs]/Capsule_Score");
-			GameObject eBubPrefab = GameObject.Find("[Core prefabs]/EnergyBubble");
-			GameObject springPrefab = GameObject.Find("[Core prefabs]/SpringTire/SpringRoot");
 			GameObject copterPrefab = GameObject.Find("[PREFABS HOLDER]/[CityPrefabs]/PlayableCopter");
-			
-			GameObject ragingInstance = UnityEngine.Object.Instantiate(ragingPrefab, prefabObject.transform);
-			setupPrefabChildren(ragingInstance, true, null);
-			GameObject wanderingInstance = UnityEngine.Object.Instantiate(wanderingPrefab, prefabObject.transform);
-			setupPrefabChildren(wanderingInstance, true, null);
-			GameObject lazerInstance = UnityEngine.Object.Instantiate(lazerPrefab, prefabObject.transform);
-			setupPrefabChildren(lazerInstance, true, null);
-			
-			redWorld = UnityEngine.Object.Instantiate(redPrefab, prefabObject.transform);
-			setupPrefabChildren(redWorld, true, null);
-			RedWorldSequence redSeq = redWorld.GetComponent<RedWorldSequence>();
-			redSeq.RagingGhost = ragingInstance;
-			redSeq.WanderingGhost = wanderingInstance;
-			
-			grayWorld = UnityEngine.Object.Instantiate(grayPrefab, prefabObject.transform);
-			setupPrefabChildren(grayWorld, true, null);
-			GrayWorldSequence graySeq = grayWorld.GetComponent<GrayWorldSequence>();
-			graySeq.GrayLazer = lazerInstance;
 
-			eBubble = UnityEngine.Object.Instantiate(eBubPrefab, prefabObject.transform);
-			setupPrefabChildren(eBubble, true, null);
-			eCapsule = UnityEngine.Object.Instantiate(eCapPrefab, prefabObject.transform);
-			setupPrefabChildren(eCapsule, true, null);
-			hCapsule = UnityEngine.Object.Instantiate(hCapPrefab, prefabObject.transform);
-			setupPrefabChildren(hCapsule, true, null);
-			sCapsule = UnityEngine.Object.Instantiate(sCapPrefab, prefabObject.transform);
-			setupPrefabChildren(sCapsule, true, null);
-			spring = UnityEngine.Object.Instantiate(springPrefab, prefabObject.transform);
-			setupPrefabChildren(spring, true, null);
-			flint = UnityEngine.Object.Instantiate(flintPrefab, prefabObject.transform);
-			setupPrefabChildren(flint, true, null);
 			copter = UnityEngine.Object.Instantiate(copterPrefab, prefabObject.transform);
 			setupPrefabChildren(copter, true, null);
 		}
 		
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName) {
-			itemTimer = -1;
 			groundTime = 0;
-			flintList.Clear();
 			debugLog("Scene Loaded: {0}", sceneName);
 			currentScene = sceneName;
 			player = GameObject.Find("Player_Fark");
 
 			GameObject canvasGO = null;
 			if (APSave.sparkFont != null) {
-				canvasGO = new GameObject("APCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(StageProprietiesAlterations));
+				canvasGO = new GameObject("APCanvas", typeof(Canvas), typeof(CanvasScaler));
 				Canvas canvas = canvasGO.GetComponent<Canvas>();
 				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 				
@@ -434,39 +349,22 @@ namespace Sparkipelago {
 			}
 
 			if (player != null) {
-				if (canvasGO != null) {
-					gravityTrap = canvasGO.GetComponent<StageProprietiesAlterations>();
-					gravityTrap.Player = player.GetComponent<PlayerBhysics>();
-					gravityTrap.Actions = player.GetComponent<ActionManager>();
-					gravityTrap.UpForce = -1;
-					gravityTrap.ConstantUpForce = false;
-				}
 				float score = APSave.file.client.scoreAmt * itemState[ItemIds.PROGRESSIVE_SCORE];
 				if (score > APSave.file.client.scoreMax) score = APSave.file.client.scoreMax;
 				ScoreManager.Charge = score;
 				Collectibles.onSceneLoad(sceneName);
+				DowndashButtons.createButtons();
 				Options.buildCategories();
-				
-				GameObject fogMesh = GameObject.Find("PlayerObjects/Camera_Objects/Main Camera/FogMeshPlayer");
-				if (fogMesh && redWorld && grayWorld) {
-					playerRed = UnityEngine.Object.Instantiate(redWorld, fogMesh.transform);
-					playerGray = UnityEngine.Object.Instantiate(grayWorld, fogMesh.transform);
-					playerRed.GetComponent<SetParent>().Parent = fogMesh.transform;
-					playerGray.GetComponent<SetParent>().Parent = fogMesh.transform;
-				} else {
-					playerRed = null;
-					playerGray = null;
-				}
+				Traps.onSceneLoad(true);
 			} else {
-				playerRed = null;
-				playerGray = null;
+				Traps.onSceneLoad(false);
 			}
 			
-			if (sceneName == "[LOGO]" && redWorld == null && grayWorld == null) {
+			if (sceneName == "[LOGO]" && !Traps.initialized) {
 				SceneManager.LoadScene("[STAGE 0X - LEVEL TEMPLATE]");
 			}
 			
-			if (sceneName == "[STAGE 0X - LEVEL TEMPLATE]" && redWorld == null && grayWorld == null) {
+			if (sceneName == "[STAGE 0X - LEVEL TEMPLATE]" && !Traps.initialized) {
 				setupPrefabs();
 				SceneManager.LoadScene("[LOGO]");
 			}

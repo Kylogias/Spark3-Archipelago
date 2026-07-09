@@ -1,5 +1,5 @@
 {
-	"version": 15,
+	"version": 16,
 	"min_version": 14,
 	"difficulties": ["base", "hard", "expert"],
 	"items": [
@@ -158,7 +158,8 @@
 				{"name": "Diamond Score Medal", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": ""}
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
-				{"name": "Bit Bubble #1", "index": 10, "sanity": "bubble", "requires": ""}
+				{"name": "Bit Bubble #1", "index": 10, "sanity": "bubble", "requires": ""},
+				{"name": "Downdash Button #1", "sanity": "downdash", "pos": [168.9133, 159.436, -6331.278], "requires": ""}
 			]},
 			{"name": "Above Start", "entrances": {"Start": "dj|cd|sf", "Road #1 Right Neighborhood Middle": ""}, "checks": [
 				{"name": "Bit Bubble #2", "index": 18, "sanity": "bubble", "requires": ""},

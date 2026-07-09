@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Sparkipelago {
 	public struct APStageCheck {
@@ -6,12 +7,22 @@ namespace Sparkipelago {
 		public string sanity;
 		public long id;
 		public int index;
+		public Vector3 pos;
 		
 		public APStageCheck(string n, string s, long i, int idx) {
 			name = n;
 			sanity = s;
 			id = i;
 			index = idx;
+			pos = Vector3.zero;
+		}
+		
+		public APStageCheck(string n, string s, long i, int idx, Vector3 p) {
+			name = n;
+			sanity = s;
+			id = i;
+			index = idx;
+			pos = p;
 		}
 	}
 	

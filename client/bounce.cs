@@ -38,6 +38,7 @@ namespace Sparkipelago {
 		public static void trySendTrap(ItemIds trap) {
 			string trapName = "";
 			if (ITEM_TO_TRAP.ContainsKey(trap)) trapName = ITEM_TO_TRAP[trap];
+			else return;
 			if (APSave.file.client.trapLink && Sparkipelago.currentSession != null) {
 				Sparkipelago.currentSession.Socket.SendPacketAsync(new BouncePacket {
 					Tags = new List<string>{"TrapLink"},
@@ -115,7 +116,7 @@ namespace Sparkipelago {
 								} else {
 									sb.Append(" (ignored)");
 								}
-								Sparkipelago.prioItemQueue.Enqueue(trapItem);
+								Traps.prioItemQueue.Enqueue(trapItem);
 								Sparkipelago.messages.Enqueue(sb.ToString());
 							}
 						}

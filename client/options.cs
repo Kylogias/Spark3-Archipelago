@@ -144,6 +144,24 @@ namespace Sparkipelago {
 			}
 		}
 
+		public class ButtonIten : ListIten {
+			public delegate void OnPress();
+			
+			public OnPress onPress;
+			
+			public ButtonIten(TutorialCategory cat, string name, string desc, OnPress press) {
+				setup(name, desc, cat, templateInput1);
+				InputIcon icon1 = component.gameObject.transform.GetChild(0).gameObject.GetComponent<InputIcon>();
+				icon1.Button = InputDevice.ControllerButton.FaceBotton;
+				icon1.ChangeIcon();
+				onPress = press;
+			}
+
+			public override void onToggle() {
+				onPress();
+			}
+		}
+
 		public class DpadPowerIten : ListIten {
 			struct PowerDesc {
 				public string name;
@@ -331,6 +349,7 @@ namespace Sparkipelago {
 					(double newV) => {PlayerHealthAndStats.Energy = (float)newV; return ((float)newV).ToString();},
 					() => {return PlayerHealthAndStats.Energy;}
 				);
+				new ButtonIten(lab, "Add Downdash Button", "", () => {DowndashButtons.addDowndashButton();});
 				new BoolIten(lab, "Destroy Labbed Checks", "", (bool newV) => {APSave.file.client.labmodeDestroy = newV; return newV.ToString();}, () => { return APSave.file.client.labmodeDestroy; });
 				new BoolIten(lab, "Track Checkpoints", "", (bool newV) => {APSave.file.client.labTrackCheckpoint = newV; return newV.ToString();}, () => {return APSave.file.client.labTrackCheckpoint;});
 				new BoolIten(lab, "Track Bubbles", "", (bool newV) => {APSave.file.client.labTrackBubble = newV; return newV.ToString();}, () => {return APSave.file.client.labTrackBubble;});

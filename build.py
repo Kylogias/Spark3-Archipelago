@@ -58,13 +58,14 @@ for macro in shared["rule_macros"]:
 			print(f"RULE CONFLICT: Macro {macro['rule']} and {rules[rule]}")
 	rules[macro['rule']] = f"Macro {macro['rule']}"
 
-curID = 16295300000
+LOCATION_BASE = 16295300000
+curID = LOCATION_BASE
 for shop in shared["shop"]:
 	shop["id"] = curID
 	location_name_to_id[f"Shop {shop['page']} {shop['name']}"] = curID
 	curID += 1
 
-sanity_priority = ["base", "speedgold", "speeddia", "scoregold", "scoredia", "explore", "hunt", "coin", "battery", "checkpoint"]
+sanity_priority = ["base", "speedgold", "speeddia", "scoregold", "scoredia", "explore", "hunt", "coin", "battery", "checkpoint", "downdash", "ddhard"]
 sanities = {}
 for sanity in sanity_priority:
 	sanities[sanity] = []
@@ -134,18 +135,28 @@ for stage in shared["stages"]:
 				region["checks"].append(check)
 		sanities["hunt"].append([stage, check])
 	
-
+ddidx = {}
+ddoff = 100000
+ddcount = 1000
 for sanity in sanity_priority:
 	for location in sanities[sanity]:
 		stage = location[0]
 		check = location[1]
+		if not stage["name"] in ddidx:
+			ddidx[stage["name"]] = []
 		check["id"] = curID
 		if isinstance(check["requires"], str):
 			check["requires"] = {"base": check["requires"]}
 		location_name_to_id[f"{stage['name']} {check['name']}"] = curID
 		if not "index" in check:
-			check["index"] = -1;
-		curID += 1
+			if check["sanity"] in ["downdash", "ddhard"]:
+				check["index"] = len(ddidx[stage["name"]])
+				check["id"] = LOCATION_BASE + ddoff + ddcount*stage["id"] + check["index"]
+				ddidx[stage["name"]].append(check)
+			else:
+				check["index"] = -1;
+		if not check["sanity"] in ["downdash", "ddhard"]:
+			curID += 1
 
 with open("logicshared.py", "w") as aplogic:
 	aplogic.write("shared = ")
@@ -203,8 +214,10 @@ with open("client/apshared.cs", "w") as apcs:
 		apcs.write(f"\t\t\tnew APStageData(\"{stage['name']}\", \"{stage['type']}\", {stage['id']}, new APStageCheck[]")
 		apcs.write("{\n")
 		for check in stage_checks:
-			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\"")
-			apcs.write(f", {check['id']}, {check['index']})")
+			apcs.write(f"\t\t\t\tnew APStageCheck(\"{check['name']}\", \"{check['sanity']}\", {check['id']}, {check['index']}")
+			if "pos" in check:
+				apcs.write(f", new UnityEngine.Vector3({check['pos'][0]}f, {check['pos'][1]}f, {check['pos'][2]}f)")
+			apcs.write(f")")
 			if check != stage_checks[-1]:
 				apcs.write(",")
 			apcs.write("\n")
