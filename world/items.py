@@ -141,7 +141,7 @@ class ItemState:
 				if level[1] == ItemType.LEVEL3:
 					include = True
 				if include:
-					if level[0] == f"{starting_stage} Unlocked":
+					if level[0] == f"{starting_stage} Unlocked" or (level[0] == "Utopia Shelter Unlocked" and world.utopia_start):
 						precollect.append(level[0])
 					else:
 						itempool.append(world.create_item(level[0]))

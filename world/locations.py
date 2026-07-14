@@ -18,7 +18,7 @@ class LocationState:
 		self.ENDLESS_COUNT = 0
 
 		self.SPHERE_ZERO_COUNT = 0
-		self.SPHERE_ZERO_STAGES = ["Cold-Dry Desert", "A.M Village", "Lost Riviera", "Arid Hole", "Roadway Rally", "Squabble Spillway", "Airstrip Madness", "Aviator Highway"]
+		self.SPHERE_ZERO_STAGES = ["Cold-Dry Desert", "A.M Village", "Arid Hole", "Roadway Rally", "Squabble Spillway", "Aviator Highway"]
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11]
 

@@ -126,6 +126,11 @@ class RulesState:
 			utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
 			if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
 			self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
+		if world.progression_mode == 3:
+			utopia_entrance = world.get_entrance(f"World Map to Utopia Shelter")
+			utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
+			if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
+			self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			stage_region = world.location_state.stage_regions[stage_name]

@@ -14,7 +14,7 @@ namespace Sparkipelago {
 		private void OnCollisionEnter(Collision col) {
 			if (col.gameObject.tag != "Player") return;
 			MelonLogger.Msg("Player has entered! Velocity {0}", col.relativeVelocity);
-			if (Sparkipelago.hasItem(ItemIds.DOWN_DASH) && col.relativeVelocity.y < -80) {
+			if (col.relativeVelocity.y < -100) {
 				ddLeft -= 1;
 				if (ddLeft <= 0) {
 					ddLeft = 0;
@@ -34,7 +34,7 @@ namespace Sparkipelago {
 				if (stage.id != stageidx) continue;
 				foreach (APStageCheck check in stage.checks) {
 					if (check.sanity == "downdash" || check.sanity == "ddhard") {
-						createDowndashButton(check.pos, 5, ddCount);
+						createDowndashButton(check.pos, 3, check.index);
 						ddCount += 1;
 					}
 				}
@@ -118,8 +118,8 @@ namespace Sparkipelago {
 		public static void addDowndashButton() {
 			Vector3 pos = Sparkipelago.player.transform.position;
 			ddCount += 1;
-			Sparkipelago.debugLog("{{\"name\": \"Downdash Button #{0}\", \"sanity\": \"downdash\", \"pos\": [{1}, {2}, {3}], \"requires\": \"\"}},", ddCount, pos.x, pos.y, pos.z);
-			createDowndashButton(pos, 5, ddCount-1);
+			Sparkipelago.debugLog("{{\"name\": \"Downdash Button #{0}\", \"sanity\": \"downdash\", \"pos\": [{1}, {2}, {3}], \"requires\": \"dd\"}},", ddCount, pos.x, pos.y, pos.z);
+			createDowndashButton(pos, 3, ddCount-1);
 		}
 	}
 }

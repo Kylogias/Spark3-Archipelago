@@ -36,9 +36,8 @@ namespace Sparkipelago {
 		}
 
 		public static void trySendTrap(ItemIds trap) {
-			string trapName = "";
-			if (ITEM_TO_TRAP.ContainsKey(trap)) trapName = ITEM_TO_TRAP[trap];
-			else return;
+			string trapName = Traps.trapIdToName(trap);
+			if (trapName == "") return;
 			if (APSave.file.client.trapLink && Sparkipelago.currentSession != null) {
 				Sparkipelago.currentSession.Socket.SendPacketAsync(new BouncePacket {
 					Tags = new List<string>{"TrapLink"},
@@ -50,17 +49,6 @@ namespace Sparkipelago {
 				});
 			}
 		}
-		
-		static Dictionary<ItemIds, string> ITEM_TO_TRAP = new Dictionary<ItemIds, string>{
-			{ItemIds.NIGHTMARE_TRAP, "Nightmare Trap"},
-			{ItemIds.LASER_TRAP, "Laser Trap"},
-			{ItemIds.FLINT_TRAP, "Flint Trap"},
-			{ItemIds.SPRING_TRAP, "Spring Trap"},
-			{ItemIds.GRAVITY_TRAP, "Gravity Trap"},
-			{ItemIds.ZOOM_TRAP, "Zoom Trap"},
-			{ItemIds.BALD_TRAP, "Bald Trap"},
-			{ItemIds.DAMAGE_TRAP, "Damage Trap"}
-		};
 		
 		static Dictionary<string, ItemIds> TRAP_TO_ITEM = new Dictionary<string, ItemIds>{
 			{"Nightmare Trap", ItemIds.NIGHTMARE_TRAP},
@@ -93,6 +81,13 @@ namespace Sparkipelago {
 			{"Bonk Trap", ItemIds.DAMAGE_TRAP},
 			{"TNT Trap", ItemIds.DAMAGE_TRAP},
 			{"TNT Barrel Trap", ItemIds.DAMAGE_TRAP},
+			{"Reverse Trap", ItemIds.REVERSE_TRAP},
+			{"Reversal Trap", ItemIds.REVERSE_TRAP},
+			{"Reverse Controls Trap", ItemIds.REVERSE_TRAP},
+			{"Control Ball Trap", ItemIds.REVERSE_TRAP},
+			{"Slow Trap", ItemIds.SLOW_TRAP},
+			{"Slowness Trap", ItemIds.SLOW_TRAP},
+			{"Fast Trap", ItemIds.FAST_TRAP}
 		};
 		
 		private static void HandlePacket(ArchipelagoPacketBase packet) {
@@ -111,11 +106,7 @@ namespace Sparkipelago {
 							MelonLogger.Msg(bounced.Data["trap_name"].ToString());
 							if (TRAP_TO_ITEM.ContainsKey((string)bounced.Data["trap_name"])) {
 								ItemIds trapItem = TRAP_TO_ITEM[(string)bounced.Data["trap_name"]];
-								if (ITEM_TO_TRAP.ContainsKey(trapItem)) {
-									sb.Append(string.Format(" (converted to {0})", ITEM_TO_TRAP[trapItem]));
-								} else {
-									sb.Append(" (ignored)");
-								}
+								sb.Append(string.Format(" (converted to {0})", Traps.trapIdToName(trapItem)));
 								Traps.prioItemQueue.Enqueue(trapItem);
 								Sparkipelago.messages.Enqueue(sb.ToString());
 							}

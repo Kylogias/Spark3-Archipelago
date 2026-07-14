@@ -168,7 +168,6 @@ namespace Sparkipelago {
 			
 			i = 0;
 			foreach (SlotData.Level boss in SlotData.bosses) {
-				MelonLogger.Msg(boss.id.ToString());
 				bossids[i] = boss.id;
 				bossOpen[i] = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[i]
 					&& numComplete >= SlotData.completionReq[i]
@@ -230,10 +229,48 @@ namespace Sparkipelago {
 		}
 
 		public static void levelProgression(LevelData[] levels) {
+			Save.SaveFile save = Save.GetCurrentSave();
+			int numComplete = 0;
+			int numExplore = 0;
+			int numSpeed = 0;
+			int numScore = 0;
+			int i = 0;
+			for (i = 0; i < save.StageCompleted.Length; i++) {
+				if (Locations.isLocationComplete(i, "Completion")) save.StageCompleted[i] = true;
+				if (save.StageCompleted[i]) numComplete++;
+				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed += 1;
+				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed += 1;
+				if (save.ScoreGoldMedals[i] && (SlotData.scoreType & MedalType.GOLD_FLAG) != 0) numScore += 1;
+				if (save.ScoreDiaMedals[i] && (SlotData.scoreType & MedalType.DIAMOND_FLAG) != 0) numScore += 1;
+				if (SlotData.utopiaMedals) {
+					if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+i) && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+i] >= 10) numExplore += 1;
+				} else {
+					if (Save.GetAmmountOfExploreMedalsInSaveFile(save, i) >= 10) numExplore += 1;
+				}
+			}
+			
+			i = 0;
+			foreach (SlotData.Level boss in SlotData.bosses) {
+				if (save.StageCompleted[bossids[i]]) numComplete--;
+				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed -= 1;
+				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed -= 1;
+				if (bossids[i] > 200) save.StageCompleted[bossids[i]] = true;
+				i++;
+			}
+			
 			foreach (LevelData level in levels) {
 				level.gameObject.SetActive(false);
 				if (level.ID == -99) level.gameObject.SetActive(true);
 				if (Sparkipelago.itemState.ContainsKey((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) {
+					if ((ItemIds.BASE_LEVEL_UNLOCK+level.ID) == ItemIds.UTOPIA_SHELTER_UNLOCKED) {
+						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[4]
+							&& numComplete >= SlotData.completionReq[4]
+							&& numExplore >= SlotData.exploreReq
+							&& numSpeed >= SlotData.speedReq[4]
+							&& numScore >= SlotData.scoreReq[4]
+							&& ((save.Power_Fark && save.Power_Sfarx) || !SlotData.requireCharacters)
+						)) continue;
+					}
 					if (Sparkipelago.hasItem((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) level.gameObject.SetActive(true);
 				}
 			}

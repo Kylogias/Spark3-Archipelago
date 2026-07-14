@@ -89,6 +89,8 @@ class Spark3World(World):
 			self.multipliers.append("Progressive Time Stop")
 		for i in range(self.options.progressive_energy.value):
 			self.multipliers.append("Progressive Energy")
+
+		self.utopia_start = self.options.start_with_utopia.value
 		
 		if self.options.spark2_stages:
 			self.spark2 = True

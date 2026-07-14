@@ -89,7 +89,11 @@
 		{"name": "Arid Hole Coin", "itemtype": "COIN", "count": 15},
 		{"name": "Squabble Spillway Coin", "itemtype": "COIN", "count": 15},
 		{"name": "Dropship Daybreak Coin", "itemtype": "COIN", "count": 27},
-
+		
+		{"name": "Reverse Trap", "itemtype": "TRAP"},
+		{"name": "Slow Trap", "itemtype": "TRAP"},
+		{"name": "Fast Trap", "itemtype": "UNIMPLEMENTED"},
+		
 		{"name": "Downtown Dissent Backtrack", "rule": "dpc", "itemtype": "UNIMPLEMENTED"}
 	],
 	"rule_macros": [
@@ -141,12 +145,19 @@
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
 				{"name": "Checkpoint #1", "index": 3, "sanity": "checkpoint", "requires": ""},
+				{"name": "Downdash Button #1", "sanity": "downdash", "pos": [3344.509, 183.9512, 869.373], "requires": "dd"},
+				{"name": "Downdash Button #2", "sanity": "downdash", "pos": [858.7194, 179.7262, 655.0422], "requires": "dd"},
 				{"name": "Checkpoint #2", "index": 2, "sanity": "checkpoint", "requires": ""},
+				{"name": "Downdash Button #3", "sanity": "downdash", "pos": [-1488.413, 301.1265, -1597.435], "requires": "dd"},
+				{"name": "Downdash Button #4", "sanity": "downdash", "pos": [-5231.897, 127.8586, 1749.857], "requires": "dd"},
 				{"name": "Battery #1", "index": 1, "sanity": "battery", "requires": "ca"},
 				{"name": "Battery #2", "index": 2, "sanity": "battery", "requires": "ca"},
 				{"name": "Battery #3", "index": 0, "sanity": "battery", "requires": "ca"},
 				{"name": "Checkpoint #3", "index": 1, "sanity": "checkpoint", "requires": ""},
-				{"name": "Checkpoint #4", "index": 0, "sanity": "checkpoint", "requires": ""}
+				{"name": "Checkpoint #4", "index": 0, "sanity": "checkpoint", "requires": ""},
+				{"name": "Downdash Button #5", "sanity": "downdash", "pos": [-6822.292, 152.0563, -3075.464], "requires": "dd"},
+				{"name": "Downdash Button #6", "sanity": "downdash", "pos": [-7070.25, 360.2435, -2907.617], "requires": "dd+(cd|da)"},
+				{"name": "Downdash Button #7", "sanity": "downdash", "pos": [-7125.973, 360.2435, -3233.173], "requires": "dd+(cd|da)"}
 			]}
 		]},
 		{"name": "Doublemoon Villa", "id": 1, "type": "stage", "regions": [
@@ -159,9 +170,9 @@
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
 				{"name": "Bit Bubble #1", "index": 10, "sanity": "bubble", "requires": ""},
-				{"name": "Downdash Button #1", "sanity": "downdash", "pos": [168.9133, 159.436, -6331.278], "requires": ""}
+				{"name": "Downdash Button #1", "sanity": "downdash", "pos": [168.9133, 159.436, -6331.278], "requires": "dd"}
 			]},
-			{"name": "Above Start", "entrances": {"Start": "dj|cd|sf", "Road #1 Right Neighborhood Middle": ""}, "checks": [
+			{"name": "Above Start", "entrances": {"Start": {"base": "dj", "hard": "dj|cd|sf|da", "expert": "dj|cd|sf|da"}, "Road #1 Right Neighborhood Middle": ""}, "checks": [
 				{"name": "Bit Bubble #2", "index": 18, "sanity": "bubble", "requires": ""},
 				{"name": "Bit Bubble #3", "index": 19, "sanity": "bubble", "requires": ""},
 				{"name": "Bit Bubble #4", "index": 20, "sanity": "bubble", "requires": ""},
@@ -187,13 +198,14 @@
 				{"name": "Bit Bubble #8", "index": 23, "sanity": "bubble", "requires": "vtn"},
 				{"name": "Score Capsule #11", "index": 34, "sanity": "capsule", "requires": "vtn"},
 				{"name": "Score Capsule #12", "index": 26, "sanity": "capsule", "requires": "vtn"},
-				{"name": "Bit Bubble #9", "index": 17, "sanity": "bubble", "requires": "sn|jd|cl|(wj+(1c|ed|fl|fa|sf))"}
+				{"name": "Bit Bubble #9", "index": 17, "sanity": "bubble", "requires": "sn|jd|cl|(wj+(1c|ed|fl|fa|sf))"},
+				{"name": "Downdash Button #2", "sanity": "downdash", "pos": [156.7063, 228.6669, -5923.001], "requires": "dd"}
 			]},
 			{"name": "Road #1", "entrances": {"Start": "spr|ww|wj", "Above Start": ""}, "checks": [
 				{"name": "Bit Bubble #10", "index": 98, "sanity": "bubble", "requires": ""},
 				{"name": "Bit Bubble #11", "index": 9, "sanity": "bubble", "requires": ""},
-				{"name": "Checkpoint #1", "index": 9, "sanity": "checkpoint", "requires": ""}
-
+				{"name": "Checkpoint #1", "index": 9, "sanity": "checkpoint", "requires": ""},
+				{"name": "Downdash Button #4", "sanity": "downdash", "pos": [181.6346, 196.4012, -5074.084], "requires": "dd"}
 			]},
 			{"name": "Road #1 Left Neighborhood", "entrances": {"Road #1": ""}, "checks": [
 				{"name": "Score Capsule #13", "index": 14, "sanity": "capsule", "requires": ""},
@@ -213,8 +225,8 @@
 				{"name": "Score Capsule #20", "index": 59, "sanity": "capsule", "requires": ""},
 				{"name": "Energy Capsule #3", "index": 7, "sanity": "capsule", "requires": ""},
 				{"name": "Score Capsule #21", "index": 50, "sanity": "capsule", "requires": ""},
-				{"name": "Score Capsule #22", "index": 55, "sanity": "capsule", "requires": ""}
-
+				{"name": "Score Capsule #22", "index": 55, "sanity": "capsule", "requires": ""},
+				{"name": "Downdash Button #3", "sanity": "downdash", "pos": [374.4999, 218.2673, -5258.715], "requires": "dd"}
 			]},
 			{"name": "Road #1 Right Neighborhood Upper Left", "entrances": {"Road #1 Right Neighborhood Middle": ""}, "checks": [
 				{"name": "Score Capsule #23", "index": 54, "sanity": "capsule", "requires": ""},
@@ -269,8 +281,8 @@
 			]},
 			{"name": "Highway Neighborhood #1", "entrances": {"Road #1": ""}, "checks": [
 				{"name": "Health Capsule #6", "index": 4, "sanity": "capsule", "requires": ""},
-				{"name": "Health Capsule #7", "index": 5, "sanity": "capsule", "requires": ""}
-
+				{"name": "Health Capsule #7", "index": 5, "sanity": "capsule", "requires": ""},
+				{"name": "Downdash Button #5", "sanity": "downdash", "pos": [213.6658, 168.4429, -4418.857], "requires": "dd"}
 			]},
 			{"name": "Stepping Stones Neighborhood", "entrances": {"Highway Neighborhood #1": ""}, "checks": [
 				{"name": "Purple Exploration Medal", "index": 5, "sanity": "explore", "requires": ""},
@@ -278,7 +290,8 @@
 				{"name": "Checkpoint #3", "index": 7, "sanity": "checkpoint", "requires": ""},
 				{"name": "Health Capsule #10", "index": 95, "sanity": "capsule", "requires": ""},
 				{"name": "Energy Capsule #6", "index": 0, "sanity": "capsule", "requires": ""},
-				{"name": "Health Capsule #11", "index": 1, "sanity": "capsule", "requires": ""}
+				{"name": "Health Capsule #11", "index": 1, "sanity": "capsule", "requires": ""},
+				{"name": "Downdash Button #6", "sanity": "downdash", "pos": [242.8031, 336.8483, -3839.114], "requires": "dd"}
 			]},
 			{"name": "Spiral Neighborhood", "entrances": {"Stepping Stones Neighborhood": ""}, "checks": [
 				{"name": "Bit Bubble #25", "index": 38, "sanity": "bubble", "requires": ""},
@@ -371,7 +384,8 @@
 				{"name": "Score Capsule #68", "index": 82, "sanity": "capsule", "requires": ""},
 				{"name": "Energy Capsule #10", "index": 81, "sanity": "capsule", "requires": ""},
 				{"name": "Bit Bubble #47", "index": 1, "sanity": "bubble", "requires": ""},
-				{"name": "Energy Bubble #9", "index": 0, "sanity": "bubble", "requires": "1c|cl|ed|sb|sf|fa|fl"}
+				{"name": "Energy Bubble #9", "index": 0, "sanity": "bubble", "requires": "1c|cl|ed|sb|sf|fa|fl"},
+				{"name": "Downdash Button #7", "sanity": "downdash", "pos": [301.0891, 66.15842, -1013.752], "requires": "dd"}
 			]},
 			{"name": "Neighborhood After Big Highway", "entrances": {"Big Highway": ""}, "checks": [
 				{"name": "Health Capsule #23", "index": 84, "sanity": "capsule", "requires": ""},
@@ -478,7 +492,8 @@
 				{"name": "Score Capsule #85", "index": 156, "sanity": "capsule", "requires": ""},
 				{"name": "Score Capsule #86", "index": 155, "sanity": "capsule", "requires": ""},
 				{"name": "Score Capsule #87", "index": 158, "sanity": "capsule", "requires": ""},
-				{"name": "Bit Bubble #64", "index": 85, "sanity": "bubble", "requires": ""}
+				{"name": "Bit Bubble #64", "index": 85, "sanity": "bubble", "requires": ""},
+				{"name": "Downdash Button #8", "sanity": "downdash", "pos": [-930.287, 553.2223, 2594.495], "requires": "dd"}
 			]},
 			{"name": "End Neighborhood Back Left", "entrances": {"End Neighborhood Left": ""}, "checks": [
 				{"name": "Bit Bubble #81", "index": 81, "sanity": "bubble", "requires": ""},
@@ -517,7 +532,8 @@
 			{"name": "End Canals", "entrances": {"Neighborhood After Big Highway": ""}, "checks": [
 				{"name": "Checkpoint #10", "index": 1, "sanity": "checkpoint", "requires": ""},
 				{"name": "Energy Capsule #18", "index": 135, "sanity": "capsule", "requires": ""},
-				{"name": "Score Capsule #112", "index": 134, "sanity": "capsule", "requires": ""}
+				{"name": "Score Capsule #112", "index": 134, "sanity": "capsule", "requires": ""},
+				{"name": "Downdash Button #9", "sanity": "downdash", "pos": [-623.5878, 363.5085, 4673.855], "requires": "dd"}
 			]}
 		]},
 		{"name": "High-Rise Tracks", "id": 2, "type": "stage", "regions": [
@@ -529,6 +545,7 @@
 				{"name": "Diamond Score Medal", "event_item": "Diamond Score Medal", "sanity": "scoredia", "requires": "co"}
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
+				{"name": "Downdash Button #1", "sanity": "downdash", "pos": [-23.19371, 29.24115, -3189.34], "requires": "dd"},
 				{"name": "Cyan Exploration Medal", "index": 0, "sanity": "explore", "requires": ""},
 				{"name": "Green Exploration Medal", "index": 1, "sanity": "explore", "requires": ""},
 				{"name": "Energy Capsule #1", "index": 9, "sanity": "capsule", "requires": ""},
@@ -558,7 +575,8 @@
 				{"name": "Energy Capsule #3", "index": 0, "sanity": "capsule", "requires": ""},
 				{"name": "Checkpoint #3", "index": 1, "sanity": "checkpoint", "requires": ""},
 				{"name": "Blue Exploration Medal", "index": 6, "sanity": "explore", "requires": ""},
-				{"name": "Bit Bubble #4", "index": 3, "sanity": "bubble", "requires": ""}
+				{"name": "Bit Bubble #4", "index": 3, "sanity": "bubble", "requires": ""},
+				{"name": "Downdash Button #2", "sanity": "downdash", "pos": [-13.06203, 35.1115, 1881.999], "requires": "dd"}
 			]}
 		]},
 		{"name": "Cold-Dry Desert", "id": 3, "type": "stage", "regions": [
@@ -634,7 +652,13 @@
 				{"name": "Bit Bubble #14", "index": 16, "sanity": "bubble", "requires": ""},
 				{"name": "Bit Bubble #15", "index": 3, "sanity": "bubble", "requires": ""},
 				{"name": "Bit Bubble #16", "index": 20, "sanity": "bubble", "requires": ""},
-				{"name": "Bit Bubble #17", "index": 11, "sanity": "bubble", "requires": "vtn|(spr+(cd|ed))"}
+				{"name": "Bit Bubble #17", "index": 11, "sanity": "bubble", "requires": "vtn|(spr+(cd|ed))"},
+				
+				{"name": "Downdash Button #1", "sanity": "downdash", "pos": [2871.216, 85.0686, -264.9258], "requires": "dd"},
+				{"name": "Downdash Button #2", "sanity": "downdash", "pos": [-2081.391, 85.06859, -265.5053], "requires": "dd"},
+				{"name": "Downdash Button #3", "sanity": "downdash", "pos": [70.04778, 143.5038, -49.53001], "requires": "dd"},
+				{"name": "Downdash Button #4", "sanity": "downdash", "pos": [218.8894, 153.0026, 39.29726], "requires": "dd"},
+				{"name": "Downdash Button #5", "sanity": "downdash", "pos": [397.461, 161.49, -670.4442], "requires": "dd"}
 			]}
 		]},
 		{"name": "Lost Riviera", "id": 5, "type": "stage", "regions": [
@@ -1839,7 +1863,9 @@
 				{"name": "Health Capsule #8", "index": 44, "sanity": "capsule", "requires": ""},
 				{"name": "Energy Capsule #11", "index": 43, "sanity": "capsule", "requires": ""},
 				{"name": "Checkpoint #5", "index": 1, "sanity": "checkpoint", "requires": ""},
-				{"name": "Purple Exploration Medal", "index": 5, "sanity": "explore", "requires": ""},
+				{"name": "Purple Exploration Medal", "index": 5, "sanity": "explore", "requires": ""}
+			]},
+			{"name": "1", "entrances": {"Start": {"base": "spe|fa|da|cd|ed|cl|wj|ww", "hard": "", "expert": ""}}, "checks": [
 				{"name": "Checkpoint #6", "index": 6, "sanity": "checkpoint", "requires": ""},
 				{"name": "Bit Bubble #18", "index": 29, "sanity": "bubble", "requires": ""},
 				{"name": "Energy Bubble #6", "index": 28, "sanity": "bubble", "requires": ""},
@@ -2446,7 +2472,7 @@
 				{"name": "Health Capsule #15", "index": 4, "sanity": "capsule", "requires": ""},
 				{"name": "Health Capsule #16", "index": 0, "sanity": "capsule", "requires": ""},
 				{"name": "Bit Bubble #24", "index": 7, "sanity": "bubble", "requires": ""},
-				{"name": "Blue Exploration Medal", "index": 6, "sanity": "explore", "requires": ""},
+				{"name": "Blue Exploration Medal", "index": 6, "sanity": "explore", "requires": {"base": "cd|da|ed", "hard": "", "expert": ""}},
 				{"name": "Bit Bubble #25", "index": 15, "sanity": "bubble", "requires": ""},
 				{"name": "Bit Bubble #26", "index": 16, "sanity": "bubble", "requires": ""},
 				{"name": "Bit Bubble #27", "index": 17, "sanity": "bubble", "requires": ""},
@@ -2941,7 +2967,7 @@
 			]},
 			{"name": "2", "entrances": {"1": "cl|(dr+(1c|fl))"}, "checks": [
 				{"name": "Checkpoint #4", "index": 5, "sanity": "checkpoint", "requires": ""},
-				{"name": "Yellow Exploration Medal", "index": 2, "sanity": "explore", "requires": ""},
+				{"name": "Yellow Exploration Medal", "index": 2, "sanity": "explore", "requires": {"base": "da", "hard": "", "expert": ""}},
 				{"name": "Checkpoint #5", "index": 4, "sanity": "checkpoint", "requires": ""},
 				{"name": "Checkpoint #6", "index": 3, "sanity": "checkpoint", "requires": ""},
 				{"name": "Red Exploration Medal", "index": 3, "sanity": "explore", "requires": ""},

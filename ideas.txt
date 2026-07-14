@@ -71,9 +71,17 @@ O=Capsule
 B=Bubble
 
 Done:
-	Option for Sphere 0 stages in Gate 0
-	Level Items progression
-	Trap Link
+	Reverse Trap
+	Slow Trap
+	Downdash Buttons (wip)
+	Gating progression options now work with Level Unlocks
+	Zoom Trap is now timed
+	Airstrip Madness is no longer Sphere 0 on Normal
+	Lost Riviera is no longer considered a sphere 0 stage
+		Note: Logic hasn't been updated. The rando just won't consider it for guaranteed completions or starting level
+	Hyperath Fleet Yellow Explore Medal now requires dash on Normal
+	Doublemoon Villa no longer requires Charged Jester Dash or Sfarx to get up top on Normal
+	Floria Plant Blue Explore Medal now requires a dash on Normal
 
 Beta Checklist:
 

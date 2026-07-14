@@ -10,7 +10,7 @@ class Shopsanity(Toggle):
 class Difficulty(Choice):
 	"""
 	How difficult should the logic be
-	WARNING: The only implemented difficulty at the moment is hard! Other difficulties will use hard logic settings
+	WARNING: At the moment the difficulty is all over the place. Ask in the future game design thread if you're having trouble
 
 	normal: The easiest option, designed for those new to the game
 	hard: You will need to be observant of the stage layout and know how to best utilize Spark's movement and simple tech
@@ -146,7 +146,7 @@ class Exploresanity(Toggle):
 
 class Checkpointsanity(Toggle):
 	"""
-	Adds the 237 checkpoints as checks (355 with Spark 2 stages)
+	Adds the 266 checkpoints as checks (355 with Spark 2 stages)
 	"""
 	display_name = "CheckpointSanity"
 
@@ -337,7 +337,7 @@ class GuaranteedCompletions(Range):
 	display_name = "Gate 0 Guaranteed Completions"
 
 	range_start = 0
-	range_end = 8
+	range_end = 7
 
 	default = 2
 
@@ -357,6 +357,13 @@ class ProgressionMode(Choice):
 
 	default = option_gates
 
+class StartWithUtopia(Toggle):
+	"""
+	In Level Item progression, should you start with the Utopia Shelter stage unlocked?
+	You will still need the other requirements to unlock it
+	"""
+	display_name = "Start with Utopia Shelter"
+
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	progression_mode: ProgressionMode
@@ -368,6 +375,8 @@ class Spark3Options(PerGameCommonOptions):
 	spark2_stages: Spark2Stages
 
 	gate_zero_completions: GuaranteedCompletions
+	start_with_utopia: StartWithUtopia
+	
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
 	require_characters: RequireCharacters
@@ -405,8 +414,16 @@ option_groups = [
 		[ProgressionMode, AbilityRando, GimmickRando, Difficulty, EnergyLogic, CharacterLogic, Spark2Stages]
 	),
 	OptionGroup(
-		"Gate Progression Options",
-		[GuaranteedCompletions, FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
+		"Progression Options",
+		[FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
+	),
+	OptionGroup(
+		"Gating Options",
+		[GuaranteedCompletions]
+	),
+	OptionGroup(
+		"Level Item Options",
+		[StartWithUtopia]
 	),
 	OptionGroup(
 		"Extra Checks",
