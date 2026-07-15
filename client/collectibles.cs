@@ -121,7 +121,7 @@ namespace Sparkipelago {
 					if (getLayer) layers |= 1 << parent.layer;
 					if (Locations.hasLocationByIndex(stage, sanity, comps.Count) || SlotData.labMode) {
 						Vector3 start = Vector3.zero, end = Vector3.zero;
-						if (sanity == "bubble" || sanity == "explore") {start = new Vector3(0, 2, 0); end = new Vector3(0, 1.25f, 0);}
+						if (sanity == "bubble" || sanity == "explore" || sanity == "downdash" || sanity == "ddhard") {start = new Vector3(0, 2, 0); end = new Vector3(0, 1.25f, 0);}
 						if (sanity == "capsule") {start = new Vector3(0, 6, 0); end = new Vector3(0, 4, 0);}
 						if (sanity == "checkpoint") {start = Vector3.up*1.25f; end = Vector3.zero;}
 						if (sanity == "coin") {start = new Vector3(0, 1.875f, 0); end = new Vector3(0, 1.25f, 0);}
@@ -250,6 +250,10 @@ namespace Sparkipelago {
 					if (!APSave.file.client.checkpointArrows) sd.go.SetActive(false);
 					else sd.go.SetActive(true);
 				}
+				if (sd.sanity == "downdash" || sd.sanity == "ddhard") {
+					if (!APSave.file.client.ddbuttonArrows) sd.go.SetActive(false);
+					else sd.go.SetActive(true);
+				}
 			}
 			if (trackFixed) {
 				if (trackXfrm != null && trackXfrm.collected) trackXfrm = null;
@@ -272,6 +276,7 @@ namespace Sparkipelago {
 					if (sd.sanity == "explore" && !APSave.file.client.labTrackMedal) continue;
 					if (sd.sanity == "coin" && !APSave.file.client.labTrackCoin) continue;
 					if (sd.sanity == "battery" && !APSave.file.client.labTrackBattery) continue;
+					if (sd.sanity == "downdash" || sd.sanity == "ddhard") continue;
 					Transform xfrm = sd.go.transform;
 					Transform goParent = xfrm.parent.parent; // Parent is the check
 					bool isInactive = false;
@@ -422,6 +427,7 @@ namespace Sparkipelago {
 			bubbles = getAllComponents<MonitorData>(scn, true, "bubble");
 			medals = getAllComponents<WorldMedal>(scn, false, "explore");
 			coins = getAllComponents<CollectableCoin>(scn, false, "coin"); // There's an easier way but shrug
+			getAllComponents<DDButton>(scn, false, "downdash");
 			batteries = getAllWithTag(scn, "Battery", "battery");
 			scout.sendScout();
 			

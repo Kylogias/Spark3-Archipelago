@@ -251,10 +251,10 @@ namespace Sparkipelago {
 			
 			i = 0;
 			foreach (SlotData.Level boss in SlotData.bosses) {
-				if (save.StageCompleted[bossids[i]]) numComplete--;
+				if (save.StageCompleted[boss.id]) numComplete--;
 				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed -= 1;
 				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed -= 1;
-				if (bossids[i] > 200) save.StageCompleted[bossids[i]] = true;
+				if (boss.id > 200) save.StageCompleted[boss.id] = true;
 				i++;
 			}
 			

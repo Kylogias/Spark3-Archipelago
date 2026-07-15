@@ -147,7 +147,6 @@ for sanity in sanity_priority:
 		check["id"] = curID
 		if isinstance(check["requires"], str):
 			check["requires"] = {"base": check["requires"]}
-		location_name_to_id[f"{stage['name']} {check['name']}"] = curID
 		if not "index" in check:
 			if check["sanity"] in ["downdash", "ddhard"]:
 				check["index"] = len(ddidx[stage["name"]])
@@ -157,6 +156,7 @@ for sanity in sanity_priority:
 				check["index"] = -1;
 		if not check["sanity"] in ["downdash", "ddhard"]:
 			curID += 1
+		location_name_to_id[f"{stage['name']} {check['name']}"] = check["id"]
 
 with open("logicshared.py", "w") as aplogic:
 	aplogic.write("shared = ")
@@ -165,7 +165,7 @@ with open("logicshared.py", "w") as aplogic:
 with open("world/apshared.py", "w") as appy:
 	appy.write("from .items import ItemType\n")
 	appy.write("apshared = ")
-	shared_str = json.dumps(shared)
+	shared_str = json.dumps(shared, indent='\t')
 	index = shared_str.find("itemtype")
 	while True:
 		index = shared_str.find("itemtype")
@@ -175,6 +175,11 @@ with open("world/apshared.py", "w") as appy:
 		part = part[2].partition('"')
 		shared_str = "".join([shared_str, part[0], part[2]])
 	appy.write(shared_str)
+	stored_locs = []
+	for loc in location_name_to_id:
+		if location_name_to_id[loc] in stored_locs:
+			print(f"DUPLICATE ID: {location_name_to_id[loc]}")
+		stored_locs.append(location_name_to_id[loc])
 	appy.write("\nlocation_name_to_id = ")
 	appy.write(json.dumps(location_name_to_id))
 	appy.write("\nitem_name_to_id = ")

@@ -50,6 +50,8 @@ class Spark3World(World):
 			self.location_state.sanities.append("battery")
 		if self.options.checkpointsanity:
 			self.location_state.sanities.append("checkpoint")
+		if self.options.downdash_buttons:
+			self.location_state.sanities.append("downdash")
 		if self.options.coinsanity == 2:
 			self.coin_hunt = 1
 		elif self.options.coinsanity == 3:

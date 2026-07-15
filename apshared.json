@@ -1766,7 +1766,7 @@
 			]}
 		]},
 		{"name": "Airstrip Madness", "id": 25, "type": "stage", "regions": [
-			{"name": "Goal", "entrances": {"Start": ""}, "checks": [
+			{"name": "Goal", "entrances": {"1": ""}, "checks": [
 				{"name": "Completion", "event_item": "Level Completion", "sanity": "base", "requires": ""},
 				{"name": "Gold Speed Medal", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
 				{"name": "Diamond Speed Medal", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""},

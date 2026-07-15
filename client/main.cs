@@ -352,8 +352,8 @@ namespace Sparkipelago {
 				float score = APSave.file.client.scoreAmt * itemState[ItemIds.PROGRESSIVE_SCORE];
 				if (score > APSave.file.client.scoreMax) score = APSave.file.client.scoreMax;
 				ScoreManager.Charge = score;
-				Collectibles.onSceneLoad(sceneName);
 				DowndashButtons.createButtons();
+				Collectibles.onSceneLoad(sceneName);
 				Options.buildCategories();
 				Traps.onSceneLoad(true);
 			} else {

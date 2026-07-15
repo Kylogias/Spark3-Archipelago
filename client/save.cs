@@ -105,6 +105,7 @@ namespace Sparkipelago {
 		public bool exploreArrows;
 		public bool coinArrows;
 		public bool batteryArrows;
+		public bool ddbuttonArrows;
 
 		public TrackType trackerMode;
 
@@ -251,8 +252,8 @@ namespace Sparkipelago {
 			);
 			new Options.BoolIten(
 				settings, "Destroy Collectathon Coins", "Should collected blue coins in collectathon stages be destroyed?",
-				(bool newV) => {APSave.file.client.capsuleArrows = newV; return newV.ToString();},
-				() => {return APSave.file.client.capsuleArrows;}
+				(bool newV) => {APSave.file.client.destroyCoins = newV; return newV.ToString();},
+				() => {return APSave.file.client.destroyCoins;}
 			);
 			new Options.BoolIten(
 				settings, "Capsule Check Arrows", "Should there be arrows above capsules denoting progressiveness?",
@@ -283,6 +284,11 @@ namespace Sparkipelago {
 				settings, "Battery Check Arrows", "Should there be arrows above batteries denoting progressiveness?",
 				(bool newV) => {APSave.file.client.batteryArrows = newV; return newV.ToString();},
 				() => {return APSave.file.client.batteryArrows;}
+			);
+			new Options.BoolIten(
+				settings, "Downdash Button Check Arrows", "Should there be arrows above downdash buttons denoting progressiveness?",
+				(bool newV) => {APSave.file.client.ddbuttonArrows = newV; return newV.ToString();},
+				() => {return APSave.file.client.ddbuttonArrows;}
 			);
 		}
 		

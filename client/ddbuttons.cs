@@ -14,11 +14,12 @@ namespace Sparkipelago {
 		private void OnCollisionEnter(Collision col) {
 			if (col.gameObject.tag != "Player") return;
 			MelonLogger.Msg("Player has entered! Velocity {0}", col.relativeVelocity);
-			if (col.relativeVelocity.y < -100) {
+			if (col.relativeVelocity.y < -85) {
 				ddLeft -= 1;
 				if (ddLeft <= 0) {
 					ddLeft = 0;
 					Sparkipelago.debugLog("Sending Check for Downdash Button #{0}!", index);
+					Locations.sendLocationByIndex(Save.CurrentStageIndex, "downdash", index);
 				}
 				gameObject.GetComponent<MeshRenderer>().material.mainTexture = Sparkipelago.ddbtnTextures[ddLeft];
 			}
@@ -118,7 +119,7 @@ namespace Sparkipelago {
 		public static void addDowndashButton() {
 			Vector3 pos = Sparkipelago.player.transform.position;
 			ddCount += 1;
-			Sparkipelago.debugLog("{{\"name\": \"Downdash Button #{0}\", \"sanity\": \"downdash\", \"pos\": [{1}, {2}, {3}], \"requires\": \"dd\"}},", ddCount, pos.x, pos.y, pos.z);
+			Sparkipelago.debugLog("{{\"name\": \"Downdash Button #{0}\", \"sanity\": \"downdash\", \"index\": {4} \"pos\": [{1}, {2}, {3}], \"requires\": \"dd\"}},", ddCount, pos.x, pos.y, pos.z, ddCount-1);
 			createDowndashButton(pos, 3, ddCount-1);
 		}
 	}

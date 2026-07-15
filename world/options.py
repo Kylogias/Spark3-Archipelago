@@ -10,7 +10,8 @@ class Shopsanity(Toggle):
 class Difficulty(Choice):
 	"""
 	How difficult should the logic be
-	WARNING: At the moment the difficulty is all over the place. Ask in the future game design thread if you're having trouble
+	WARNING: At the moment the difficulty is all over the place.
+	If you have a suggestion or a question, please ask in the future game design thread
 
 	normal: The easiest option, designed for those new to the game
 	hard: You will need to be observant of the stage layout and know how to best utilize Spark's movement and simple tech
@@ -364,6 +365,14 @@ class StartWithUtopia(Toggle):
 	"""
 	display_name = "Start with Utopia Shelter"
 
+class DowndashButtons(Toggle):
+	"""
+	By default, Down Dash isn't a very progressive item, only being useful for 1 check
+	This option adds buttons that you need to logically Down Dash onto as locations
+	The exact number may change between releases
+	"""
+	display_name = "Down Dash Buttons"
+
 @dataclass
 class Spark3Options(PerGameCommonOptions):
 	progression_mode: ProgressionMode
@@ -396,6 +405,7 @@ class Spark3Options(PerGameCommonOptions):
 	coinsanity: Coinsanity
 	checkpointsanity: Checkpointsanity
 	batterysanity: Batterysanity
+	downdash_buttons: DowndashButtons
 	endless_dive_checks: EndlessDiveChecks
 
 	combat_moves: CombatMoves
@@ -427,7 +437,7 @@ option_groups = [
 	),
 	OptionGroup(
 		"Extra Checks",
-		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, Checkpointsanity, EndlessDiveChecks]
+		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, Checkpointsanity, DowndashButtons, EndlessDiveChecks]
 	),
 	OptionGroup(
 		"Item Options",
