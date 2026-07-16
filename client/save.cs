@@ -87,6 +87,10 @@ namespace Sparkipelago {
 		public double timeMax;
 		public double energyAmt;
 		public double energyMax;
+		
+		public double trapTime;
+		public int shopMaxBit;
+		public double shopDiscount;
 
 		public bool labmodeDestroy;
 		public bool labTrackCheckpoint;
@@ -121,6 +125,9 @@ namespace Sparkipelago {
 			energyMax = 10;
 			timeAmt = 0.9;
 			timeMax = 0.5;
+			shopMaxBit = 1000;
+			shopDiscount = 0.9;
+			trapTime = 2;
 			labmodeDestroy = true;
 			labTrackCheckpoint = true;
 			labTrackBubble = true;
@@ -238,6 +245,22 @@ namespace Sparkipelago {
 				settings, "Energy Max", "What is the maximum energy per second progressive energy can give", 0, 20, 0.1,
 				(double newV) => {APSave.file.client.energyMax = newV; return newV.ToString();},
 				() => {return APSave.file.client.energyMax;}
+			);
+
+			new Options.RangeIten(
+				settings, "Shop Max Price", "At what price should shop items start getting discounted", 0, 10000, 50,
+				(double newV) => {APSave.file.client.shopMaxBit = (int)newV; return ((int)newV).ToString();},
+				() => {return (double)APSave.file.client.shopMaxBit;}
+			);
+			new Options.RangeIten(
+				settings, "Shop Discount", "What should be the discount for shop items above the max price?", 0, 1, 0.001,
+				(double newV) => {APSave.file.client.shopDiscount = newV; int perc = (int)(newV*100); return string.Format("{0}.{1}%", perc, (int)(newV*1000)-(perc*10));},
+				() => {return APSave.file.client.shopDiscount;}
+			);
+			new Options.RangeIten(
+				settings, "Item Timer", "How often should the in-stage items be collected", 0.1, 20, 0.1,
+				(double newV) => {APSave.file.client.trapTime = newV; return newV.ToString();},
+				() => {return APSave.file.client.trapTime;}
 			);
 			
 			new Options.BoolIten(

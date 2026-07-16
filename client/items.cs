@@ -363,9 +363,7 @@ namespace Sparkipelago {
 		private static class AbyssBoosterPatch {
 			private static bool Prefix(SpeedUpGate __instance, Collider col) {
 				if (col.tag == "Player") {
-					if (__instance.GetComponentInParent<BoostPadData>() != null) {
-						if (!Sparkipelago.hasItem(ItemIds.CAR_BOOST_PADS)) return false;
-					} else if (!Sparkipelago.hasItem(ItemIds.ABYSS_BOOSTERS)) return false;
+					if (!Sparkipelago.hasItem(ItemIds.ABYSS_BOOSTERS)) return false;
 				}
 				return true;
 			}
@@ -398,7 +396,7 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(CarCollectables), "OnTriggerEnter")]
 		private static class BoostPadPatch {
 			private static bool Prefix(Collider col) {
-				if (col.tag == "BoostPad" && !Sparkipelago.hasItem(ItemIds.CAR_BOOST_PADS)) return false;
+				if (col.tag == "BoostPad" && !Sparkipelago.hasItem(ItemIds.ABYSS_BOOSTERS)) return false;
 				return true;
 			}
 		}

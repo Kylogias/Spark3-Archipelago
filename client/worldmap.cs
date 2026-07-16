@@ -321,7 +321,7 @@ namespace Sparkipelago {
 		[HarmonyPatch(typeof(ShopItenDetails), "Start")]
 		private static class ItenBitPatch {
 			private static void Prefix(ShopItenDetails __instance) {
-				if (__instance.BitsCost >= 1000) __instance.BitsCost /= 10;
+				if (__instance.BitsCost >= APSave.file.client.shopMaxBit) __instance.BitsCost = (int)(__instance.BitsCost*(1-APSave.file.client.shopDiscount));
 			}
 		}
 		

@@ -82,7 +82,7 @@
 		{"name": "Abyss Bracers", "rule": "abr", "itemtype": "GIMMICK"},
 		{"name": "Ramps", "rule": "ra", "itemtype": "GIMMICK"},
 		{"name": "Protestors", "rule": "pt", "itemtype": "GIMMICK"},
-		{"name": "Car Boost Pads", "rule": "cb", "itemtype": "GIMMICK"},
+		{"name": "Removed 1", "itemtype": "UNIMPLEMENTED"},
 		{"name": "Abyss Boosters", "rule": "abo", "itemtype": "GIMMICK"},
 		
 		{"name": "A.M Village Coin", "itemtype": "COIN", "count": 15},

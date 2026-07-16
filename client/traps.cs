@@ -496,7 +496,7 @@ namespace Sparkipelago {
 		public static List<TrapBase> queuedDelete;
 		public static Queue<ItemIds> itemQueue;
 		public static Queue<ItemIds> prioItemQueue;
-		static float itemTimer;
+		static double itemTimer;
 		public static bool initialized = false;
 		static Type[] trapTypes = {
 			typeof(EnergyBubble),
@@ -557,12 +557,12 @@ namespace Sparkipelago {
 			if (prioItemQueue.Count > 0 && itemTimer < 0) {
 				ItemIds nextTrap = prioItemQueue.Dequeue();
 				trySpawnTrap(nextTrap, true);
-				itemTimer = 2;
+				itemTimer = APSave.file.client.trapTime;
 			}
 			if (itemQueue.Count > 0 && itemTimer < 0) {
 				ItemIds nextTrap = itemQueue.Dequeue();
 				trySpawnTrap(nextTrap, false);
-				itemTimer = 2;
+				itemTimer = APSave.file.client.trapTime;
 			}
 			foreach (TrapBase del in queuedDelete) {
 				activeTraps.Remove(del);

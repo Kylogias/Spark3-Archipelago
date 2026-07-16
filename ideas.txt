@@ -76,6 +76,8 @@ Done:
 	Downdash Buttons (wip)
 	Gating progression options now work with Level Unlocks
 	Zoom Trap is now timed
+	Stage Item timer and Shop Discounts can now be configured
+	Merged Car Boost Pads into Abyss Boosters
 	Airstrip Madness is no longer Sphere 0 on Normal
 	Lost Riviera is no longer considered a sphere 0 stage
 		Note: Logic hasn't been updated. The rando just won't consider it for guaranteed completions or starting level
@@ -86,15 +88,26 @@ Done:
 Beta Checklist:
 
 Stable Checklist:
+Progressive Energy overhaul
 Progression Modes
 	- Gates
 	- Open World
 	- Vanilla Entrance Rando
 	- Levels Items
+Fans (gimmick)
+Combine Trampolines and Protestors (should only be used in Titanic Tower)
+Rail Switching ability
+Rail Crouching ability
 Speed Sanity
 Bubble Sanity
 Capsule Sanity
 Normal Logic
+	Lost Riviera
+	Coin in Dropship Daybreak
+	Titanic Tower start
+	District 5
+	District 6
+	Downtown Dissent
 Expert Logic
 Downdash Buttons
 Freom Check/Goal

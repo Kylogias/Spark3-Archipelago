@@ -72,7 +72,7 @@ namespace Sparkipelago {
 			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Abyss Bracers", ItemIds.ABYSS_BRACERS, "ABYSS_BRACERS", KeyCode.None));
 			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Ramps", ItemIds.RAMPS, "RAMPS", KeyCode.None));
 			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Protestors", ItemIds.PROTESTORS, "PROTESTORS", KeyCode.None));
-			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Car Boost Pads", ItemIds.CAR_BOOST_PADS, "CAR_BOOST_PADS", KeyCode.None));
+			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has (REMOVED GIMMICK)", ItemIds.REMOVED_1, "REMOVED_1", KeyCode.None));
 			movedbg.Add(new MoveDebugPref("AP Gimmicks", "Has Abyss Boosters", ItemIds.ABYSS_BOOSTERS, "ABYSS_BOOSTERS", KeyCode.None));
 		}
 		
