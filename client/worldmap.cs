@@ -111,6 +111,10 @@ namespace Sparkipelago {
 		public static void onMapLoad() {
 			// Randomize Entrances
 			LevelData[] levels = GameObject.Find("Map/Stages").GetComponentsInChildren<LevelData>(true);
+			if (isGoalAvailable()) {
+				Locations.sendLocationCheck(200, "Completion");
+				if (SlotData.goal == GoalType.Reqs && Sparkipelago.hasItem(ItemIds.REQUIREMENTS_UNLOCKED)) Sparkipelago.currentSession.SetGoalAchieved();
+			}
 			
 			switch (SlotData.progressionMode) {
 				case ProgressionType.GATES:
@@ -173,17 +177,12 @@ namespace Sparkipelago {
 				i++;
 			}
 
-			bool avail = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[4]
+			return avail = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[4]
 				&& numComplete >= SlotData.completionReq[4]
 				&& numExplore >= SlotData.exploreReq
 				&& numSpeed >= SlotData.speedReq[4]
 				&& numScore >= SlotData.scoreReq[4]
 				&& ((save.Power_Fark && save.Power_Sfarx) || !SlotData.requireCharacters);
-			if (avail) {
-				Locations.sendLocationCheck(200, "Completion");
-				if (SlotData.goal == GoalType.Reqs && Sparkipelago.hasItem(ItemIds.REQUIREMENTS_UNLOCKED)) Sparkipelago.currentSession.SetGoalAchieved();
-			}
-			return avail;
 		}
 		
 		public static void gateProgression(LevelData[] levels) {
