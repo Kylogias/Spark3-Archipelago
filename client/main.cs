@@ -380,7 +380,8 @@ namespace Sparkipelago {
 			}
 			
 			if (sceneName == "[CUTSCENE 16 - ENDING CUTSCENE]") {
-				currentSession.SetGoalAchieved();
+				if (SlotData.goal == GoalType.Utopia) currentSession.SetGoalAchieved();
+				else Locations.sendLocationCheck(50, "Completion");
 			}
 			
 			if (sceneName == "[CUTSCENE 02 - FLINT CUTSCENE]" || sceneName == "[CUTSCENE 04 - FLINT SECOND CUTSCENE]") {

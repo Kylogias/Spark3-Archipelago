@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle, DefaultOnToggle, NamedRange
+from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle, DefaultOnToggle, NamedRange, OptionSet
+
+from .apshared import apshared
 
 class Shopsanity(Toggle):
 	"""
@@ -147,7 +149,7 @@ class Exploresanity(Toggle):
 
 class Checkpointsanity(Toggle):
 	"""
-	Adds the 266 checkpoints as checks (355 with Spark 2 stages)
+	Adds the 237 checkpoints as checks (326 with Spark 2 stages)
 	"""
 	display_name = "CheckpointSanity"
 
@@ -333,12 +335,12 @@ class CombatMoves(DefaultOnToggle):
 
 class GuaranteedCompletions(Range):
 	"""
-	How many guaranteed completable stages should be in the first gate? Increasing this can help with generation errors
+	How many stages from the Sphere 0 list should be in the first gate? Increasing this can help with generation errors
 	"""
-	display_name = "Gate 0 Guaranteed Completions"
+	display_name = "Gate 0 Count"
 
 	range_start = 0
-	range_end = 7
+	range_end = 100
 
 	default = 2
 
@@ -349,21 +351,62 @@ class ProgressionMode(Choice):
 	Gates: Similar to Sonic Adventure 2 AP, levels are placed in gates with very configurable requirements to move to the next gate
 	Vanilla Entrance Randomizer: The world map is unlocked like in vanilla Spark 3
 	Level Items: You must find levels in the stages in order to progress. Levels are in their vanilla locations
+	Open World: All levels are unlocked from the start, effectively Gates but with only Gate 0
+		- The goal level is the only exception. Progression Options denote the requirements
 	"""
 	display_name = "Progression Mode"
 
 	option_gates = 1
 #	option_vanilla_entrance_randomizer = 2
 	option_level_items = 3
+#	option_open_world = 4
 
 	default = option_gates
 
-class StartWithUtopia(Toggle):
+class StartingLocations(OptionSet):
 	"""
-	In Level Item progression, should you start with the Utopia Shelter stage unlocked?
-	You will still need the other requirements to unlock it
+	Which locations are you guaranteed to start with?
+	If a goal stage is not in this list and has checks/goal, it will be put into the item pool
+	If progression is set to Gates, these locations are guaranteed to always be accessible
 	"""
-	display_name = "Start with Utopia Shelter"
+	display_name = "Starting Locations"
+	valid_keys = [stage['name'] for stage in apshared["stages"]]
+	default = ["Utopia Shelter"]
+
+class SphereZeroList(OptionSet):
+	"""
+	What is the list of stages that may be used for starting level with Level Items or guaranteed gate 0 stages with Gates
+	"""
+	display_name = "Sphere 0 List"
+	valid_keys = [stage['name'] for stage in apshared["stages"]]
+	default = ["Cold-Dry Desert", "A.M Village", "Arid Hole", "Roadway Rally", "Squabble Spillway", "Aviator Highway"]
+
+class GoalLocation(Choice):
+	"""
+	What should the goal stage be? Goals are in their vanilla locations
+	Utopia Shelter: Defeat the final boss within Utopia Shelter to goal
+	Freom Mk-0: Defeat the secret Freom boss to goal
+	Requirements Only: Goal automatically sends upon meeting the progression requirements and going to the World Map
+	"""
+	display_name = "Goal Location"
+
+	option_utopia_shelter = 0
+	option_freom_mk0 = 1
+	option_requirements_only = 2
+
+	default = option_utopia_shelter
+
+class GoalChecks(OptionSet):
+	"""
+	Which goal locations should have checks inside them? If the current goal location is included, the completion checks will not be randomized
+	The unlock requirements for each of these is the level item
+	Utopia Shelter contains
+		- 29 checkpoints
+	"Requirements" sends a completion check when the "Requirements Only" goal would otherwise be reached
+	"""
+	display_name = "Goal Checks"
+	valid_keys = ["Utopia Shelter", "Freom Mk-0", "Requirements"]
+	default = []
 
 class DowndashButtons(Toggle):
 	"""
@@ -375,6 +418,7 @@ class DowndashButtons(Toggle):
 
 @dataclass
 class Spark3Options(PerGameCommonOptions):
+	goal_location: GoalLocation
 	progression_mode: ProgressionMode
 	ability_rando: AbilityRando
 	gimmick_rando: GimmickRando
@@ -383,8 +427,9 @@ class Spark3Options(PerGameCommonOptions):
 	difficulty: Difficulty
 	spark2_stages: Spark2Stages
 
+	sphere_zero_list: SphereZeroList
 	gate_zero_completions: GuaranteedCompletions
-	start_with_utopia: StartWithUtopia
+	starting_stages: StartingLocations
 	
 	freedom_count: FreedomCount
 	freedom_required: FreedomRequired
@@ -406,6 +451,7 @@ class Spark3Options(PerGameCommonOptions):
 	checkpointsanity: Checkpointsanity
 	batterysanity: Batterysanity
 	downdash_buttons: DowndashButtons
+	goal_checks: GoalChecks
 	endless_dive_checks: EndlessDiveChecks
 
 	combat_moves: CombatMoves
@@ -421,23 +467,19 @@ class Spark3Options(PerGameCommonOptions):
 option_groups = [
 	OptionGroup(
 		"Basic Options",
-		[ProgressionMode, AbilityRando, GimmickRando, Difficulty, EnergyLogic, CharacterLogic, Spark2Stages]
+		[GoalLocation, ProgressionMode, AbilityRando, GimmickRando, Difficulty, EnergyLogic, CharacterLogic, Spark2Stages, StartingLocations]
 	),
 	OptionGroup(
 		"Progression Options",
-		[FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
+		[SphereZeroList, FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
 	),
 	OptionGroup(
 		"Gating Options",
 		[GuaranteedCompletions]
 	),
 	OptionGroup(
-		"Level Item Options",
-		[StartWithUtopia]
-	),
-	OptionGroup(
 		"Extra Checks",
-		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, Checkpointsanity, DowndashButtons, EndlessDiveChecks]
+		[ExploreHunt, Exploresanity, Scoresanity, Speedsanity, Shopsanity, Coinsanity, Batterysanity, Checkpointsanity, DowndashButtons, GoalChecks, EndlessDiveChecks]
 	),
 	OptionGroup(
 		"Item Options",

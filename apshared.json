@@ -1,6 +1,6 @@
 {
-	"version": 16,
-	"min_version": 14,
+	"version": 17,
+	"min_version": 17,
 	"difficulties": ["base", "hard", "expert"],
 	"items": [
 		{"name": "Freedom Medal", "itemtype": "FREEDOM"},
@@ -82,7 +82,7 @@
 		{"name": "Abyss Bracers", "rule": "abr", "itemtype": "GIMMICK"},
 		{"name": "Ramps", "rule": "ra", "itemtype": "GIMMICK"},
 		{"name": "Protestors", "rule": "pt", "itemtype": "GIMMICK"},
-		{"name": "Removed 1", "itemtype": "UNIMPLEMENTED"},
+		{"name": "Fans", "itemtype": "UNIMPLEMENTED"},
 		{"name": "Abyss Boosters", "rule": "abo", "itemtype": "GIMMICK"},
 		
 		{"name": "A.M Village Coin", "itemtype": "COIN", "count": 15},
@@ -2057,8 +2057,8 @@
 		{"name": "Aviator Highway", "id": 31, "type": "stage", "regions": [
 			{"name": "Goal", "entrances": {"Start": ""}, "checks": [
 				{"name": "Completion", "event_item": "Level Completion", "sanity": "base", "requires": ""},
-				{"name": "Gold Speed Medal", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": "cb"},
-				{"name": "Diamond Speed Medal", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": "cb+js"}
+				{"name": "Gold Speed Medal", "event_item": "Gold Speed Medal", "sanity": "speedgold", "requires": ""},
+				{"name": "Diamond Speed Medal", "event_item": "Diamond Speed Medal", "sanity": "speeddia", "requires": ""}
 			]},
 			{"name": "Start", "entrances": {}, "checks": [
 				{"name": "Battery #1", "index": 7, "sanity": "battery", "requires": "ca"},
@@ -3054,7 +3054,7 @@
 			]},
 			{"name": "Start", "entrances": {}, "checks": []}
 		]},
-		{"name": "Utopia Shelter", "id": 50, "type": "utopia", "regions": [
+		{"name": "Utopia Shelter", "id": 50, "type": "goal", "regions": [
 			{"name": "Goal", "entrances": {"10": ""}, "checks": [
 				{"name": "Completion", "sanity": "base", "requires": ""}
 			]},
@@ -3110,6 +3110,18 @@
 				{"name": "Checkpoint #28", "index": 26, "sanity": "checkpoint", "requires": ""},
 				{"name": "Checkpoint #29", "index": 28, "sanity": "checkpoint", "requires": ""}
 			]}
+		]},
+		{"name": "Freom Mk-0", "id": 156, "type": "goal", "regions": [
+			{"name": "Goal", "entrances": {"Start": "co+pa+(cd|da|spe)"}, "checks": [
+				{"name": "Completion", "sanity": "base", "requires": ""}
+			]},
+			{"name": "Start", "entrances": {}, "checks": []}
+		]},
+		{"name": "Requirements", "id": 200, "type": "goal", "regions": [
+			{"name": "Goal", "entrances": {"Start": ""}, "checks": [
+				{"name": "Completion", "sanity": "base", "requires": ""}
+			]},
+			{"name": "Start", "entrances": {}, "checks": []}
 		]}
 	]
 }

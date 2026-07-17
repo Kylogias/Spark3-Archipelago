@@ -139,8 +139,52 @@ namespace Sparkipelago {
 			UnityEngine.UI.Text fplabel = GameObject.Find("UI/WorldMapInfo/Fp/FpText").GetComponent<UnityEngine.UI.Text>();
 			fplabel.text = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL].ToString();
 		}
+		
+		public static bool isGoalAvailable() {
+			Save.SaveFile save = Save.GetCurrentSave();
+			int numComplete = 0;
+			int numExplore = 0;
+			int numSpeed = 0;
+			int numScore = 0;
+			int i = 0;
+			for (i = 0; i < save.StageCompleted.Length; i++) {
+				if (Locations.isLocationComplete(i, "Completion")) save.StageCompleted[i] = true;
+				if (save.StageCompleted[i]) numComplete++;
+				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed += 1;
+				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed += 1;
+				if (save.ScoreGoldMedals[i] && (SlotData.scoreType & MedalType.GOLD_FLAG) != 0) numScore += 1;
+				if (save.ScoreDiaMedals[i] && (SlotData.scoreType & MedalType.DIAMOND_FLAG) != 0) numScore += 1;
+				if (SlotData.utopiaMedals) {
+					if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+i) && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+i] >= 10) numExplore += 1;
+				} else {
+					if (Save.GetAmmountOfExploreMedalsInSaveFile(save, i) >= 10) numExplore += 1;
+				}
+			}
+			
+			i = 0;
+			foreach (SlotData.Level boss in SlotData.bosses) {
+				if (save.StageCompleted[boss.id]) numComplete--;
+				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed -= 1;
+				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed -= 1;
+				if (boss.id > 200) save.StageCompleted[boss.id] = true;
+				i++;
+			}
 
+			bool avail = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[4]
+				&& numComplete >= SlotData.completionReq[4]
+				&& numExplore >= SlotData.exploreReq
+				&& numSpeed >= SlotData.speedReq[4]
+				&& numScore >= SlotData.scoreReq[4]
+				&& ((save.Power_Fark && save.Power_Sfarx) || !SlotData.requireCharacters);
+			if (avail && SlotData.goal == GoalType.Reqs) {
+				Locations.sendLocationCheck(200, "Completion");
+				Sparkipelago.currentSession.SetGoalAchieved();
+			}
+			return avail;
+		}
+		
 		public static void gateProgression(LevelData[] levels) {
+			levelProgression(levels);
 			int[] bossids = {9, 24, 37, 38};
 			bool[] bossUnlocked = {false, false, false, false};
 			bool[] bossOpen = {false, false, false, false};
@@ -206,13 +250,7 @@ namespace Sparkipelago {
 					if (i > 0 && i < SlotData.gates.Count()-1) {
 						if (!force && !bossUnlocked[i-1]) {i++; continue;}
 					} else if (i == SlotData.gates.Count()-1) {
-						if (!force && !(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[i-1]
-							&& numComplete >= SlotData.completionReq[i-1]
-							&& numExplore >= SlotData.exploreReq
-							&& numSpeed >= SlotData.speedReq[i-1]
-							&& numScore >= SlotData.scoreReq[i-1]
-							&& ((save.Power_Fark && save.Power_Sfarx) || !SlotData.requireCharacters)
-						)) {i++; continue;}
+						if (!force && !isGoalAvailable()) {i++; continue;}
 					}
 					foreach (SlotData.Level lvlinfo in gate) {
 						if (placeStage(lvlinfo, level)) unlocked = true;
@@ -222,54 +260,18 @@ namespace Sparkipelago {
 				
 				if (unlocked) {
 					level.gameObject.SetActive(true);
-				} else {
-					level.gameObject.SetActive(false);
 				}
 			}
 		}
 
 		public static void levelProgression(LevelData[] levels) {
-			Save.SaveFile save = Save.GetCurrentSave();
-			int numComplete = 0;
-			int numExplore = 0;
-			int numSpeed = 0;
-			int numScore = 0;
-			int i = 0;
-			for (i = 0; i < save.StageCompleted.Length; i++) {
-				if (Locations.isLocationComplete(i, "Completion")) save.StageCompleted[i] = true;
-				if (save.StageCompleted[i]) numComplete++;
-				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed += 1;
-				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed += 1;
-				if (save.ScoreGoldMedals[i] && (SlotData.scoreType & MedalType.GOLD_FLAG) != 0) numScore += 1;
-				if (save.ScoreDiaMedals[i] && (SlotData.scoreType & MedalType.DIAMOND_FLAG) != 0) numScore += 1;
-				if (SlotData.utopiaMedals) {
-					if (Sparkipelago.itemState.ContainsKey(ItemIds.BASE_EXPLORE_MEDAL+i) && Sparkipelago.itemState[ItemIds.BASE_EXPLORE_MEDAL+i] >= 10) numExplore += 1;
-				} else {
-					if (Save.GetAmmountOfExploreMedalsInSaveFile(save, i) >= 10) numExplore += 1;
-				}
-			}
-			
-			i = 0;
-			foreach (SlotData.Level boss in SlotData.bosses) {
-				if (save.StageCompleted[boss.id]) numComplete--;
-				if (save.SpeedGoldMedals[i] && (SlotData.speedType & MedalType.GOLD_FLAG) != 0) numSpeed -= 1;
-				if (save.SpeedDiaMedals[i] && (SlotData.speedType & MedalType.DIAMOND_FLAG) != 0) numSpeed -= 1;
-				if (boss.id > 200) save.StageCompleted[boss.id] = true;
-				i++;
-			}
-			
 			foreach (LevelData level in levels) {
 				level.gameObject.SetActive(false);
 				if (level.ID == -99) level.gameObject.SetActive(true);
 				if (Sparkipelago.itemState.ContainsKey((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) {
-					if ((ItemIds.BASE_LEVEL_UNLOCK+level.ID) == ItemIds.UTOPIA_SHELTER_UNLOCKED) {
-						if (!(Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[4]
-							&& numComplete >= SlotData.completionReq[4]
-							&& numExplore >= SlotData.exploreReq
-							&& numSpeed >= SlotData.speedReq[4]
-							&& numScore >= SlotData.scoreReq[4]
-							&& ((save.Power_Fark && save.Power_Sfarx) || !SlotData.requireCharacters)
-						)) continue;
+					if (!isGoalAvailable()) {
+						if ((ItemIds.BASE_LEVEL_UNLOCK+level.ID) == ItemIds.UTOPIA_SHELTER_UNLOCKED && SlotData.goal == GoalType.Utopia) continue;
+						if ((ItemIds.BASE_LEVEL_UNLOCK+level.ID) == ItemIds.FREOM_MK0_UNLOCKED && SlotData.goal == GoalType.Freom) continue;
 					}
 					if (Sparkipelago.hasItem((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) level.gameObject.SetActive(true);
 				}

@@ -19,6 +19,8 @@ class LocationState:
 
 		self.SPHERE_ZERO_COUNT = 0
 		self.SPHERE_ZERO_STAGES = ["Cold-Dry Desert", "A.M Village", "Arid Hole", "Roadway Rally", "Squabble Spillway", "Aviator Highway"]
+		self.GOAL_STAGES = ["Utopia Shelter", "Freom Mk-0", "Requirements"]
+		self.GOAL_CHECKS = []
 		
 		self.GATE_STAGE_COUNT = [10, 10, 11, 11, 11]
 
@@ -49,7 +51,7 @@ class LocationState:
 		self.stages = []
 		self.spark2 = []
 		self.bosses = []
-		self.utopia = []
+		self.goals = []
 		self.stage_regions = {}
 	
 		# This data is passed to the client. The 5 lists are each gates
@@ -68,8 +70,8 @@ class LocationState:
 					self.spark2.append(stage)
 				case "boss":
 					self.bosses.append(stage)
-				case "utopia":
-					self.utopia = stage
+				case "goal":
+					self.goals.append(stage)
 		
 		self.PAGES = {"Moves": SHOP_MOVES, "Powers": SHOP_POWERS, "Upgrades": SHOP_UPGRADES, "Characters": SHOP_CHARACTERS}
 		for item in apshared["shop"]:
@@ -130,7 +132,8 @@ class LocationState:
 				for loc in region_locs.keys():
 					new_region.add_event(loc, event, location_type=Spark3Location, item_type=Spark3Item)
 			else:
-				new_region.add_locations(region_locs)
+				if stage["type"] != "goal" or stage["name"] in self.GOAL_CHECKS:
+					new_region.add_locations(region_locs)
 			if "event" in region:
 				event_locations.append({"name": "Access", "sanity": "base", "event_item": region["event"]})
 			for event_loc in event_locations:
@@ -241,10 +244,13 @@ class LocationState:
 		for boss in self.bosses:
 			stage_region = self.setup_stage_region(world, boss)
 			self.stage_regions[boss['name']] = [stage_region[0], boss, stage_region[1]]
-		stage_region = self.setup_stage_region(world, self.utopia, event="Victory")
-		self.stage_regions[self.utopia['name']] = [stage_region[0], self.utopia, stage_region[1]]
+		for goal in self.goals:
+			stage_region = self.setup_stage_region(world, goal, event="Victory" if goal["name"] == self.GOAL_STAGES[world.goal_index] else None)
+			self.stage_regions[goal['name']] = [stage_region[0], goal, stage_region[1]]
 		
-			
+		for stage_name in self.stage_regions:
+			stage_region = self.stage_regions[stage_name][0]
+			worldmap.connect(stage_region, f"World Map to {stage_name}", Has(f"{stage_name} Unlocked"))	
 		if (world.progression_mode == 1): self.setup_gates(world, worldmap)
 		if (world.progression_mode == 2): self.setup_gates(world, worldmap)
 		if (world.progression_mode == 3): self.setup_level_unlocks(world, worldmap)
@@ -296,9 +302,6 @@ class LocationState:
 		for i in range(5):
 			total = self.position_stages_in_gate(world, total, gates[i], i)
 		
-		self.add_stage_to_gate(world, gates[0], self.utopia, event="Victory")
-		self.gate_data[5].append([self.utopia["id"], self.UTOPIA_CENTER[0], self.UTOPIA_CENTER[1]])
-		
 		self.spoiler_text += "Boss Order:\n"
 		for i in range(4):
 			self.add_stage_to_gate(world, gates[i+1], self.bosses[i])
@@ -310,6 +313,4 @@ class LocationState:
 			self.boss_data.append([self.bosses[i]["id"], self.BOSS_CENTERS[i][0], self.BOSS_CENTERS[i][1]])
 	
 	def setup_level_unlocks(self, world, worldmap):
-		for stage_name in self.stage_regions:
-			stage_region = self.stage_regions[stage_name][0]
-			worldmap.connect(stage_region, f"World Map to {stage_name}", Has(f"{stage_name} Unlocked"))
+		pass

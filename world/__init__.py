@@ -92,7 +92,10 @@ class Spark3World(World):
 		for i in range(self.options.progressive_energy.value):
 			self.multipliers.append("Progressive Energy")
 
-		self.utopia_start = self.options.start_with_utopia.value
+		self.item_state.STARTING_STAGES = self.options.starting_stages.value
+		self.location_state.SPHERE_ZERO_STAGES = list(self.options.sphere_zero_list.value)
+		self.goal_index = self.options.goal_location.value
+		self.location_state.GOAL_CHECKS = self.options.goal_checks.value
 		
 		if self.options.spark2_stages:
 			self.spark2 = True
@@ -168,6 +171,8 @@ class Spark3World(World):
 			self.explore_hunt = slot_data["explore_hunt"]
 			self.coin_hunt = slot_data["coin_hunt"]
 			self.progression_mode = slot_data["progression_mode"]
+			self.goal_index = slot_data["goal"]
+			self.location_state.GOAL_CHECKS = slot_data["goal_checks"]
 			return
 
 		location_count = 43 + self.location_state.ENDLESS_COUNT
@@ -180,9 +185,16 @@ class Spark3World(World):
 		if self.options.exploresanity: location_count += 300 if self.spark2 else 180
 		if self.options.coinsanity: location_count += 72
 		if self.options.batterysanity: location_count += 13
-		if self.options.checkpointsanity: location_count += 355 if self.spark2 else 237
+		if self.options.checkpointsanity: location_count += 326 if self.spark2 else 237
 		if self.explore_hunt: location_count += 30 if self.spark2 else 18
-
+		
+		if "Utopia Shelter" in self.options.goal_checks:
+			if self.options.checkpointsanity: location_count += 29
+		if "Freom Mk-0" in self.options.goal_checks:
+			pass
+		if "Requirements" in self.options.goal_checks:
+			pass
+		
 		reserved_items = 19 + len(self.multipliers)
 		if self.combat_moves: reserved_items += 8
 		if self.shop_enabled: reserved_items += 4
@@ -243,6 +255,8 @@ class Spark3World(World):
 			"gates": self.location_state.gate_data,
 			"bosses": self.location_state.boss_data,
 			"progression_mode": self.progression_mode,
+			"goal": self.goal_index,
+			"goal_checks": self.location_state.GOAL_CHECKS,
 			"musicseed": self.random.randint(0, 2**31),
 		}
 		return slot_data

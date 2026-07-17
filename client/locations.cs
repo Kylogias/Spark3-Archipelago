@@ -279,6 +279,7 @@ namespace Sparkipelago {
 			MelonLogger.Msg("Send Location For Level " + idx.ToString());
 			sendLocationCheck(idx, "Completion");
 			Save.SaveFile savefile = Save.Saves[Save.CurrentSaveSlot];
+			if (idx == 156 && SlotData.goal == GoalType.Freom) Sparkipelago.currentSession.SetGoalAchieved();
 			if (savefile.SpeedGoldMedals[idx]) {
 				MelonLogger.Msg("Send Gold Speed");
 				sendLocationCheck(idx, "Gold Speed Medal");

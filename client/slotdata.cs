@@ -27,6 +27,12 @@ namespace Sparkipelago {
 		VANILLA_ER = 2,
 		LEVEL = 3
 	}
+
+	public enum GoalType {
+		Utopia = 0,
+		Freom = 1,
+		Reqs = 2
+	}
 	
 	public class SlotData {
 		public struct Level {
@@ -42,6 +48,7 @@ namespace Sparkipelago {
 		
 		public static int version;
 		public static ProgressionType progressionMode;
+		public static GoalType goal;
 		public static int musicSeed;
 		public static int exploreReq;
 		public static int[] freedomReq;
@@ -71,8 +78,8 @@ namespace Sparkipelago {
 		
 		public SlotData(Dictionary<string, object> data) {
 			version = (int)(long)data["version"];
-			if (data.ContainsKey("progression_mode")) progressionMode = (ProgressionType)(long)data["progression_mode"];
-			else progressionMode = ProgressionType.GATES;
+			progressionMode = (ProgressionType)(long)data["progression_mode"];
+			goal = (GoalType)(long)data["goal"];
 			musicSeed = (int)(long)data["musicseed"];
 			exploreReq = (int)(long)data["explore_requirement"];
 			freedomReq = fillReqArray((JArray)data["freedom_requirements"]);

@@ -122,17 +122,13 @@ class RulesState:
 			for i in range(4):
 				gate_entrance = world.get_entrance(f"Gate {i} to Boss")
 				self.set_gate_entrance_rule(world, gate_entrance, i, True_())
-			utopia_entrance = world.get_entrance(f"Entrance to Utopia Shelter")
-			utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
-			if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
-			self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
-		if world.progression_mode == 3:
-			utopia_entrance = world.get_entrance(f"World Map to Utopia Shelter")
-			utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
-			if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
-			self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
+		utopia_entrance = world.get_entrance(f"World Map to {world.location_state.GOAL_STAGES[world.goal_index]}")
+		utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT) & Has(f"{world.location_state.GOAL_STAGES[world.goal_index]} Unlocked")
+		if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
+		self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
 		
 		for stage_name in world.location_state.stage_regions.keys():
+			print(stage_name)
 			stage_region = world.location_state.stage_regions[stage_name]
 			stage_data = stage_region[1]
 			stage_region = stage_region[0]
@@ -151,9 +147,11 @@ class RulesState:
 				
 				for check in region["checks"]:
 					if check["sanity"] in world.location_state.sanities or check["sanity"] in ["explore"] or "event_item" in check:
-						loc = world.get_location(f"{stage_data['name']} {check['name']}")
-						world.set_rule(loc, self.parse_location_rules(world, check['requires']))
-						if check["sanity"] == "hunt" and world.explore_hunt:
-							world.set_rule(loc, Has(f"{stage_name} Explore Medal", count=10))
+						try:
+							loc = world.get_location(f"{stage_data['name']} {check['name']}")
+							world.set_rule(loc, self.parse_location_rules(world, check['requires']))
+							if check["sanity"] == "hunt" and world.explore_hunt:
+								world.set_rule(loc, Has(f"{stage_name} Explore Medal", count=10))
+						except: pass
 
 		world.multiworld.completion_condition[world.player] = lambda state: state.has("Victory", world.player)

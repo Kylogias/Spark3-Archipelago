@@ -37,6 +37,7 @@ class ItemState:
 		self.TRAP_ITEMS = []
 		self.MOVE_ITEMS = []
 		self.PROGRESSION_ITEMS = []
+		self.STARTING_STAGES = []
 		self.FREEDOM_ITEMS = []
 		self.EXPLORE_ITEMS = []
 		self.COIN_ITEMS = []
@@ -141,10 +142,19 @@ class ItemState:
 				if level[1] == ItemType.LEVEL3:
 					include = True
 				if include:
-					if level[0] == f"{starting_stage} Unlocked" or (level[0] == "Utopia Shelter Unlocked" and world.utopia_start):
+					for start in self.STARTING_STAGES:
+						if f"{start} Unlocked" == level[0]:
+							include = False
+					if level[0] == f"{starting_stage} Unlocked" or not include:
 						precollect.append(level[0])
 					else:
 						itempool.append(world.create_item(level[0]))
+		else:
+			for stage in self.STARTING_STAGES:
+				precollect.append(f"{stage} Unlocked")
+			for stage in world.location_state.GOAL_STAGES:
+				if (not f"{stage} Unlocked" in precollect) and (stage == world.location_state.GOAL_STAGES[world.goal_index] or stage in world.location_state.GOAL_CHECKS):
+					itempool.append(world.create_item(f"{stage} Unlocked"))
 		
 		num_items = len(itempool)
 		unfilled_locs = len(world.multiworld.get_unfilled_locations(world.player))

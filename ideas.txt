@@ -74,7 +74,12 @@ Done:
 	Reverse Trap
 	Slow Trap
 	Downdash Buttons (wip)
-	Gating progression options now work with Level Unlocks
+	Added a new goal: Freom Mk-0
+	Added a new goal: simply completing all the requirements to unlock the goal area
+	Gating progression options now always lock the goal area
+	Added an option to pick starting stages
+	Added an option to customize the stages chosen for guaranteed completions and level unlocks
+	Added an option for completing a goal to be a location if the goal isn't active
 	Zoom Trap is now timed
 	Stage Item timer and Shop Discounts can now be configured
 	Merged Car Boost Pads into Abyss Boosters
