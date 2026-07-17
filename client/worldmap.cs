@@ -119,7 +119,10 @@ namespace Sparkipelago {
 				case ProgressionType.VANILLA_ER:
 					break;
 				case ProgressionType.LEVEL:
-					levelProgression(levels);
+					levelProgression(levels, false);
+					break;
+				case ProgressionType.OPEN:
+					levelProgression(levels, true);
 					break;
 				default:
 					foreach (LevelData level in levels) {
@@ -176,15 +179,15 @@ namespace Sparkipelago {
 				&& numSpeed >= SlotData.speedReq[4]
 				&& numScore >= SlotData.scoreReq[4]
 				&& ((save.Power_Fark && save.Power_Sfarx) || !SlotData.requireCharacters);
-			if (avail && SlotData.goal == GoalType.Reqs) {
+			if (avail) {
 				Locations.sendLocationCheck(200, "Completion");
-				Sparkipelago.currentSession.SetGoalAchieved();
+				if (SlotData.goal == GoalType.Reqs && Sparkipelago.hasItem(ItemIds.REQUIREMENTS_UNLOCKED)) Sparkipelago.currentSession.SetGoalAchieved();
 			}
 			return avail;
 		}
 		
 		public static void gateProgression(LevelData[] levels) {
-			levelProgression(levels);
+			levelProgression(levels, false);
 			int[] bossids = {9, 24, 37, 38};
 			bool[] bossUnlocked = {false, false, false, false};
 			bool[] bossOpen = {false, false, false, false};
@@ -264,16 +267,19 @@ namespace Sparkipelago {
 			}
 		}
 
-		public static void levelProgression(LevelData[] levels) {
+		public static void levelProgression(LevelData[] levels, bool openWorld) {
 			foreach (LevelData level in levels) {
 				level.gameObject.SetActive(false);
 				if (level.ID == -99) level.gameObject.SetActive(true);
+				if (Sparkipelago.hasItem(ItemIds.OUT_OF_BOUNDS) && level.ID == 155) level.gameObject.SetActive(true);
 				if (Sparkipelago.itemState.ContainsKey((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) {
 					if (!isGoalAvailable()) {
 						if ((ItemIds.BASE_LEVEL_UNLOCK+level.ID) == ItemIds.UTOPIA_SHELTER_UNLOCKED && SlotData.goal == GoalType.Utopia) continue;
 						if ((ItemIds.BASE_LEVEL_UNLOCK+level.ID) == ItemIds.FREOM_MK0_UNLOCKED && SlotData.goal == GoalType.Freom) continue;
 					}
-					if (Sparkipelago.hasItem((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) level.gameObject.SetActive(true);
+					if ((ItemIds.BASE_LEVEL_UNLOCK+level.ID) == ItemIds.UTOPIA_SHELTER_UNLOCKED && !Sparkipelago.hasItem(ItemIds.UTOPIA_SHELTER_UNLOCKED)) continue;
+					if ((ItemIds.BASE_LEVEL_UNLOCK+level.ID) == ItemIds.FREOM_MK0_UNLOCKED && !Sparkipelago.hasItem(ItemIds.FREOM_MK0_UNLOCKED)) continue;
+					if (openWorld || Sparkipelago.hasItem((ItemIds)(ItemIds.BASE_LEVEL_UNLOCK+level.ID))) level.gameObject.SetActive(true);
 				}
 			}
 		}

@@ -353,13 +353,14 @@ class ProgressionMode(Choice):
 	Level Items: You must find levels in the stages in order to progress. Levels are in their vanilla locations
 	Open World: All levels are unlocked from the start, effectively Gates but with only Gate 0
 		- The goal level is the only exception. Progression Options denote the requirements
+		- Levels are in their vanilla locations
 	"""
 	display_name = "Progression Mode"
 
 	option_gates = 1
 #	option_vanilla_entrance_randomizer = 2
 	option_level_items = 3
-#	option_open_world = 4
+	option_open_world = 4
 
 	default = option_gates
 
@@ -367,11 +368,12 @@ class StartingLocations(OptionSet):
 	"""
 	Which locations are you guaranteed to start with?
 	If a goal stage is not in this list and has checks/goal, it will be put into the item pool
-	If progression is set to Gates, these locations are guaranteed to always be accessible
+	If progression is set to Gates, these locations are guaranteed to always be accessible (with exception to the goal)
+	If the goal is "Requirements Only", you will need the "Requirements Unlocked" item to goal (which this option gives by default)
 	"""
 	display_name = "Starting Locations"
 	valid_keys = [stage['name'] for stage in apshared["stages"]]
-	default = ["Utopia Shelter"]
+	default = ["Utopia Shelter", "Requirements"]
 
 class SphereZeroList(OptionSet):
 	"""
@@ -400,8 +402,10 @@ class GoalChecks(OptionSet):
 	"""
 	Which goal locations should have checks inside them? If the current goal location is included, the completion checks will not be randomized
 	The unlock requirements for each of these is the level item
-	Utopia Shelter contains
+	"Utopia Shelter" contains
 		- 29 checkpoints
+	"Freom Mk-0" contains
+		- no extra checks
 	"Requirements" sends a completion check when the "Requirements Only" goal would otherwise be reached
 	"""
 	display_name = "Goal Checks"

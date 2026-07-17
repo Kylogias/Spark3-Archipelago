@@ -126,6 +126,10 @@ class RulesState:
 		utopia_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT) & Has(f"{world.location_state.GOAL_STAGES[world.goal_index]} Unlocked")
 		if (self.REQUIRE_CHARACTERS): utopia_rule = utopia_rule & Has(FARK) & Has(SFARX)
 		self.set_gate_entrance_rule(world, utopia_entrance, 4, utopia_rule)
+		if world.location_state.GOAL_STAGES[world.goal_index] != "Requirements" and "Requirements" in world.location_state.GOAL_CHECKS:
+			req_rule = Has("Stage Explored", count=self.EXPLORE_REQUIREMENT)
+			if (self.REQUIRE_CHARACTERS): req_rule = req_rule & Has(FARK) & Has(SFARX)
+			self.set_gate_entrance_rule(world, world.get_entrance(f"World Map to Requirements"), 4, utopia_rule)
 		
 		for stage_name in world.location_state.stage_regions.keys():
 			print(stage_name)

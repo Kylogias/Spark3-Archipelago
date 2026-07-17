@@ -74,6 +74,7 @@ Done:
 	Reverse Trap
 	Slow Trap
 	Downdash Buttons (wip)
+	New progression mode: Open World
 	Added a new goal: Freom Mk-0
 	Added a new goal: simply completing all the requirements to unlock the goal area
 	Gating progression options now always lock the goal area
@@ -115,7 +116,6 @@ Normal Logic
 	Downtown Dissent
 Expert Logic
 Downdash Buttons
-Freom Check/Goal
 General Stability
 
 TODO:

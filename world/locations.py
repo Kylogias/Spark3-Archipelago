@@ -254,6 +254,7 @@ class LocationState:
 		if (world.progression_mode == 1): self.setup_gates(world, worldmap)
 		if (world.progression_mode == 2): self.setup_gates(world, worldmap)
 		if (world.progression_mode == 3): self.setup_level_unlocks(world, worldmap)
+		if (world.progression_mode == 4): self.setup_open_world(world, worldmap)
 
 	def setup_gates(self, world, worldmap):
 		gates = [
@@ -314,3 +315,7 @@ class LocationState:
 	
 	def setup_level_unlocks(self, world, worldmap):
 		pass
+
+	def setup_open_world(self, world, worldmap):
+		for stage_name in self.stage_regions:
+			world.set_rule(world.get_entrance(f"World Map to {stage_name}"), True_())

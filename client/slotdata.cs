@@ -25,7 +25,8 @@ namespace Sparkipelago {
 	public enum ProgressionType {
 		GATES = 1,
 		VANILLA_ER = 2,
-		LEVEL = 3
+		LEVEL = 3,
+		OPEN = 4
 	}
 
 	public enum GoalType {
