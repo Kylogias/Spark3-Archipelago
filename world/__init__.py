@@ -127,7 +127,7 @@ class Spark3World(World):
 		self.rules_state.ENERGY_LOGIC = self.options.energy_logic.value
 		self.rules_state.CHARACTER_LOGIC = self.options.character_logic.value
 
-		self.location_state.UTOPIA_HUNT_MEDALS = self.options.utopia_hunt_medals.value
+		self.location_state.UTOPIA_HUNT_MEDALS = False
 		self.rules_state.EXPLORE_REQUIREMENT = int(math.ceil((self.options.required_explore.value*0.01) * (30 if self.spark2 else 18)))
 		
 		self.location_state.SPEED_PERCENT = self.options.required_speed.value * 0.01

@@ -178,7 +178,7 @@ class FreedomCount(Range):
 	display_name = "Freedom Medal Count"
 
 	range_start = 0
-	range_end = 100
+	range_end = 2000
 	
 	default = 0
 
@@ -264,6 +264,8 @@ class RequiredExplore(Range):
 class ExplorePercentIsHunt(Toggle):
 	"""
 	Should the exploration percentage use Explore Hunt medals?
+	WARNING: If this option and "Shuffle Medals" are both ON, YOU WILL BE REQUIRED TO GET THE REQUIRED PERCENT
+	ROUNDING UP OF FULL SETS OF 10 MEDALS (out of 30 with Spark 2 stages, 18 without)
 	"""
 	display_name = "Explore Hunt Medals for Utopia"
 
@@ -444,7 +446,7 @@ class Spark3Options(PerGameCommonOptions):
 	required_score: RequiredScore
 	score_type: ScoreRequiredType
 	required_explore: RequiredExplore
-	utopia_hunt_medals: ExplorePercentIsHunt
+#	utopia_hunt_medals: ExplorePercentIsHunt
 
 	explore_hunt: ExploreHunt
 	exploresanity: Exploresanity
@@ -475,7 +477,7 @@ option_groups = [
 	),
 	OptionGroup(
 		"Progression Options",
-		[SphereZeroList, FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore, ExplorePercentIsHunt]
+		[SphereZeroList, FreedomCount, FreedomRequired, RequireCharacters, RequiredCompletion, RequiredSpeed, SpeedRequiredType, RequiredScore, ScoreRequiredType, RequiredExplore]
 	),
 	OptionGroup(
 		"Gating Options",
