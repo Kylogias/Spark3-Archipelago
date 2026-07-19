@@ -148,6 +148,7 @@ namespace Sparkipelago {
 		}
 		
 		public static bool isGoalAvailable() {
+			if (Sparkipelago.currentSession == null) return false;
 			Save.SaveFile save = Save.GetCurrentSave();
 			int numComplete = 0;
 			int numExplore = 0;

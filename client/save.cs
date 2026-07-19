@@ -356,10 +356,15 @@ namespace Sparkipelago {
 		private static int port;
 		private static string[] columns;
 		private static Text[] textComps;
-		private static Transform[] pivots;
+		private static Image[] pivots;
 		private static GameObject[] infoGO;
+		private static bool colorUp;
+		private static float blinkDark;
 		
 		public static void onSaveSelect() {
+			blinkDark = 1;
+			colorUp = false;
+			
 			isChangingConnection = false;
 			isNewSlot = false;
 			connectRow = 0;
@@ -367,7 +372,7 @@ namespace Sparkipelago {
 
 			columns = new string[6];
 			textComps = new Text[6];
-			pivots = new Transform[6];
+			pivots = new Image[6];
 
 			infoGO = new GameObject[5];
 			for (int i = 0; i < 5; i++) {
@@ -376,9 +381,11 @@ namespace Sparkipelago {
 			}
 			
 			GameObject UIObject = GameObject.Find("UI");
-			connectUI = new GameObject("APConnection");
+			connectUI = new GameObject("APConnection", typeof(VerticalLayoutGroup));
 			connectUI.transform.SetParent(UIObject.transform);
 			connectUI.transform.position = UIObject.transform.position;
+			connectUI.transform.localScale = Vector3.one*0.7f;
+			((RectTransform)connectUI.transform).sizeDelta = ((RectTransform)UIObject.transform).sizeDelta;
 			connectUI.SetActive(false);
 
 			Text versionText = GameObject.Find("UI/VersionNumber").GetComponent<Text>();
@@ -391,52 +398,69 @@ namespace Sparkipelago {
 				cursorTex = GameObject.Find("UI").transform.GetChild(6).GetChild(0).gameObject.GetComponent<Image>().mainTexture;
 				cursorTex.hideFlags = HideFlags.DontUnloadUnusedAsset;
 			}
+			Texture2D buttonTex = (Texture2D)GameObject.Find("UI/SaveSelect/Saves/Inp").GetComponent<Image>().mainTexture;
 			if (!buttonSprite) {
-				Texture2D buttonTex = (Texture2D)GameObject.Find("UI/SaveSelect/Saves/Inp").GetComponent<Image>().mainTexture;
 				Rect buttonSubTex = new Rect(0, 530, 2048, 497);
 				Vector4 buttonBorder = new Vector4(406, 0, 144, 0);
 				buttonSprite = Sprite.Create(buttonTex, buttonSubTex, Vector2.one*0.5f, 100, 0, SpriteMeshType.FullRect, buttonBorder, false);
 				buttonSprite.hideFlags = HideFlags.DontUnloadUnusedAsset;
-				
 			}
 
-			float rowHeight = versionText.fontSize*2;
+			GameObject prefab = GameObject.Find("UI/SaveSelect/Saves/Inp_1");
+			GameObject connectInput = GameObject.Instantiate(prefab, prefab.transform.parent);
+			Vector3 inpDif = prefab.transform.position - GameObject.Find("UI/SaveSelect/Saves/Inp").transform.position;
+			connectInput.transform.position = prefab.transform.position + inpDif;
+			InputIcon inpIcon = connectInput.transform.GetChild(0).GetComponent<InputIcon>();
+			inpIcon.Button = InputDevice.ControllerButton.FaceLeft;
+			inpIcon.Key = InputDevice.KeyboardKey.MouseLeft;
+			Text inpText = connectInput.transform.GetChild(1).GetComponent<Text>();
+			inpText.text = "CONNECTION INFO";
+			inpText.fontSize = (int)(inpText.fontSize*0.8);
+			
+			Rect connectSubTex = new Rect(0, 1042, 2048, 497);
+			Vector4 connectBorder = new Vector4(406, 0, 144, 0);
+			Sprite connectSprite = Sprite.Create(buttonTex, connectSubTex, Vector2.one*0.5f, 100, 0, SpriteMeshType.FullRect, connectBorder, false);
+			
 			string[] rows = {"Info", "IP", "Port", "Slot", "Password", "If KB+M, Press"};
 			for (int i = 0; i < rows.Length; i++) {
 				
-				GameObject row = new GameObject(rows[i]);
+				GameObject row = new GameObject(rows[i], typeof(Image));
 				row.transform.SetParent(connectUI.transform);
-				row.transform.position = new Vector3(0, (rowHeight*(4-i))-(rowHeight), 0) + connectUI.transform.position;
+				row.transform.localScale = Vector3.one;
+				Image rowImg = row.GetComponent<Image>();
+				rowImg.sprite = connectSprite;
+				rowImg.type = Image.Type.Sliced;
+				Vector2 scrSize = ((RectTransform)connectUI.transform).sizeDelta;
+				rowImg.pixelsPerUnitMultiplier = 497/(scrSize.y/rows.Length);
+				
 				GameObject text = new GameObject("Text", typeof(Text));
 				text.transform.SetParent(row.transform);
+				text.transform.localScale = Vector3.one;
 
-				float width = connectUI.transform.position.x/2;
-				GameObject pivot = new GameObject("Pivot");
-				pivot.transform.position = new Vector3(-width, 0, 0) + row.transform.position;
-				pivot.transform.SetParent(row.transform);
-				pivots[i] = pivot.transform;
+				pivots[i] = rowImg;
 				
-				text.transform.position = new Vector3(-width/2, 0, 0) + row.transform.position;
+				text.transform.localPosition = new Vector3(-scrSize.x/4, 0, 0);
 				Text textComp = text.GetComponent<Text>();
 				textComp.text = rows[i];
 				textComp.font = font;
 				textComp.resizeTextForBestFit = true;
-				textComp.fontSize = (int)(versionText.fontSize*1.5);
+				textComp.fontSize = 10000;
 				textComp.alignment = TextAnchor.MiddleCenter;
 				RectTransform textRect = text.GetComponent<RectTransform>();
-				textRect.sizeDelta = new Vector2(width, rowHeight);
+				textRect.sizeDelta = new Vector2(scrSize.x/2, scrSize.y/rows.Length);
 
 				GameObject input = new GameObject("Input", typeof(Text));
 				input.transform.SetParent(row.transform);
-				input.transform.position = new Vector3(width/2, 0, 0) + row.transform.position;
+				input.transform.localPosition = new Vector3(scrSize.x/4, 0, 0);
+				input.transform.localScale = Vector3.one;
 				Text inputText = input.GetComponent<Text>();
 				textComps[i] = inputText;
 				inputText.font = font;
 				inputText.resizeTextForBestFit = true;
-				inputText.fontSize = (int)(versionText.fontSize*1.5);
-				inputText.alignment = TextAnchor.MiddleLeft;
+				inputText.fontSize = 10000;
+				inputText.alignment = TextAnchor.MiddleCenter;
 				RectTransform inputRect = input.GetComponent<RectTransform>();
-				inputRect.sizeDelta = new Vector2(width, rowHeight);
+				inputRect.sizeDelta = new Vector2(scrSize.x/2, scrSize.y/rows.Length);
 			}
 		}
 
@@ -450,6 +474,17 @@ namespace Sparkipelago {
 				bool ___SaveSelectMenu
 			) {
 				if (isChangingConnection) {
+					if (colorUp) blinkDark += Time.deltaTime*0.35f;
+					else blinkDark -= Time.deltaTime*0.35f;
+					if (blinkDark > 1) {
+						blinkDark = 1;
+						colorUp = false;
+					}
+					if (blinkDark < 0.85f) {
+						blinkDark = 0.85f;
+						colorUp = true;
+					}
+					
 					// AxisManager is a private function
 					MethodInfo axisManager = __instance.GetType().GetMethod("AxisManager", BindingFlags.NonPublic | BindingFlags.Instance);
 					axisManager.Invoke(__instance, null);
@@ -460,19 +495,20 @@ namespace Sparkipelago {
 							connectUI.SetActive(false);
 							GameObject.Find("UI/SaveSelect/Saves").SetActive(true);
 							GameObject.Find("UI/SaveSelect/Difficulty").SetActive(true);
+							__instance.Woosh.Play();
 							return true;
 						}
 						if (___Rewinp.GetButtonDown("D_up") || ___AxisInput == 2) {
 							connectRow -= 1;
-							if (connectRow < 0) connectRow = 0;
+							if (connectRow < 0) connectRow += 6;
+							__instance.Move.Play();
 						}
 						if (___Rewinp.GetButtonDown("D_down") || ___AxisInput == -2) {
 							connectRow += 1;
-							if (connectRow >= 6) connectRow = 5;
+							if (connectRow >= 6) connectRow -= 6;
+							__instance.Move.Play();
 						}
 					}
-
-					__instance.Pointer.position = Vector3.Lerp(__instance.Pointer.position, pivots[connectRow].position, Time.deltaTime * __instance.PointerSpeed);
 					
 					// Spark 3 doesn't play nice with InputField components, jury-rig our own
 					foreach (char c in Input.inputString) {
@@ -488,6 +524,7 @@ namespace Sparkipelago {
 								columns[connectRow] = string.Concat(columns[connectRow], c);
 							}
 						}
+						__instance.Click.Play();
 					}
 
 					file.connect[___Index].info = columns[0];
@@ -498,7 +535,9 @@ namespace Sparkipelago {
 					infoGO[___Index].GetComponent<Text>().text = columns[0];
 					for (int i = 0; i < 6; i++) {
 						textComps[i].text = columns[i];
+						pivots[i].color = new Color(0.75f, 0.75f, 0.75f);
 					}
+					pivots[connectRow].color = new Color(blinkDark, blinkDark, blinkDark);
 					textComps[2].text = port.ToString();
 					
 					return false;
@@ -515,6 +554,7 @@ namespace Sparkipelago {
 						columns[3] = file.connect[___Index].slot;
 						columns[4] = file.connect[___Index].password;
 						columns[5] = "Left Click";
+						__instance.Woosh.Play();
 						return false;
 					}
 					if (___Rewinp.GetButtonDown("Jump") && !Save.GetSaveFile(___Index).SlotInUse) {
@@ -528,6 +568,7 @@ namespace Sparkipelago {
 						columns[3] = "Player1";
 						columns[4] = "";
 						columns[5] = "Space Here";
+						__instance.Woosh.Play();
 						return false;
 					}
 				}

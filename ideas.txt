@@ -71,11 +71,9 @@ O=Capsule
 B=Bubble
 
 Done:
-	Fix Requirements goal/location getting sent 60 times
-	Added options for chat delays and the ability to filter non-sent and non-receive messages
-	Added a background for the chat
-	Removed the ability for the required explore percentage to require shuffled medals
-	Massively increase the amount of Freedom Medals in the pool in preparation for future sanities
+	Fixed the chat. Oops
+	Overhauled the connection info screen
+	Added a button prompt on the save select screen
 
 Beta Checklist:
 

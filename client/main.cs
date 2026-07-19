@@ -39,7 +39,7 @@ namespace Sparkipelago {
 			public GameObject text;
 			public double timeLeft;
 		}
-		private static DisplayedMessage[] messageText;
+		private static List<DisplayedMessage> messageText;
 		
 		public static GameObject copter;
 		
@@ -68,9 +68,9 @@ namespace Sparkipelago {
 			
 			LabMode.initPrefs();
 			messages = new Queue<string>();
-			messageText = new DisplayedMessage[5];
-			for (int i = 0; i < messageText.Length; i++) {
-				messageText[i] = new DisplayedMessage();
+			messageText = new List<DisplayedMessage>();
+			for (int i = 0; i < 5; i++) {
+				messageText.Add(new DisplayedMessage());
 			}
 			new SlotData();
 			
@@ -270,24 +270,25 @@ namespace Sparkipelago {
 				}
 			}
 			if (messages.Count() > 0 && messageText[0].go != null) {
-				int index = -1;
 				if (messageText[0].go.activeSelf) {
 					if (chatDelayTime < 0) {
 						messageText[0].timeLeft = -1;
 					}
 					chatDelayTime -= Time.unscaledDeltaTime;
 				} else {
-					RectTransform textRect = messageText[index].go.GetComponent<RectTransform>();
+					RectTransform textRect = messageText[0].go.GetComponent<RectTransform>();
 					Vector2 scrSize = ((RectTransform)textRect.parent).sizeDelta;
 					Vector2 newSize = new Vector2(scrSize.x*0.9f, (scrSize.y/4)/messageText.Count());
 					textRect.sizeDelta = newSize;
-					messageText[index].image.GetComponent<RectTransform>().sizeDelta = newSize;
+					messageText[0].image.GetComponent<RectTransform>().sizeDelta = newSize;
 					newSize = new Vector2(newSize.x-(812*(newSize.y/497)), newSize.y);
-					messageText[index].text.GetComponent<RectTransform>().sizeDelta = newSize;
-					messageText[index].image.GetComponent<Image>().pixelsPerUnitMultiplier = 497/newSize.y;
+					messageText[0].text.GetComponent<RectTransform>().sizeDelta = newSize;
+					messageText[0].image.GetComponent<Image>().pixelsPerUnitMultiplier = 497/newSize.y;
 					textRect.SetAsLastSibling();
-					messageText[index].timeLeft = APSave.file.client.chatVis;
-					messageText[index].text.GetComponent<Text>().text = messages.Dequeue();
+					messageText[0].timeLeft = APSave.file.client.chatVis;
+					messageText[0].text.GetComponent<Text>().text = messages.Dequeue();
+					messageText.Add(messageText[0]);
+					messageText.RemoveAt(0);
 					chatDelayTime = APSave.file.client.chatDelay;
 				}
 			}
