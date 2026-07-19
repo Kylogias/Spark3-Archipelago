@@ -71,25 +71,9 @@ O=Capsule
 B=Bubble
 
 Done:
-	Reverse Trap
-	Slow Trap
-	Downdash Buttons (wip)
-	New progression mode: Open World
-	Added a new goal: Freom Mk-0
-	Added a new goal: simply completing all the requirements to unlock the goal area
-	Gating progression options now always lock the goal area
-	Added an option to pick starting stages
-	Added an option to customize the stages chosen for guaranteed completions and level unlocks
-	Added an option for completing a goal to be a location if the goal isn't active
-	Zoom Trap is now timed
-	Stage Item timer and Shop Discounts can now be configured
-	Merged Car Boost Pads into Abyss Boosters
-	Airstrip Madness is no longer Sphere 0 on Normal
-	Lost Riviera is no longer considered a sphere 0 stage
-		Note: Logic hasn't been updated. The rando just won't consider it for guaranteed completions or starting level
-	Hyperath Fleet Yellow Explore Medal now requires dash on Normal
-	Doublemoon Villa no longer requires Charged Jester Dash or Sfarx to get up top on Normal
-	Floria Plant Blue Explore Medal now requires a dash on Normal
+	Fix Requirements goal/location getting sent 60 times
+	Added options for chat delays and the ability to filter non-sent and non-receive messages
+	Added a background for the chat
 
 Beta Checklist:
 

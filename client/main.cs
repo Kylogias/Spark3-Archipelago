@@ -35,7 +35,9 @@ namespace Sparkipelago {
 		public static Queue<string> messages;
 		class DisplayedMessage {
 			public GameObject go;
-			public float timeLeft;
+			public GameObject image;
+			public GameObject text;
+			public double timeLeft;
 		}
 		private static DisplayedMessage[] messageText;
 		
@@ -104,7 +106,6 @@ namespace Sparkipelago {
 			
 			messages.Clear();
 			foreach (DisplayedMessage dm in messageText) {
-				messages.Enqueue("");
 				messages.Enqueue("");
 			}
 			
@@ -189,13 +190,33 @@ namespace Sparkipelago {
 
 		public static void OnMessageReceived(LogMessage message) {
 			StringBuilder sb = new StringBuilder("", 65536);
-			MelonLogger.Msg("Message Part Count: {0}", message.Parts.Count());
+			bool isSentOrRecv = false;
 			foreach (MessagePart part in message.Parts) {
 				if (!part.IsBackgroundColor) sb.AppendFormat("<color=#{0:X2}{1:X2}{2:X2}>", part.Color.R, part.Color.G, part.Color.B);
+				switch (part.Type) {
+					case MessagePartType.Player:
+						PlayerMessagePart plPart = (PlayerMessagePart)part;
+						if (plPart.IsActivePlayer) isSentOrRecv = true;
+						break;
+					default:
+						break;
+				}
 				sb.Append(part.Text);
 				if (!part.IsBackgroundColor) sb.Append("</color>");
 			}
-			messages.Enqueue(sb.ToString());
+			bool shouldDisplay = false;
+			switch (APSave.file.client.displayedMessages) {
+				case ChatType.NoMessages:
+					shouldDisplay = false;
+					break;
+				case ChatType.AllMessages:
+					shouldDisplay = true;
+					break;
+				case ChatType.SentAndReceived:
+					shouldDisplay = isSentOrRecv;
+					break;
+			}
+			if (shouldDisplay) messages.Enqueue(sb.ToString());
 			
 			string playerName = APSave.getAPConnect().slot;
 			string msgStr = message.ToString();
@@ -224,6 +245,7 @@ namespace Sparkipelago {
 		}
 
 		static float groundTime;
+		static double chatDelayTime;
 		public override void OnUpdate() {
 			if (player) {
 				bool onGround = player.GetComponent<PlayerBhysics>().Grounded;
@@ -249,37 +271,24 @@ namespace Sparkipelago {
 			}
 			if (messages.Count() > 0 && messageText[0].go != null) {
 				int index = -1;
-				bool found = false;
-				for (index = 0; index < messageText.Count(); index++) {
-					if (!messageText[index].go.activeSelf) {
-						found = true;
-						break;
+				if (messageText[0].go.activeSelf) {
+					if (chatDelayTime < 0) {
+						messageText[0].timeLeft = -1;
 					}
-				}
-				if (!found) {
-					float maxY = -100000;
-					index = -1;
-					for (int i = 0; i < messageText.Count(); i++) {
-						RectTransform xfrm = messageText[i].go.GetComponent<RectTransform>();
-						if (xfrm.localPosition.y > maxY) {
-							maxY = xfrm.localPosition.y;
-							index = i;
-						}
-					}
-					messageText[index].timeLeft = -1;
+					chatDelayTime -= Time.unscaledDeltaTime;
 				} else {
 					RectTransform textRect = messageText[index].go.GetComponent<RectTransform>();
-					textRect.localPosition = new Vector3(0, -((Screen.height/2)-(Screen.height/16)), 0);
-					textRect.sizeDelta = new Vector2(Screen.width, Screen.height/8);
-					for (int i = 0; i < messageText.Count(); i++) {
-						if (!messageText[i].go.activeSelf) continue;
-						RectTransform moveup = messageText[i].go.GetComponent<RectTransform>();
-						moveup.localPosition = new Vector3(0, moveup.localPosition.y + moveup.sizeDelta.y/2, 0);
-					}
-
-					messageText[index].timeLeft = 5;
-					Text text = messageText[index].go.GetComponent<Text>();
-					text.text = messages.Dequeue();
+					Vector2 scrSize = ((RectTransform)textRect.parent).sizeDelta;
+					Vector2 newSize = new Vector2(scrSize.x*0.9f, (scrSize.y/4)/messageText.Count());
+					textRect.sizeDelta = newSize;
+					messageText[index].image.GetComponent<RectTransform>().sizeDelta = newSize;
+					newSize = new Vector2(newSize.x-(812*(newSize.y/497)), newSize.y);
+					messageText[index].text.GetComponent<RectTransform>().sizeDelta = newSize;
+					messageText[index].image.GetComponent<Image>().pixelsPerUnitMultiplier = 497/newSize.y;
+					textRect.SetAsLastSibling();
+					messageText[index].timeLeft = APSave.file.client.chatVis;
+					messageText[index].text.GetComponent<Text>().text = messages.Dequeue();
+					chatDelayTime = APSave.file.client.chatDelay;
 				}
 			}
 			if (SlotData.labMode && currentSession != null) {
@@ -323,28 +332,40 @@ namespace Sparkipelago {
 
 			GameObject canvasGO = null;
 			if (APSave.sparkFont != null) {
-				canvasGO = new GameObject("APCanvas", typeof(Canvas), typeof(CanvasScaler));
+				canvasGO = new GameObject("APCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(VerticalLayoutGroup));
 				Canvas canvas = canvasGO.GetComponent<Canvas>();
 				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+				VerticalLayoutGroup vlg = canvasGO.GetComponent<VerticalLayoutGroup>();
+				vlg.childAlignment = TextAnchor.LowerCenter;
+				vlg.childForceExpandWidth = false;
+				vlg.childForceExpandHeight = false;
+				vlg.childControlWidth = false;
+				vlg.childControlHeight = false;
+				vlg.spacing = 8;
 				
 				for (int i = 0; i < messageText.Count(); i++) {
-					GameObject textGO = new GameObject("APText", typeof(Text), typeof(DeactivateAfterAWhile));
+					GameObject textGO = new GameObject("APText", typeof(RectTransform));
+					GameObject imgObject = new GameObject("Image", typeof(Image));
+					GameObject textObject = new GameObject("Text", typeof(Text));
 					messageText[i].go = textGO;
+					messageText[i].text = textObject;
+					messageText[i].image = imgObject;
 					messageText[i].timeLeft = 0;
 					textGO.SetActive(false);
 					textGO.transform.parent = canvasGO.transform;
-					Text text = textGO.GetComponent<Text>();
+					imgObject.transform.parent = textGO.transform;
+					textObject.transform.parent = textGO.transform;
+					Text text = textObject.GetComponent<Text>();
 					text.font = APSave.sparkFont;
 					text.text = "chat looks a bit dead";
 					text.alignment = TextAnchor.MiddleCenter;
 					text.resizeTextForBestFit = true;
 					text.fontSize = 1000;
 					text.supportRichText = true;
-					RectTransform textRect = textGO.GetComponent<RectTransform>();
-					textRect.localPosition = new Vector3(0, -((Screen.height/2)-(Screen.height/16)), 0);
-					textRect.sizeDelta = new Vector2(Screen.width, Screen.height/8);
-					DeactivateAfterAWhile daaw = textGO.GetComponent<DeactivateAfterAWhile>();
-					daaw.TimeToStop = 5.0f;
+					Image image = imgObject.GetComponent<Image>();
+					image.sprite = APSave.buttonSprite;
+					image.type = Image.Type.Sliced;
+					image.color = new UnityEngine.Color(1, 1, 1, 0.5f);
 				}
 			}
 

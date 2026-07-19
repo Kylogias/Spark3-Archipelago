@@ -373,7 +373,7 @@ class StartingLocations(OptionSet):
 	"""
 	display_name = "Starting Locations"
 	valid_keys = [stage['name'] for stage in apshared["stages"]]
-	default = ["Utopia Shelter", "Requirements"]
+	default = ["Utopia Shelter", "Requirements", "Freom Mk-0"]
 
 class SphereZeroList(OptionSet):
 	"""
@@ -409,7 +409,7 @@ class GoalChecks(OptionSet):
 	"Requirements" sends a completion check when the "Requirements Only" goal would otherwise be reached
 	"""
 	display_name = "Goal Checks"
-	valid_keys = ["Utopia Shelter", "Freom Mk-0", "Requirements"]
+	valid_keys = ["Utopia Shelter", "Requirements"]
 	default = []
 
 class DowndashButtons(Toggle):

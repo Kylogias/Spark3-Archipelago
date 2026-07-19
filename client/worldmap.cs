@@ -177,7 +177,7 @@ namespace Sparkipelago {
 				i++;
 			}
 
-			return avail = Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[4]
+			return Sparkipelago.itemState[ItemIds.FREEDOM_MEDAL] >= SlotData.freedomReq[4]
 				&& numComplete >= SlotData.completionReq[4]
 				&& numExplore >= SlotData.exploreReq
 				&& numSpeed >= SlotData.speedReq[4]

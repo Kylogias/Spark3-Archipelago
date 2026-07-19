@@ -73,11 +73,21 @@ namespace Sparkipelago {
 		IncludeAll
 	};
 	
+	public enum ChatType {
+		NoMessages,
+		SentAndReceived,
+		AllMessages
+	};
+	
 	[Serializable]
 	public class APClientOptions {
 		public MusicType musicRando;
 		public EnemyType enemyRando;
 		public int diveFloors;
+		
+		public double chatDelay;
+		public double chatVis;
+		public ChatType displayedMessages;
 		
 		public int scoreAmt;
 		public int scoreMax;
@@ -117,6 +127,9 @@ namespace Sparkipelago {
 			musicRando = MusicType.Vanilla;
 			enemyRando = EnemyType.Vanilla;
 			diveFloors = 1;
+			chatDelay = 0;
+			chatVis = 5;
+			displayedMessages = ChatType.SentAndReceived;
 			scoreAmt = 10;
 			scoreMax = 30;
 			comboAmt = 1;
@@ -151,6 +164,7 @@ namespace Sparkipelago {
 	class APSave {
 		public static Font sparkFont;
 		public static Texture cursorTex;
+		public static Sprite buttonSprite;
 
 		[Serializable]
 		public class APSavefile {
@@ -204,6 +218,21 @@ namespace Sparkipelago {
 				settings, "Enemy Rando", "How should enemies be randomized", 0, 2, 1,
 				(double newV) => {APSave.file.client.enemyRando = (EnemyType)newV; return ((EnemyType)newV).ToString();},
 				() => {return (double)APSave.file.client.enemyRando;}
+			);
+			new Options.RangeIten(
+				settings, "Displayed Chat Messages", "What chat messages should be displayed?", 0, 2, 1,
+				(double newV) => {APSave.file.client.displayedMessages = (ChatType)newV; return ((ChatType)newV).ToString();},
+				() => {return (double)APSave.file.client.displayedMessages;}
+			);
+			new Options.RangeIten(
+				settings, "Chat Delay Time", "When the chat is full, how long until the next message is displayed?", 0, 20, 0.1,
+				(double newV) => {APSave.file.client.chatDelay = newV; return newV.ToString();},
+				() => {return APSave.file.client.chatDelay;}
+			);
+			new Options.RangeIten(
+				settings, "Chat Visible Time", "How long should each chat message be visible before disappearing?", 0, 20, 0.1,
+				(double newV) => {APSave.file.client.chatVis = newV; return newV.ToString();},
+				() => {return APSave.file.client.chatVis;}
 			);
 			
 			new Options.RangeIten(
@@ -361,6 +390,14 @@ namespace Sparkipelago {
 			if (!cursorTex) {
 				cursorTex = GameObject.Find("UI").transform.GetChild(6).GetChild(0).gameObject.GetComponent<Image>().mainTexture;
 				cursorTex.hideFlags = HideFlags.DontUnloadUnusedAsset;
+			}
+			if (!buttonSprite) {
+				Texture2D buttonTex = (Texture2D)GameObject.Find("UI/SaveSelect/Saves/Inp").GetComponent<Image>().mainTexture;
+				Rect buttonSubTex = new Rect(0, 530, 2048, 497);
+				Vector4 buttonBorder = new Vector4(406, 0, 144, 0);
+				buttonSprite = Sprite.Create(buttonTex, buttonSubTex, Vector2.one*0.5f, 100, 0, SpriteMeshType.FullRect, buttonBorder, false);
+				buttonSprite.hideFlags = HideFlags.DontUnloadUnusedAsset;
+				
 			}
 
 			float rowHeight = versionText.fontSize*2;
